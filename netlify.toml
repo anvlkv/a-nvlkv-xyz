@@ -15,3 +15,8 @@ ZOLA_VERSION = "0.17.2"
 
 [context.deploy-preview]
 command = "zola build --base-url $DEPLOY_PRIME_URL"
+
+[[redirects]]
+from = "/"
+to = "/bio"
+status = 200

@@ -1,0 +1,13 @@
+<form class="Contact" name="commissions" data-netlify="true" method="POST">
+  <legend class="Contact__legend">
+    {{page.content | safe}}
+  </legend>
+  <label class="Contact__label" for="name">From:</label>
+  <input class="Contact__input" type="text" name="name" max="500" placeholder="What's your name?" />
+  <label class="Contact__label" for="email">Email:</label>
+  <input class="Contact__input" type="email" required max="500" name="email" placeholder="How to contact you?" />
+  <label class="Contact__label" for="message">Message:</label>
+  <textarea class="Contact__input Contact__input--textarea" name="message" min="200" required
+    placeholder="Inquire..."></textarea>
+  <button class="Contact__submit" type="submit">Send commission inquiry</button>
+</form>
