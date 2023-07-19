@@ -1,7 +1,8 @@
 from transformers import pipeline, AutoTokenizer
-from diffusers import StableDiffusionPipeline
+from diffusers import KandinskyV22Img2ImgPipeline, KandinskyV22PriorPipeline
 import torch
 import os
+from PIL import Image
 
 
 with open("./content/bio.md", "r") as f:
@@ -15,14 +16,19 @@ model_name = "knkarthick/MEETING_SUMMARY"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 cv_summarizer = pipeline("summarization", model="knkarthick/MEETING_SUMMARY")
 
-sketcher = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float32, device="cpu")
-# if torch.cuda.is_available() == True:
-#   sketcher.to("cuda")
-# else:
-#     commandline_args = os.environ.get('COMMANDLINE_ARGS', "--skip-torch-cuda-test --no-half")
+# sketcher = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float32, device="cpu")
+pipe_prior = KandinskyV22PriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", torch_dtype=torch.float32)
+pipe = KandinskyV22Img2ImgPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", torch_dtype=torch.float32)
 
-# text = "one day I will see the world"
-candidate_labels = ['personality', 'society', 'mindfulness', 'fashion', 'art', 'software']
+
+candidate_labels = ['personal life',
+                     'society and relationships', 
+                     'mindfulness and yoga', 
+                     'fashion and industry', 
+                     'art and textiles', 
+                     'software engineering']
+
+mood = "prosperity, fulfillment, high-end"
 
 def classification(text):
     results = classifier(text, candidate_labels)
@@ -40,14 +46,34 @@ for i, paragraph in enumerate(paragraphs):
 
     labels = classification(paragraph)
     
-    max_length = min(len(tokenizer.tokenize(paragraph)) - 1, 100)
+    max_length = min(len(tokenizer.tokenize(paragraph)) - 1, 60)
     
-    summary = cv_summarizer(paragraph, min_length=2, max_length=max_length)
-    prompt = "focus on '" + labels[1] + "' and '" + labels[0] + "' create quick pencil sketch:" + summary[0]["summary_text"]
+    summary = cv_summarizer(f"({labels[0]}): {paragraph}", min_length=2, max_length=max_length)
+    prompt = f"mood: {mood}; topic: {labels[1]}; artwork: {summary[0]['summary_text']}"
     print(prompt)
-    sketch = sketcher(prompt)
-    for y, img in enumerate(sketch.images):  
-      img.save ("./static/bio/" + str(i) + '-' + str(y) + ".png")
+
+    negative_prompt = "3D, photo-realistic, low quality, bad, error, amateur, ugly, unprofessional, low resolution, incoherent, inappropriate, unappealing, dull, waste, face error, cut, incomplete, naive, rough, outdated"
+
+    image_embeds, negative_image_embeds = pipe_prior(prompt, guidance_scale=4.0, num_inference_steps=13).to_tuple()
+
+    original_image = Image.open("./static/origins/" + labels[0] + ".jpg")
+
+    out = pipe(
+        image=original_image,
+        image_embeds=image_embeds,
+        negative_image_embeds=negative_image_embeds,
+        height=1024,
+        width=1024,
+        num_inference_steps=32,
+        strength=0.37,
+    )
+
+    
+    out.images[0].save(f"./static/bio/{str(i)}.png")
+
+    # sketch = sketcher(prompt)
+    # for y, img in enumerate(sketch.images):  
+    #   img.save ("./static/bio/" + str(i) + '-' + str(y) + ".png")
     
     # print(paragraph)
     # print(best_classification(paragraph, candidate_labels))
