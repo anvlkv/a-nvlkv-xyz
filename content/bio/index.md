@@ -1,8 +1,8 @@
 +++
 pronouns=["they", "them"]
-features=["kazakh", "tanned", "curly hair", "asian goatee"]
-mood=["inquiry", "mindfulness", "prosperity"]
-negative_prompt=["3d", "photo", "cinematic", "error face", "error eyes", "incomplete", "low quality", "text", "doodle"]
+features=["kazakh", "tanned", "curly hair", "asian goatee", "rebel"]
+mood=["inquiry", "mindfulness", "prosperity", "simplicity", "accuracy", "trees and butterflies", "harmony"]
+negative_prompt=["error (face | eyes | hands | arms | body)", "incomplete", "low quality", "text", "doodle", "parody", "monster", "animal", "insect", "(bad | poor) composition", "gap", "empty space", "edges", "grid", "abstract"]
 +++
 
 I now ask for help. I want to dedicate my time and space to the twopack.gallery project, promote collaborations between artists, and show everyone they are creative and beautiful beings, who has something very important and unique to tell to this world. I hereby proclaim myself a communication artist, willing to help this world talk in a dialog. I look for part-time commissions on relevant topics and donations to enable our work on twopack.gallery project. I promise to stay transparent about both and to keep sharing my code, art, and ideas through the podcast and all other means.
