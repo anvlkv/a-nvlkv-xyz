@@ -1,0 +1,47 @@
+.Form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  &__label {
+    font-weight: 700;
+    margin-top: .5em;
+  }
+  &__input {
+    margin-bottom: 1em;
+    padding: .5em;
+    border: .5px solid $black;
+    border-radius: 3px;
+    font-size: 1em;
+    &:focus {
+      outline: .1px solid $black;
+    }
+    @media (prefers-color-scheme: dark) {
+      border-color: $white;
+      &:focus {
+        outline: .1px solid $white;
+      }
+    }
+  }
+  &__submit {
+    margin-top: 1em;
+    padding: .5em;
+    border: .5px solid $black;
+    border-radius: 3px;
+    font-size: 1em;
+    background-color: $black;
+    color: $white;
+    font-weight: 700;
+    &:hover {
+      background-color: $white;
+      color: $black;
+    }
+    @media (prefers-color-scheme: dark) {
+      border-color: $white;
+      color: $white;
+      &:hover {
+        background-color: $black;
+        color: $white;
+      }
+    }
+  }
+}

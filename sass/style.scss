@@ -1,0 +1,53 @@
+@import "./vars";
+@import "../node_modules/normalize-scss/sass/normalize";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: $white;
+  color: $black;
+  font-family: sans-serif;
+  @media (prefers-color-scheme: dark) {
+    background-color: $black;
+    color: $white;
+    letter-spacing: .01em;
+  }
+  article {
+    font-family: serif;
+    padding: 0 1em;
+  }
+  a {
+    padding: .1em .2em 0;
+    transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+    text-decoration: none;
+    color: $link;
+    &:visited {
+      color: $visited;
+    }
+    &:hover, &:focus {
+      background-color: $visited;
+      text-decoration: underline;
+      color: $white;
+    }
+    @media (prefers-color-scheme: dark) {
+      color: $white;
+      outline: .1px dashed $white;
+      &:hover {
+        background-color: $link;
+      }
+    }
+  }
+  p:first-child {
+    margin-top: 0;
+  }
+}
+
+@import "./bio";
+@import "./navigation";
+@import "./landing";
+@import "./layout";
+@import "./page";
+@import "./form";

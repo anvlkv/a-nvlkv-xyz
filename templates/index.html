@@ -1,0 +1,22 @@
+
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+
+{% block page_meta %}
+<title>{{ section.title }}</title>
+<meta name="description" content="{{ section.description }}" />
+{% endblock page_meta%}
+
+{% block content %}
+  <main class="Landing">
+    <h1 class="Landing__type">
+      <span>Hi! I'm</span>
+      <span>a Communication artist<sup>*</sup></span>
+      <small><sup>*</sup>self-proclaimed</small>
+    </h1>
+    {{macros::navigation(type="Navigation--large Landing__navigation", extra=section.content)}}
+  </main>
+  <footer class="Layout__footer">
+    <a href="/license">(PPL) a.nvlkv {{now() | date(format="%Y")}}</a>
+  </footer>
+{% endblock %}

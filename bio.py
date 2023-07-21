@@ -100,7 +100,7 @@ def process_entry(character, mood, negative_prompt, text, prev=None):
 
 def process_dir(dir_name, out_dir):
     print("Processing dir")
-    with open(dir_name + "/index.md", "r") as f:
+    with open(dir_name + "/_index.md", "r") as f:
         text = f.read()
     [__, config, text] = text.strip().split("+++")
 
@@ -116,7 +116,7 @@ def process_dir(dir_name, out_dir):
 
     for f in os.listdir(dir_name):
         if f.endswith(".md"):
-            if f == "index.md":
+            if f == "_index.md":
                 continue
             with open(dir_name + "/" + f, "r") as file:
                 text = file.read();
@@ -130,4 +130,4 @@ def process_dir(dir_name, out_dir):
             prev = entry.images[0]
 
 
-process_dir("./content/bio", "./static/bio")
+process_dir("./content/bio", "./content/bio")
