@@ -13,7 +13,7 @@ page_meta %}
 <div class="Bio__sidebar">
   <nav class="Navigation Navigation--aside">
     <ul class="Navigation__list">
-      {% for page in section.pages %} <li>{{macros::nav_link(href=page.path,
+      {% for page in section.pages %} <li class="Navigation__item">{{macros::nav_link(href=page.path,
       text=macros::period_format(periods=page.taxonomies.period))}}</li> {% endfor %}
     </ul>
   </nav>

@@ -5,9 +5,10 @@
     align-items: center;
     margin-bottom: 3.5em;
     @media (min-width: $screen-lg) {
-      flex-direction: row;
+      flex-direction: row-reverse;
       flex-wrap: wrap;
       align-items: flex-start;
+      justify-content: flex-end;
     }
   }
   &__period {
@@ -19,29 +20,38 @@
     margin-bottom: .5em;
   }
   &__figure{
-    flex-grow: 0;
-    flex-shrink: 1;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    flex-grow:1;
     margin: 0;
+    margin-bottom: 2em;
     max-height: 95vh;
-    text-align: center;
     img{
-      width: auto;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: cover;
+      width: 100%;
+      max-height: calc(95vh - 1.5em);
+      object-fit: contain;
+    }
+    figcaption{
+      font-size: 80%;
+      font-style: italic;
+      text-align: center;
+      margin: .5em .5em 0;
     }
   }
   &__content{
     flex-shrink: 0;
     @media (min-width: $screen-md) {
       flex-basis: 25vw;
-      flex-grow: 1;
-      padding-left: 1em;
+      padding-right: 1em;
+    }
+    @media (min-width: $screen-lg) {
+      padding-right: 2em;
     }
   }
   &__sidebar{
     width: 100%;
-    max-height: calc(100vh - 2.25rem);
+    max-height: calc(100vh - 1.5rem);
     overflow-y: auto;
     padding-top: 1.9em;
     background-color: $white;
@@ -50,10 +60,16 @@
     }
     @media (min-width: $screen-md) {
       position: fixed;
-      width: calc(100vw  / 4);
+      width: calc(100vw  / 5);
     }
     @media (min-width: $screen-lg) {
-      width: calc(100vw  / 5);
+      width: calc(100vw  / 6);
+    }
+    .Navigation__list{
+      width: 100%;
+      @media (min-width: $screen-md) {
+        padding-bottom: 6em;
+      }
     }
   }
 }

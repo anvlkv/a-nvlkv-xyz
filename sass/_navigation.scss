@@ -20,11 +20,11 @@ $class-name: "Navigation";
             content: "✕";
           }
         }
-        & + .#{$class-name}__label + .#{$class-name}__logo{
+        .#{$class-name}__logo{
           display: block;
           width: fit-content;
         }
-        &:checked + .#{$class-name}__label + .#{$class-name}__logo + .#{$class-name}__extra + .#{$class-name}__nav {
+        &:checked + .#{$class-name}__label + .#{$class-name}__nav {
           top: 0;
           transform: scale(1);
         }
@@ -33,9 +33,11 @@ $class-name: "Navigation";
       .#{$class-name}__label {
         position: absolute;
         display: block;
-        top: .25rem;
-        right: .25rem;
+        top: 0;
+        right: 0;
+        padding: .5rem;
         z-index: 5;
+
         &::after {
           font-size: x-large;
           content: "☰";
@@ -65,7 +67,6 @@ $class-name: "Navigation";
   &__nav {
     width: 100%;
     height: 100%;
-    overflow: hidden;
     background-color: $white;
     @media (prefers-color-scheme: dark) {
       background-color: $black;
@@ -118,7 +119,11 @@ $class-name: "Navigation";
   &__item {
     flex-grow: 1;
     min-width: 3em;
-    overflow: hidden;
+    @media (max-width: $screen-md) {
+      hr {
+        transform: rotate(90deg);
+      }
+    }
   }
 
   &__logo{
@@ -133,7 +138,7 @@ $class-name: "Navigation";
   }
 
   @media (min-width: $screen-md) {
-    .#{$class-name}__item:first-child {
+    &:not(.#{$class-name}--aside) .#{$class-name}__item:first-child {
       display: none;
     }
   }

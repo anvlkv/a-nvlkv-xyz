@@ -41,7 +41,7 @@
       {% endif %}
       {% endif %}
       {% endfor %}
-      <li><hr/></li>
+      <li class="Navigation__item"><hr/></li>
       {% for page in section.pages %} 
         <li class="Navigation__item">{{macros::nav_link(href=page.path,
         text=macros::period_format(periods=page.taxonomies.period))}}</li> 

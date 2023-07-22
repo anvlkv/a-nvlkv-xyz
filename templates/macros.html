@@ -9,20 +9,21 @@
   = resize_image(path=asset, width=512, height=512 ) %}
   <figure class="Bio__figure">
     <img src="{{ src.url }}" />
+    <figcaption>Image is generated from the biographic entry</figcaption>
   </figure>
   {% endif %} {% endfor %}
   <div class="Bio__content">{{ page.content | safe }}</div>
 </article>
 {% endmacro bio %} {% macro navigation(type="", extra="")%}
 <div class="Navigation {{type}}">
-  <input type="checkbox" id="menu-toggle" class="Navigation__trigger" />
-  <label for="menu-toggle" class="Navigation__label"></label>
   <nav class="Navigation__logo">
     {{ self::nav_link(href="/", text="a.nvlkv") }}
   </nav>
   <div class="Navigation__extra">
     {{ extra | safe }}
   </div>
+  <input type="checkbox" id="menu-toggle" class="Navigation__trigger" />
+  <label for="menu-toggle" class="Navigation__label"></label>
   <nav
     class="Navigation__nav"
     onclick="document.getElementById('menu-toggle').setAttribute('checked', 'false')"
