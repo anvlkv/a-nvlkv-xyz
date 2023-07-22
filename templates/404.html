@@ -8,11 +8,13 @@
 {% block content %}
 
 <main class="404">
+  <header>
+    {{macros::navigation(type="Navigation--large")}}
+  </header>
   <article class="404__content">
     <h1>404. Page not found</h1>
     <p>Sorry, the page with this URL doesn't exist.</p>
   </article>
-  {{macros::navigation(type="Navigation--large")}}
 </main>
 
 {% endblock content %}

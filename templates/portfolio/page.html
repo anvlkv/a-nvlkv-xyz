@@ -11,9 +11,13 @@
 <div class="Portfolio">
   <article class="Portfolio__showcase">
     {% for asset in page.assets %}
-    <figure class="Portfoliio__fiigure">
+    <figure class="Portfolio__figure">
       {% set image = resize_image(path=asset, width=800, height=800, op='fit')%}
-      <img src="{{ image.url }}" alt="{{ page.title }}" />
+      {% set meta = get_image_metadata(path=asset)%}
+      {% set original = resize_image(path=asset, width=meta.width, height=meta.height)%}
+      <a class="Potfolio__img-link" href="{{original.url}}" target="_blank">
+        <img src="{{ image.url }}" alt="{{ page.title }}" />
+      </a>
       <figcaption>{{ page.title }}</figcaption>
     </figure>
     {% endfor %}

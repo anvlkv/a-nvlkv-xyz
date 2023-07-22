@@ -49,27 +49,4 @@
       padding-right: 2em;
     }
   }
-  &__sidebar{
-    width: 100%;
-    max-height: calc(100vh - 1.5rem);
-    overflow-y: auto;
-    padding-top: 1.9em;
-    background-color: $white;
-    @media (prefers-color-scheme: dark) {
-      background-color: $black;
-    }
-    @media (min-width: $screen-md) {
-      position: fixed;
-      width: calc(100vw  / 5);
-    }
-    @media (min-width: $screen-lg) {
-      width: calc(100vw  / 6);
-    }
-    .Navigation__list{
-      width: 100%;
-      @media (min-width: $screen-md) {
-        padding-bottom: 6em;
-      }
-    }
-  }
 }
