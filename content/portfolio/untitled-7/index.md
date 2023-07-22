@@ -1,0 +1,4 @@
++++
+[taxonomies]
+category=["photography"]
++++

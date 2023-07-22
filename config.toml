@@ -9,6 +9,7 @@ build_search_index = true
 
 taxonomies = [
     { name = "period", feed = false, render=false},
+    { name = "category", feed = false, render=false},
 ]
 
 [markdown]
