@@ -14,7 +14,8 @@
       <span>a Communication artist<sup>*</sup></span>
       <small><sup>*</sup>self-proclaimed</small>
     </h1>
-    {{macros::navigation(type="Navigation--large Landing__navigation", extra=section.content)}}
+    {% set content = "<article class='Landing__content'>"~section.content~"</article>" %}
+    {{macros::navigation(type="Navigation--large Landing__navigation", extra=content)}}
   </main>
   <footer class="Layout__footer">
     <a href="/license">(PPL) a.nvlkv {{now() | date(format="%Y")}}</a>

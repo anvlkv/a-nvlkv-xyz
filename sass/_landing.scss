@@ -45,23 +45,32 @@
     .Navigation__extra {
       display: flex;
       flex-direction: column;
-      font-size: 80%;
-      width: 70vw;
+      width: 100vw;
       @media (min-width: $screen-md) {
-        width: 50vw;
+        width: 70vw;
+      }
+      @media (min-width: $screen-lg) {
+        width: 45.7vw;
       }
     }
     .Navigation__logo {
       width: 100%;
       font-weight: 900;
       font-size: 400%;
-      letter-spacing: .05em;
+      letter-spacing: .025em;
       margin-bottom: 2rem;
       display: flex;
       align-items: center;
       @media(max-width: ($screen-sm - 1px)) {
         font-size: 250%;
       }
+    }
+  }
+
+  &__content{
+    p {
+      font-size: 1.55rem;
+      line-height: 1.3;
     }
   }
 }

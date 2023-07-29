@@ -43,7 +43,7 @@ page_meta %}
       {% endfor %}">
         {%set title = page.title | default(value='untitled')%}
         <a href="{{ page.path }}" class="Portfolio__link" title="{{title}}">
-          {% set image = resize_image(path=page.assets[0], width=200, height=200, op='fill')%}
+          {% set image = resize_image(path=page.assets[0], width=500, height=500, op='fill')%}
           <img src="{{ image.url }}" alt="{{ title }}" />
           <span>{{title}}</span>
         </a>

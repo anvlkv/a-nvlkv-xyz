@@ -1,8 +1,13 @@
+@import "./vars";
+
 .Portfolio {
   width: 100%;
   &__grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
+    @media (min-width: $screen-md) {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+    }
+    // grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
     grid-gap: 1em;
   }
   &__item {
