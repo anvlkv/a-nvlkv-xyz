@@ -1,0 +1,41 @@
+{% import "macros.html" as macros %} {% extends "layout.html" %} {% block
+page_meta %}
+<title>{{ page.title }}</title>
+<meta name="description" content="{{ page.description }}" />
+{% endblock page_meta%} {% block main %}
+
+<div class="Contact">
+  <article>{{ page.content | safe }}</article>
+  <form class="Form" name="contact" data-netlify="true" method="POST" name="contact"
+  action="/contact-success/">
+    <label class="Form__label" for="name">From:</label>
+    <input
+      class="Form__input"
+      type="text"
+      name="name"
+      max="500"
+      placeholder="Please enter your name"
+    />
+    <label class="Form__label" for="email">Email:</label>
+    <input
+      class="Form__input"
+      type="email"
+      required
+      max="500"
+      name="email"
+      placeholder="Please enter your email address"
+    />
+    <label class="Form__label" for="message">Message:</label>
+    <textarea
+      class="Form__input Form__input--textarea"
+      name="message"
+      min="10"
+      rows="10"
+      required
+      placeholder="Please enter your message"
+    ></textarea>
+    <button class="Form__submit" type="submit">Send me a message</button>
+  </form>
+</div>
+
+{% endblock main %}

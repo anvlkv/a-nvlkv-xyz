@@ -1,0 +1,93 @@
+{% macro bio(page, section) %}
+<article class="Bio__entry">
+  {% if page.taxonomies %}
+  <a class="Bio__period" href="{{page.path}}">
+    {{self::period_format(periods=page.taxonomies.period)}}
+  </a>
+  {% endif %} {% for asset in section.assets %} {% if asset is
+  ending_with(page.relative_path | replace(from=".md", to=".png")) %} {% set src
+  = resize_image(path=asset, width=512, height=512 ) %}
+  <figure class="Bio__figure">
+    <img src="{{ src.url }}" />
+    <figcaption>Image is generated from the biographic entry</figcaption>
+  </figure>
+  {% endif %} {% endfor %}
+  <div class="Bio__content">{{ page.content | safe }}</div>
+</article>
+{% endmacro bio %} {% macro navigation(type="", logo=true)%}
+<div class="Navigation {{type}}">
+  {% if logo %}
+  <nav class="Navigation__logo">
+    {{ self::nav_link(href="/", text="a.nvlkv") }}
+  </nav>
+  {% endif %}
+  <input type="checkbox" id="menu-toggle" class="Navigation__trigger" />
+  <label for="menu-toggle" class="Navigation__label"></label>
+  <nav
+    class="Navigation__nav"
+    onclick="document.getElementById('menu-toggle').setAttribute('checked', 'false')"
+  >
+    <ul class="Navigation__list">
+      <li class="Navigation__item">
+        {{ self::nav_link(href="/", text="a.nvlkv") }}
+      </li>
+
+
+      <li class="Navigation__item">
+        {% set section = get_section(path="cv/_index.md") %} {{
+        self::nav_link(href=section.path, text="CV",
+        reading_time=self::section_reading_time(section=section)) }}
+      </li>
+      <li class="Navigation__item">
+        {% set section = get_section(path="portfolio/_index.md") %} {{
+        self::nav_link(href=section.path, text="Portfolio",
+        reading_time=self::section_reading_time(section=section)) }}
+      </li>
+      <li class="Navigation__item">
+        {{ self::nav_link(href="/contact", text="Contact") }}
+      </li>
+
+    </ul>
+  </nav>
+</div>
+{% endmacro navigation %} 
+
+{% macro nav_link(href, text, reading_time=false)%} {%
+if current_path and current_path == href %}
+<span class="Navigation__link Navigation__link--active"
+  >{{text}} {% if reading_time %}{{reading_time | safe}}{% endif %}</span
+>
+{% else %}
+<a class="Navigation__link" href="{{href}}"
+  >{{text}} {% if reading_time %}{{reading_time | safe}}{% endif %}</a
+>
+{% endif %} 
+{% endmacro nav_link%} 
+
+
+{% macro section_reading_time(section) %}
+{% set assets_time = section.assets | length%}
+{% set reading_time = section.reading_time %} 
+{% for page in section.pages %} 
+{% set_global reading_time = reading_time + page.reading_time %} 
+{% set page_assets_time = page.assets | length %} 
+{% set_global assets_time = assets_time + page_assets_time %} 
+{% if
+reading_time + assets_time > 0 %} 
+{% if loop.last %} 
+{% set total_time =
+(reading_time + assets_time/20) | round(method="ceil") %}
+<small>{{ total_time }} minute{{ total_time | pluralize}} read</small>
+
+{% endif %} 
+{% endif %} 
+{% endfor %} 
+{% endmacro section_reading_time %} 
+{%
+macro period_format(periods) %} 
+{% for period in periods %} 
+{% if loop.index > 1
+%} - 
+{% endif %} {{ period }} 
+{% endfor %} 
+{% endmacro period_format%}

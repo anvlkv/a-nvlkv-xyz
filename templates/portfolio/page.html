@@ -1,0 +1,50 @@
+{% import "macros.html" as macros %}
+{% extends "layout.html" %} 
+
+
+{% block page_meta %}
+<title>{{page.title |default(value="untitled")}} by a.nvlkv</title>
+<meta name="description" content="{{ page.description }}" />
+{% endblock page_meta%} 
+
+{% block main %}
+<div class="Portfolio">
+  <article class="Portfolio__showcase">
+    {% for asset in page.assets %}
+    <figure class="Portfolio__figure">
+      {% set image = resize_image(path=asset, width=800, height=800, op='fit')%}
+      {% set meta = get_image_metadata(path=asset)%}
+      {% set original = resize_image(path=asset, width=meta.width, height=meta.height)%}
+      <a class="Potfolio__img-link" href="{{original.url}}" target="_blank">
+        <img src="{{ image.url }}" alt="{{ page.title }}" />
+      </a>
+      <figcaption>{{ page.title }}</figcaption>
+    </figure>
+    {% endfor %}
+    <div class="Portfolio__content">
+      {{ page.content | safe }}
+    </div>
+  </article>
+</div>
+{% endblock main %}
+
+{% block sidebar %}
+<div class="Portfolio__sidebar">
+  <nav class="Navigation Navigation--aside">
+    <ul class="Navigation__list">
+      <li class="Navigation__item Portfolio__nav-item">
+        {{macros::nav_link(href="/portfolio", text="← Back to all")}}
+      </li>
+      <li class="Navigation__item Portfolio__nav-item">
+        <hr/>
+      </li>
+      {% for term in page.taxonomies.category %}
+      {% set term = get_taxonomy_term(kind='category', term=term) %}
+      <li class="Navigation__item Portfolio__nav-item">
+        {{macros::nav_link(href="/portfolio#"~term.slug, text=term.name | title)}}
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+</div>
+{% endblock sidebar %}

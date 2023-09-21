@@ -1,0 +1,24 @@
+{% import "macros.html" as macros %}
+{% extends "layout.html" %} 
+
+{% block page_meta %}
+<title>{{ page.title }}</title>
+<meta name="description" content="{{ page.description }}" />
+{% endblock page_meta%}
+
+{% block main %}
+
+<div class="Page">
+  {% for asset in page.assets %} {% if asset is ending_with(page.relative_path |
+  replace(from=".md", to=".png")) %} {% set src = resize_image(path=asset,
+  width=512, height=512 ) %}
+  <figure>
+    <img src="{{ src.url }}" />
+  </figure>
+  {% endif %} {% endfor %}
+  <article>{{ page.content | safe }}</article>
+</div>
+
+{% endblock main %}
+
+

@@ -1,1 +1,26 @@
-zola!
+
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+
+{% block page_meta %}
+<title>{{ section.title }}</title>
+<meta name="description" content="{{ section.description }}" />
+{% endblock page_meta%}
+
+{% block content %}
+  <main class="Landing">
+    <h1 class="Landing__type">
+      <span>Hi! I'm</span>
+      <span>a Communication artist<sup>*</sup></span>
+      <small><sup>*</sup>self-proclaimed</small>
+    </h1>
+    <article class='Landing__content'>
+      {{macros::navigation(type="Navigation--large Landing__navigation")}}
+      {{section.content | safe}}
+    </article>
+    {{macros::navigation(type="Navigation--large Landing__navigation", logo=false)}}
+  </main>
+  <footer class="Layout__footer">
+    <a href="/license">(CC-BY-SA 4.0) a.nvlkv {{now() | date(format="%Y")}}</a>
+  </footer>
+{% endblock %}
