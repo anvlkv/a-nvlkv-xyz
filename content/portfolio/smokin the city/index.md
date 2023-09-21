@@ -1,5 +1,6 @@
 +++
 title="Smokin˚ the city"
+weight=6
 [taxonomies]
-category=["photography", "collage", "mixed media"]
+category=["photography", "art"]
 +++

@@ -1,5 +1,6 @@
 +++
 title="Gaian suicide"
+weight=6
 [taxonomies]
-category=["batik", "cyanotype", "mixed media", "painting"]
+category=["art"]
 +++

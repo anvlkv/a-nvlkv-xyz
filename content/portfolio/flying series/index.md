@@ -1,5 +1,6 @@
 +++
 title="flying series"
+weight=9
 [taxonomies]
-category=["fashion", "textiles"]
+category=["art", "fashion"]
 +++

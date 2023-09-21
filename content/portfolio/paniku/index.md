@@ -1,5 +1,6 @@
 +++
 title="パニック"
+weight=3
 [taxonomies]
-category=["photography", "fashion", "textiles", "laser cutting", "manual print"]
+category=["photography", "fashion", "art"]
 +++

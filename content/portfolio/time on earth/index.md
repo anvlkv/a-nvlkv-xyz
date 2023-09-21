@@ -1,5 +1,6 @@
 +++
 title="Time on Earth"
+weight=7
 [taxonomies]
-category=["photography", "long exposure"]
+category=["photography", "art"]
 +++

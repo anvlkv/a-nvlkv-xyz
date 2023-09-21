@@ -1,5 +1,6 @@
 +++
 title="Holy kangaroo"
+weight=9
 [taxonomies]
-category=["batik", "cyanotype", "mixed media", "painting"]
+category=["art"]
 +++

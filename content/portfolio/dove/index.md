@@ -1,5 +1,6 @@
 +++
 title="Dove"
+weight=5
 [taxonomies]
-category=["batik", "textiles", "painting", "screen print", "mixed media"]
+category=["art"]
 +++

@@ -1,5 +1,6 @@
 +++
 title="body of water"
+weight=10
 [taxonomies]
-category=["batik", "textiles", "painting"]
+category=["art"]
 +++

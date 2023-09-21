@@ -5,6 +5,7 @@ $class-name: "Navigation";
 .#{$class-name} {
   height: 100%;
   display: flex;
+  font-family: sans-serif;
 
   &__trigger,
   &__label {

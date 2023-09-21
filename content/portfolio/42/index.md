@@ -1,5 +1,6 @@
 +++
 title="42"
+weight=10
 [taxonomies]
-category=["photography"]
+category=["photography", "art"]
 +++

@@ -37,9 +37,6 @@ page_meta %}
       <div class="Portfolio__item" data-categories="{% for category in page.taxonomies.category %}
       {% set term = get_taxonomy_term(kind='category', term=category)%}
       {{term.slug}},
-      {% endfor %}{% for category in page.taxonomies.category %}
-      {% set term = get_taxonomy_term(kind='category', term=category)%}
-      {{term.slug}},
       {% endfor %}">
         {%set title = page.title | default(value='untitled')%}
         <a href="{{ page.path }}" class="Portfolio__link" title="{{title}}">
@@ -58,7 +55,7 @@ page_meta %}
     {%set categories=get_taxonomy(kind="category")%}
     <ul class="Navigation__list">
       <li class="Navigation__item Portfolio__nav-item">
-        {{macros::nav_link(href=section.path, text="All")}}
+        {{macros::nav_link(href=section.path~"#", text="All")}}
       </li>
       {% for category in categories.items %}
         <li class="Navigation__item Portfolio__nav-item">

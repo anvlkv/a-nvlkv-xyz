@@ -1,5 +1,6 @@
 +++
 title="Jumpsuit"
+weight=7
 [taxonomies]
-category=["fashion", "textiles"]
+category=["fashion", "art"]
 +++

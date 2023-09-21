@@ -1,5 +1,6 @@
 +++
 title="Horse head series"
+weight=7
 [taxonomies]
-category=["photography", "laser cutting", "mixed media"]
+category=["art", "photography"]
 +++

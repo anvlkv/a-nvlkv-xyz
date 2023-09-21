@@ -1,5 +1,6 @@
 +++
 title="TAKE IT EASY"
+weight=8
 [taxonomies]
-category=["batik", "textiles", "textile application", "mixed media","painting"]
+category=["art"]
 +++

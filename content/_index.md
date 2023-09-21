@@ -1,6 +1,6 @@
 +++
 title="a.nvlkv"
-description="Communication artist a.nvlkv, their projects and commissions, CV. This website is a meta medium experiment in generative story telling based on entered autobiography facts"
+description="Communication artist a.nvlkv, their portfolio and CV"
 +++
 
 As a communication artist I enjoy working across different media and technology to foster genuine conversations.
@@ -9,7 +9,15 @@ As a communication artist I enjoy working across different media and technology 
 >
 > _– Marshal McLuhan, 1964_
 
-This particular website is my small _meta medium_ experiment in generative storytelling using entered autobiography facts. It uses `diffusers` and `kandinsky-community/kandinsky-2-2` model to illustrate bio entries. 
+I aspire to promote peace and harmony in our world through my work, by cultivating authentic and meaningful conversations across diverse media.
 
-I trust everyone's story is best heard than envied, and therefore I share my [story](/bio) and [my code](https://gist.github.com/anvlkv/fe49c2f168d481b9abc19107cc603e58) openly. Hoping for us to live in the world where we have time for each other.
+Embracing my self-taught journey, I highly value the diverse backgrounds and unique experiences that other individuals bring to the table. 
+
+I'm proficient in UX and interactive design across multiple platforms, front-end and full-stack software development, along with a flair for textile art, and graphic design. 
+
+My approach is best described as evolutionary, artistic, hands-on engagement, systems thinking, and R&D. I prioritize functionality and robustness over appearance, firmly believing that the best aesthetic qualities emerge from transforming chaos into order.
+
+As humans, our greatest strength lies in our ability to learn, and I find immense joy in the ceaseless pursuit of knowledge:)
+
+My hobbies are yoga, hiking, languages, analog photography.
 

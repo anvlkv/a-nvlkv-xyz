@@ -1,5 +1,6 @@
 +++
 title="Таков путь"
+weight=6
 [taxonomies]
-category=["photography", "long exposure"]
+category=["photography", "art"]
 +++

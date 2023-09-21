@@ -19,6 +19,12 @@
     display: flex;
     flex-direction: column;
     text-decoration: none;
+    &:not(:hover, :active) {
+      filter: grayscale(100%);
+    }
+    span {
+      margin-top: .25em;
+    }
   }
   &__showcase{
     width: 100%;

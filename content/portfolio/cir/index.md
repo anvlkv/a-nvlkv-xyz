@@ -1,5 +1,6 @@
 +++
 title="CIR"
+weight=5
 [taxonomies]
-category=["photography"]
+category=["photography", "art"]
 +++

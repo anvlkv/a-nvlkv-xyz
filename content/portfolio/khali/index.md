@@ -1,5 +1,6 @@
 +++
 title="Khali"
+weight=8
 [taxonomies]
-category=["batik", "textiles", "mixed media", "painting"]
+category=["art"]
 +++

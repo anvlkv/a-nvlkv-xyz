@@ -1,5 +1,6 @@
 +++
 title="Kiss"
+weight=9
 [taxonomies]
-category=["batik", "textiles", "painting"]
+category=["art"]
 +++

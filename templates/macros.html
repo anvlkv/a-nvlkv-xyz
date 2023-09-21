@@ -14,14 +14,13 @@
   {% endif %} {% endfor %}
   <div class="Bio__content">{{ page.content | safe }}</div>
 </article>
-{% endmacro bio %} {% macro navigation(type="", extra="")%}
+{% endmacro bio %} {% macro navigation(type="", logo=true)%}
 <div class="Navigation {{type}}">
+  {% if logo %}
   <nav class="Navigation__logo">
     {{ self::nav_link(href="/", text="a.nvlkv") }}
   </nav>
-  <div class="Navigation__extra">
-    {{ extra | safe }}
-  </div>
+  {% endif %}
   <input type="checkbox" id="menu-toggle" class="Navigation__trigger" />
   <label for="menu-toggle" class="Navigation__label"></label>
   <nav
@@ -32,11 +31,7 @@
       <li class="Navigation__item">
         {{ self::nav_link(href="/", text="a.nvlkv") }}
       </li>
-      <li class="Navigation__item">
-        {% set section = get_section(path="bio/_index.md") %} {{
-        self::nav_link(href=section.path, text="Bio",
-        reading_time=self::section_reading_time(section=section)) }}
-      </li>
+
 
       <li class="Navigation__item">
         {% set section = get_section(path="cv/_index.md") %} {{
@@ -48,23 +43,16 @@
         self::nav_link(href=section.path, text="Portfolio",
         reading_time=self::section_reading_time(section=section)) }}
       </li>
-
       <li class="Navigation__item">
-        {% set page = get_page(path="acknowledgements.md") %}
-        {{ self::nav_link(href=page.path, text="Acknowledgements" ) }}
+        {{ self::nav_link(href="/contact", text="Contact") }}
       </li>
 
-      <li class="Navigation__item">{% set page = get_page(path="donations.md") %}
-        {{ self::nav_link(href=page.path, text="Donations") }}
-      </li>
-
-      <li class="Navigation__item">{% set page = get_page(path="commissions.md") %}
-        {{ self::nav_link(href=page.path, text="Commissions") }}
-      </li>
     </ul>
   </nav>
 </div>
-{% endmacro navigation %} {% macro nav_link(href, text, reading_time=false)%} {%
+{% endmacro navigation %} 
+
+{% macro nav_link(href, text, reading_time=false)%} {%
 if current_path and current_path == href %}
 <span class="Navigation__link Navigation__link--active"
   >{{text}} {% if reading_time %}{{reading_time | safe}}{% endif %}</span
@@ -73,7 +61,10 @@ if current_path and current_path == href %}
 <a class="Navigation__link" href="{{href}}"
   >{{text}} {% if reading_time %}{{reading_time | safe}}{% endif %}</a
 >
-{% endif %} {% endmacro nav_link%} 
+{% endif %} 
+{% endmacro nav_link%} 
+
+
 {% macro section_reading_time(section) %}
 {% set assets_time = section.assets | length%}
 {% set reading_time = section.reading_time %} 
