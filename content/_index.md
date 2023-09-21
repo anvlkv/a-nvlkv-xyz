@@ -9,7 +9,7 @@ As a communication artist I enjoy working across different media and technology 
 >
 > _– Marshal McLuhan, 1964_
 
-I aspire to promote peace and harmony in our world through my work, by cultivating authentic and meaningful conversations across diverse media.
+I aspire to promote peace and harmony in our world through my work.
 
 Embracing my self-taught journey, I highly value the diverse backgrounds and unique experiences that other individuals bring to the table. 
 
