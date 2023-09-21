@@ -3,27 +3,30 @@
 
 
 {% block page_meta %}
-<title>{{page.title |default(value="untitled")}} by a.nvlkv</title>
+<title>{{page.title | default(value="untitled")}} by a.nvlkv</title>
 <meta name="description" content="{{ page.description }}" />
 {% endblock page_meta%} 
 
 {% block main %}
 <div class="Portfolio">
   <article class="Portfolio__showcase">
-    {% for asset in page.assets %}
-    <figure class="Portfolio__figure">
-      {% set image = resize_image(path=asset, width=800, height=800, op='fit')%}
-      {% set meta = get_image_metadata(path=asset)%}
-      {% set original = resize_image(path=asset, width=meta.width, height=meta.height)%}
-      <a class="Potfolio__img-link" href="{{original.url}}" target="_blank">
-        <img src="{{ image.url }}" alt="{{ page.title }}" />
-      </a>
-      <figcaption>{{ page.title }}</figcaption>
-    </figure>
-    {% endfor %}
+    <h2>
+      {% if page.taxonomies.employer %}
+        {% set employer = get_taxonomy_term(kind="employer", term=page.taxonomies.employer[0]) %}
+        <a href="{{employer.path}}">{{page.title}} @ {{employer.name}}</a>
+      {% else %}
+        {{page.title | default(value="untitled") }}
+      {% endif %}
+    </h2>
+    {{macros::figure(asset=page.assets[0], title=page.title)}}
     <div class="Portfolio__content">
       {{ page.content | safe }}
     </div>
+    {% for asset in page.assets %}
+    {% if loop.index > 2 %}
+    {{macros::figure(asset=asset, title=page.title)}}
+    {% endif %}
+    {% endfor %}
   </article>
 </div>
 {% endblock main %}

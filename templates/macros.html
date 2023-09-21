@@ -91,3 +91,18 @@ macro period_format(periods) %}
 {% endif %} {{ period }} 
 {% endfor %} 
 {% endmacro period_format%}
+
+
+{% macro figure(asset, type="Portfolio", title=false) %}
+{% set image = resize_image(path=asset, width=800, height=800, op='fit')%}
+{% set meta = get_image_metadata(path=asset)%}
+{% set original = resize_image(path=asset, width=meta.width, height=meta.height)%}
+<a class="{{type}}__img-link" href="{{original.url}}" target="_blank">
+<figure class="{{type}}__figure">
+    <img src="{{ image.url }}" alt="{{ page.title }}" />
+    {% if title %}
+    <figcaption>{{ title }}</figcaption>
+    {% endif %}
+  </figure>
+</a>
+{% endmacro  %}
