@@ -23,7 +23,7 @@
       {{ page.content | safe }}
     </div>
     {% for asset in page.assets %}
-    {% if loop.index > 2 %}
+    {% if loop.index > 1 %}
     {{macros::figure(asset=asset, title=page.title)}}
     {% endif %}
     {% endfor %}
