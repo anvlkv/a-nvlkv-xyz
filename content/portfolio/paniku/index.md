@@ -4,3 +4,7 @@ weight=3
 [taxonomies]
 category=["photography", "fashion", "art"]
 +++
+
+Around the time that COVID-19 was picking up I felt quite apocalyptic and thought up this coat. Perhaps most appropriate for wearing in public transport.
+
+I made laser cut stencils and painted the fabric. We took these pictures much later.
