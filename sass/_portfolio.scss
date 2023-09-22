@@ -19,6 +19,8 @@
     display: flex;
     flex-direction: column;
     text-decoration: none;
+    outline: none;
+    padding-top: .2em;
     &:not(:hover, :active) {
       filter: grayscale(100%);
     }
@@ -52,5 +54,6 @@
   &__img-link {
     flex-basis: content;
     display: block;
+    outline: none;
   }
 }

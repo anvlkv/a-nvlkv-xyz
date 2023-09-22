@@ -5,3 +5,5 @@ weight=4
 category=["software", "mobile"]
 employer=["Mozgy"]
 +++
+
+This project aimed to deliver entertaining content (aka memes). I created multiple designs, including those made of plasticine which I photographed element by element in different states. For once Photoshop was handy :)
