@@ -4,6 +4,9 @@
 {% block page_meta %}
 <title>{{ page.title }}</title>
 <meta name="description" content="{{ page.description }}" />
+<meta property="og:title" content="{{ page.title }}" />
+<meta property="og:description" content="{{ page.description }}" />
+<meta property="og:image" content="{{config.base_url~'/hero.webp'}}" />
 {% endblock page_meta%}
 
 {% block main %}

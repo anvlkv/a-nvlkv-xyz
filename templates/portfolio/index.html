@@ -4,7 +4,9 @@
 
 <title>{{ section.title }}</title>
 <meta name="description" content="{{ section.description }}" />
-
+<meta property="og:title" content="{{ section.title }}" />
+<meta property="og:description" content="{{ section.description }}" />
+<meta property="og:image" content="{{config.base_url~'/hero.webp'}}" />
 {% endblock page_meta%} 
 
 

@@ -4,6 +4,8 @@
 {% block page_meta %}
 <title>{{ term.name }} projects by a.nvlkv</title>
 <meta name="description" content="{{ term.name }} projects by a.nvlkv" />
+<meta property="og:title" content="{{ term.name }} projects by a.nvlkv" />
+<meta property="og:image" content="{{config.base_url~'/hero.webp'}}" />
 {% endblock page_meta%}
 
 {% block main %}

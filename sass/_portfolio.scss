@@ -9,9 +9,13 @@
     justify-content: center;
     grid-template-columns: 1fr;
     @media (min-width: $screen-md) {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 280px));
+      grid-gap: .25em;
     }
-    grid-gap: 1em;
+    @media (min-width: $screen-lg) {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
+      grid-gap: 1em;
+    }
   }
   &__item {
     &--hidden {

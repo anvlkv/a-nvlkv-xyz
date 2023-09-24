@@ -5,6 +5,10 @@
 {% block page_meta %}
 <title>{{page.title | default(value="untitled")}} by a.nvlkv</title>
 <meta name="description" content="{{ page.description }}" />
+<meta property="og:title" content="{{ page.title }}" />
+<meta property="og:description" content="{{ page.description }}" />
+{% set image = resize_image(path=page.assets[0], width=640, height=480, op='fit', format="jpeg")%}
+<meta property="og:image" content="{{image.url}}" />
 {% endblock page_meta%} 
 
 {% block main %}
