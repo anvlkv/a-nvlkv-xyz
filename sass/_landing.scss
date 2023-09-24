@@ -3,7 +3,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 3.5em;
+  padding-top: 3rem;
+  &__hero {
+    background-image: url("hero.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: cover;
+    position: absolute;
+    width: 100vw;
+    height: calc(100vw * 0.641);
+    max-height: 543px;
+    z-index: -1;
+    top: 0;
+  }
   &__type{
     width: max-content;
     display: flex;
@@ -37,6 +49,9 @@
     @media(max-width: ($screen-sm - 1px)) {
       font-size: 140%;
     }
+    @media (prefers-color-scheme: dark) {
+      filter: invert(1);
+    }
   }
   &__navigation {
     flex-direction: column;
@@ -54,6 +69,7 @@
       @media(max-width: ($screen-sm - 1px)) {
         font-size: 250%;
       }
+      background-color: desaturate($visited, $amount: .25);
     }
   }
 
@@ -61,13 +77,19 @@
     display: flex;
     flex-direction: column;
     width: 100vw;
+    
     @media (min-width: $screen-md) {
       width: 70vw;
     }
     @media (min-width: $screen-lg) {
       width: 45.7vw;
     }
-    p {
+    article {
+      @media (max-width: $screen-md) {
+        padding-left: 1em;
+        padding-right: 1em;
+      }
+      padding-top: .75em;
       font-size: 1.55rem;
       line-height: 1.3;
     }

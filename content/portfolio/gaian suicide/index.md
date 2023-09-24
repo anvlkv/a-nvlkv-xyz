@@ -3,6 +3,7 @@ title="Gaian suicide"
 weight=6
 [taxonomies]
 category=["art"]
+period=["May 2019"]
 +++
 
 The story goes like this:

@@ -3,14 +3,7 @@
 .Layout{
   display: grid;
   grid-template-columns: 1fr;
-  @media (min-width: $screen-md) {
-    grid-template-columns: 1fr 4fr;
-    grid-template-rows: auto 1fr auto;
-    gap: 1em;
-  }
-  @media (min-width: $screen-lg) {
-    grid-template-columns: 1fr 5fr;
-  }
+  
   &__header {
     min-height: 2.25rem;
     grid-column: 1/ span all;
@@ -22,24 +15,25 @@
   }
   &__sidebar {
     grid-column: 1;
-    grid-row: 3;
-    @media (min-width: $screen-md) {
-      grid-row: 2;
-    }
+    grid-row: 2;
+    // @media (min-width: $screen-md) {
+    //   grid-row: 2;
+    // }
   }
   &__main{
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 3;
     min-height: calc(100vh  - 7rem);
-    @media (min-width: $screen-md) {
-      grid-column: 2;
-    }
+    // @media (min-width: $screen-md) {
+    //   grid-column: 2;
+    // }
   }
   &__footer{
-    grid-column: 1 / span all;
-    @media (min-width: $screen-md) {
-      grid-row: 3;
-    }
+    // grid-column: 1 / span all;
+    // @media (min-width: $screen-md) {
+    //   grid-row: 3;
+    // }
+    grid-row:4;
     display: flex;
     justify-content: flex-end;
     align-items: center;

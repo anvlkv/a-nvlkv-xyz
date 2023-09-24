@@ -9,15 +9,18 @@
 
 {% block content %}
   <main class="Landing">
+    <div class="Landing__hero"></div>
     <h1 class="Landing__type">
       <span>Hi! I'm</span>
       <span>a Communication artist<sup>*</sup></span>
       <small><sup>*</sup>self-proclaimed</small>
     </h1>
-    <article class='Landing__content'>
+    <div class='Landing__content'>
       {{macros::navigation(type="Navigation--large Landing__navigation")}}
-      {{section.content | safe}}
-    </article>
+      <article>
+        {{section.content | safe}}
+      </article>
+    </div>
     {{macros::navigation(type="Navigation--large Landing__navigation", logo=false)}}
   </main>
   <footer class="Layout__footer">

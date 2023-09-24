@@ -34,8 +34,8 @@
 
 
       <li class="Navigation__item">
-        {% set section = get_section(path="cv/_index.md") %} {{
-        self::nav_link(href=section.path, text="CV",
+        {% set section = get_section(path="resume/_index.md") %} {{
+        self::nav_link(href=section.path, text="Resume",
         reading_time=self::section_reading_time(section=section)) }}
       </li>
       <li class="Navigation__item">
@@ -99,9 +99,11 @@ macro period_format(periods) %}
 {% set original = resize_image(path=asset, width=meta.width, height=meta.height)%}
 <a class="{{type}}__img-link" href="{{original.url}}" target="_blank">
 <figure class="{{type}}__figure">
-    <img src="{{ image.url }}" alt="{{ page.title }}" />
-    {% if title %}
+    <img src="{{ image.url }}" alt="{{ page.title }}" width="{{image.width}}" height="{{image.height}}" />
+    {% if title is string %}
     <figcaption>{{ title }}</figcaption>
+    {% elif title %}
+    <figcaption>{{ asset | split(pat="/") | last | split(pat=".") | first | title }}</figcaption>
     {% endif %}
   </figure>
 </a>

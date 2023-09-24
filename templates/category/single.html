@@ -1,0 +1,47 @@
+{% import "macros.html" as macros %}
+{% extends "layout.html" %} 
+
+{% block page_meta %}
+<title>{{ term.name }} projects by a.nvlkv</title>
+<meta name="description" content="{{ term.name }} projects by a.nvlkv" />
+{% endblock page_meta%}
+
+{% block main %}
+
+<div class="Portfolio">
+  <div class="Portfolio__grid">
+    {% for page in term.pages %}
+        <div class="Portfolio__item">
+          {%set title = page.title | default(value='untitled')%}
+          <a href="{{ page.path }}" class="Portfolio__link" title="{{title}}">
+            {% set image = resize_image(path=page.assets[0], width=500, height=500, op='fill')%}
+            <img src="{{ image.url }}" alt="{{ title }}" />
+            <span>{{title}}</span>
+          </a>
+        </div>
+    {% endfor %}
+  </div>
+  
+</div>
+
+{% endblock main %}
+
+{% block sidebar %}
+<div class="Portfolio__sidebar">
+  <nav class="Navigation Navigation--aside">
+    {%set categories=get_taxonomy(kind="category")%}
+    <ul class="Navigation__list">
+      <li class="Navigation__item Portfolio__nav-item">
+        {{macros::nav_link(href="/portfolio", text="All")}}
+      </li>
+      {% for category in categories.items | reverse %}
+        <li class="Navigation__item Portfolio__nav-item">
+          {{macros::nav_link(href=category.path, text=category.name | title)}}
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+</div>
+{% endblock sidebar %}
+
+
