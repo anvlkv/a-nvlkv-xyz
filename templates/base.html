@@ -10,6 +10,9 @@
     <meta name="color-scheme" content="light dark" />
     {% block page_meta %} {% endblock %}
 
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{current_url | default(value=config.base_url)}}" />
+
     <link rel="stylesheet" href="/style.css" />
     <link
       rel="apple-touch-icon"

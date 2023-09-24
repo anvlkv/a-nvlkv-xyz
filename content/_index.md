@@ -1,6 +1,6 @@
 +++
 title="a.nvlkv"
-description="Communication artist a.nvlkv, their portfolio and CV"
+description="Communication artist a.nvlkv, their portfolio and resume"
 +++
 
 As a communication artist I enjoy working across different media and technology to foster genuine conversations.

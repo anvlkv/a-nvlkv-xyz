@@ -120,11 +120,6 @@ $class-name: "Navigation";
   &__item {
     flex-grow: 1;
     min-width: 3em;
-    @media (max-width: $screen-md) {
-      hr {
-        transform: rotate(90deg);
-      }
-    }
   }
 
   &__logo{
@@ -145,32 +140,32 @@ $class-name: "Navigation";
   }
 
   &--aside {
-    width: 100%;
-    max-height: calc(100vh - 1.5rem);
-    overflow-y: auto;
-    padding-top: 1.9em;
-    background-color: $white;
-    @media (prefers-color-scheme: dark) {
-      background-color: $black;
-    }
-    @media (min-width: $screen-md) {
-      position: fixed;
-      width: calc(100vw  / 5);
-    }
-    @media (min-width: $screen-lg) {
-      width: calc(100vw  / 6);
-    }
+    // width: 100%;
+    // max-height: calc(100vh - 1.5rem);
+    // overflow-y: auto;
+    // padding-top: 1.9em;
+    // background-color: $white;
+    // @media (prefers-color-scheme: dark) {
+    //   background-color: $black;
+    // }
+    // @media (min-width: $screen-md) {
+    //   position: fixed;
+    //   width: calc(100vw  / 5);
+    // }
+    // @media (min-width: $screen-lg) {
+    //   width: calc(100vw  / 6);
+    // }
     
     .#{$class-name}__list {
       width: 100%;
       flex-direction: row;
       flex-wrap: wrap;
       
-      @media (min-width: ($screen-md + 1px)) {
-        padding-bottom: 6em;
-        flex-direction: column;
-        flex-wrap: nowrap;
-      }
+      // @media (min-width: ($screen-md + 1px)) {
+      //   padding-bottom: 6em;
+      //   flex-direction: column;
+      //   flex-wrap: nowrap;
+      // }
     }
     
   }

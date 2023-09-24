@@ -4,6 +4,7 @@ weight=1
 [taxonomies]
 category=["software", "mobile"]
 employer=["DDG"]
+period=["Aug 2014", "Feb 2015"]
 +++
 
 Picket navigator is an app for pipeline engineers and servicemen. It allowed inspection of existing pipelines and projects in the field and at the office.

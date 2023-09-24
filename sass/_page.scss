@@ -1,20 +1,61 @@
 @import "./vars";
 
 .Page{
-  .Patreon {
-    background-color: $black;
-    font-family: sans-serif;
-    display: inline-flex;
-    align-items: center;
-    color: $white;
-    padding: 10px;
-    border-radius: 7px;
+  padding-top: 1em;
+  padding-bottom: 2em;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 1fr;
+  @media (min-width: $screen-md) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+  }
+  > * {
+    grid-column: 1 / span all;
+    padding: 0 1rem;
+  }
+}
+
+.NotFound{
+  padding: 3rem;
+  font-family: sans-serif;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1em;
+  @media (min-width: $screen-md) {
+    grid-template-columns: 1fr 3fr;
+  }
+
+  a {
+    padding: 0;
+    grid-column: 1;
+    display: block;
+    outline: none;
+    font-size: 7rem;
     text-align: center;
-    font-size: 88%;
-    font-weight: 700;
-    margin-bottom: 20px;
-    img {
-      margin-right: 3px;
+    line-height: 21rem;
+    font-weight: 900;
+    color: $visited;
+    &:active, &:hover {
+      text-decoration: none;
+      background: none;
+      color: $white;
     }
+  }
+
+  h1, p {
+    grid-column: 1;
+    @media (min-width: $screen-md) {
+      grid-column: 2;
+    }
+    margin: 0;
+  }
+
+  h1 {
+    font-size: 5rem;
+  }
+
+  p {
+    font-size: 2rem;
+    white-space: pre-line;
   }
 }

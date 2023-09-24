@@ -9,7 +9,7 @@ build_search_index = true
 
 taxonomies = [
     { name = "period", feed = false, render=false},
-    { name = "category", feed = false, render=false},
+    { name = "category", feed = false, render=true},
     { name = "employer", feed = false, render=true},
     { name = "location", feed = false, render=false},
 ]

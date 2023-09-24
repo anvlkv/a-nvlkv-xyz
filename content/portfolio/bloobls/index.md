@@ -4,6 +4,7 @@ weight=3
 [taxonomies]
 category=["software", "mobile"]
 employer=["Mozgy"]
+period=["Sep 2013", "Jun 2014"]
 +++
 
 Bloobls was intended as an educational game. Our team only made one level, which we presented at Winter Nights. Sadly we had to part with our founder.

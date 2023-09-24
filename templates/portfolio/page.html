@@ -5,6 +5,10 @@
 {% block page_meta %}
 <title>{{page.title | default(value="untitled")}} by a.nvlkv</title>
 <meta name="description" content="{{ page.description }}" />
+<meta property="og:title" content="{{ page.title }}" />
+<meta property="og:description" content="{{ page.description }}" />
+{% set image = resize_image(path=page.assets[0], width=640, height=480, op='fit', format="jpeg")%}
+<meta property="og:image" content="{{image.url}}" />
 {% endblock page_meta%} 
 
 {% block main %}
@@ -17,6 +21,9 @@
       {% else %}
         {{page.title | default(value="untitled") }}
       {% endif %}
+      {% if page.taxonomies.period %}
+      <small>{{page.taxonomies.period | join(sep="—")}}</small>
+      {% endif %}
     </h2>
     {{macros::figure(asset=page.assets[0], title=page.title)}}
     <div class="Portfolio__content">
@@ -24,7 +31,7 @@
     </div>
     {% for asset in page.assets %}
     {% if loop.index > 1 %}
-    {{macros::figure(asset=asset, title=page.title)}}
+    {{macros::figure(asset=asset, title=true)}}
     {% endif %}
     {% endfor %}
   </article>
@@ -38,13 +45,10 @@
       <li class="Navigation__item Portfolio__nav-item">
         {{macros::nav_link(href="/portfolio", text="← Back to all")}}
       </li>
-      <li class="Navigation__item Portfolio__nav-item">
-        <hr/>
-      </li>
       {% for term in page.taxonomies.category %}
       {% set term = get_taxonomy_term(kind='category', term=term) %}
       <li class="Navigation__item Portfolio__nav-item">
-        {{macros::nav_link(href="/portfolio#"~term.slug, text=term.name | title)}}
+        {{macros::nav_link(href=term.path, text=term.name | title)}}
       </li>
       {% endfor %}
     </ul>

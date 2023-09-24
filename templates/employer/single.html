@@ -4,34 +4,31 @@
 {% block page_meta %}
 <title>a.nvlkv @ {{ term.name }}</title>
 <meta name="description" content="Projects by a.nvlkv at {{ term.name }}" />
+<meta property="og:title" content="a.nvlkv @ {{ term.name }}" />
+<meta property="og:image" content="{{config.base_url~'/hero.webp'}}" />
 {% endblock page_meta%}
 
 {% block main %}
 
 <div class="Page">
   <h2>{{term.name}}</h2>
-  
   {% for page in term.pages %}
-    
-    {% if page.relative_path is starting_with("cv") %}
-      <div class="CV__enrty">
+    {% if page.relative_path is starting_with("resume") %}
+      <div class="Resume__enrty">
         <h5>{{page.taxonomies.period[0]}} - {{page.taxonomies.period[1]}}</h4>
         <h4>{{page.title}} @ {{page.taxonomies.employer[0]}}, <small>{{page.taxonomies.location[0]}}</small></h3>
           <article>{{page.content | safe}}</article>
       </div>
     {% endif %}
-
-    {% if page.relative_path is starting_with("portfolio")%}
-      <div class="Portfolio__item">
-        {%set title = page.title | default(value='untitled')%}
-        <a href="{{ page.path }}" class="Portfolio__link" title="{{title}}">
-          {% set image = resize_image(path=page.assets[0], width=500, height=500, op='fill')%}
-          <img src="{{ image.url }}" alt="{{ title }}" />
-          <span>{{title}}</span>
-        </a>
-      </div>
-    {% endif %}
   {% endfor %}
+
+  <div class="Portfolio__grid">
+  {% for page in term.pages %}
+  {% if page.relative_path is starting_with("portfolio") %}
+    {{ macros::portfolio_grid_item(asset=page.assets[0], title=page.title, href=page.path) }}
+  {% endif %}
+  {% endfor %}
+</div>
   
 </div>
 

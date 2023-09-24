@@ -4,6 +4,7 @@ weight=0
 [taxonomies]
 category=["software", "web"]
 employer=["PRé sustainability"]
+period=["Oct 2016", "Sep 2023"]
 +++
 
 SimaPro is a leading solution for <abbr>LCA</abbr> (Life Cycle Assessment) and I was honored to work on SimaPro web platform. 
