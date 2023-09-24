@@ -97,7 +97,7 @@ macro period_format(periods) %}
 <div class="Portfolio__item">
   {%set title = title | default(value='untitled')%}
   <a href="{{ href }}" class="Portfolio__link" title="{{title}}">
-    {% set image = resize_image(path=asset, width=500, height=500, op='fill', format="webp") %}
+    {% set image = resize_image(path=asset, width=500, height=500, op='fill', format="webp", quality=70) %}
     <img src="{{ image.url }}" alt="{{ title }}" />
     <span>{{title}}</span>
   </a>
