@@ -13,17 +13,9 @@
 <div class="Portfolio">
   <div class="Portfolio__grid">
     {% for page in term.pages %}
-        <div class="Portfolio__item">
-          {%set title = page.title | default(value='untitled')%}
-          <a href="{{ page.path }}" class="Portfolio__link" title="{{title}}">
-            {% set image = resize_image(path=page.assets[0], width=500, height=500, op='fill')%}
-            <img src="{{ image.url }}" alt="{{ title }}" />
-            <span>{{title}}</span>
-          </a>
-        </div>
+    {{ macros::portfolio_grid_item(asset=page.assets[0], title=page.title, href=page.path) }}
     {% endfor %}
   </div>
-  
 </div>
 
 {% endblock main %}
