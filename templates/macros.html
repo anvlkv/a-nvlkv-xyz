@@ -1,20 +1,4 @@
-{% macro bio(page, section) %}
-<article class="Bio__entry">
-  {% if page.taxonomies %}
-  <a class="Bio__period" href="{{page.path}}">
-    {{self::period_format(periods=page.taxonomies.period)}}
-  </a>
-  {% endif %} {% for asset in section.assets %} {% if asset is
-  ending_with(page.relative_path | replace(from=".md", to=".png")) %} {% set src
-  = resize_image(path=asset, width=512, height=512 ) %}
-  <figure class="Bio__figure">
-    <img src="{{ src.url }}" />
-    <figcaption>Image is generated from the biographic entry</figcaption>
-  </figure>
-  {% endif %} {% endfor %}
-  <div class="Bio__content">{{ page.content | safe }}</div>
-</article>
-{% endmacro bio %} {% macro navigation(type="", logo=true)%}
+{% macro navigation(type="", logo=true)%}
 <div class="Navigation {{type}}">
   {% if logo %}
   <nav class="Navigation__logo">
@@ -94,7 +78,7 @@ macro period_format(periods) %}
 
 
 {% macro figure(asset, type="Portfolio", title=false) %}
-{% set image = resize_image(path=asset, width=800, height=800, op='fit')%}
+{% set image = resize_image(path=asset, width=800, height=800, op='fit', format="webp")%}
 {% set meta = get_image_metadata(path=asset)%}
 {% set original = resize_image(path=asset, width=meta.width, height=meta.height)%}
 <a class="{{type}}__img-link" href="{{original.url}}" target="_blank">
