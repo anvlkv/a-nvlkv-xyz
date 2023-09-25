@@ -2,12 +2,12 @@
 @import "./page";
 
 .Portfolio {
-  @extend .Page;
-
+  padding-top: 1rem;
   &__grid{
     display: grid;
     justify-content: center;
     grid-template-columns: 1fr;
+    grid-column: 1 / span all;
     @media (min-width: $screen-md) {
       grid-template-columns: repeat(auto-fit, minmax(150px, 280px));
       grid-gap: .25em;

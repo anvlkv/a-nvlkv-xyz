@@ -12,6 +12,12 @@
   > * {
     grid-column: 1 / span all;
     padding: 0 1rem;
+    @media (min-width: $screen-md) {
+      padding: 0 2.5rem;
+    }
+    @media (min-width: $screen-lg) {
+      padding: 0 4.5rem;
+    }
   }
 }
 
