@@ -13,9 +13,6 @@
     padding-top: 3rem;
     font-size: 1rem;
   }
-  @media (prefers-color-scheme: dark) {
-    filter: invert(1);
-  }
   &__hero {
     background-image: url("hero.webp");
     background-color: $white;
@@ -28,6 +25,9 @@
     max-height: 543px;
     z-index: -1;
     top: 0;
+    @media (prefers-color-scheme: dark) {
+      filter: invert(1);
+    }
   }
   &__type{
     width: max-content;
