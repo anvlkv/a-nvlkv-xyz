@@ -3,7 +3,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 3rem;
+  font-size: 0.5rem;
+  padding-top: 1rem;
+  @media(min-width: $screen-sm) {
+    font-size: 0.75rem;
+    padding-top: 1.75rem;
+  }
+  @media(min-width: $screen-md) {
+    padding-top: 3rem;
+    font-size: 1rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    filter: invert(1);
+  }
   &__hero {
     background-image: url("hero.webp");
     background-color: $white;
@@ -47,12 +59,6 @@
       text-align: right;
       padding-right: .75em;
     }
-    @media(max-width: ($screen-sm - 1px)) {
-      font-size: 140%;
-    }
-    @media (prefers-color-scheme: dark) {
-      filter: invert(1);
-    }
   }
   &__navigation {
     flex-direction: column;
@@ -73,7 +79,6 @@
       background-color: desaturate($visited, $amount: .25);
     }
   }
-
   &__content{
     display: flex;
     flex-direction: column;
