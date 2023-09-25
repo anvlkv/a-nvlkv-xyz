@@ -25,11 +25,11 @@
     max-height: 543px;
     z-index: -1;
     top: 0;
-    @media (prefers-color-scheme: dark) {
-      filter: invert(1);
-    }
   }
   &__type{
+    @media (prefers-color-scheme: dark) {
+      color: $black;
+    }
     width: max-content;
     display: flex;
     flex-direction: column;
