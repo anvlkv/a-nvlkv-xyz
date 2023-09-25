@@ -41,8 +41,8 @@ body {
     transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
     text-decoration: none;
     color: $link;
-    outline: .1px dashed $black;
     overflow: visible;
+    border: .1px dashed rgba($black, .5);
     &:visited {
       color: $visited;
     }
@@ -50,10 +50,12 @@ body {
       background-color: $visited;
       text-decoration: underline;
       color: $white;
+      outline: .1px dashed $black;
     }
     @media (prefers-color-scheme: dark) {
       color: $white;
-      outline: .1px dashed $white;
+      border-color: rgba($white, .5);
+      outline-color: $white;
       &:hover {
         background-color: $link;
       }
