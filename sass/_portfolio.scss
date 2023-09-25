@@ -38,6 +38,10 @@
   }
 
   &__link {
+    img {
+      max-width: 100%;
+      height: auto;
+    }
     &:not(:hover, :active) {
       filter: grayscale(100%);
     }
