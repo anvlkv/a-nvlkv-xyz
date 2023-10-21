@@ -1,8 +1,10 @@
 +++
 title="Resume a.nvlkv"
 description="Resume of a.nvlkv communication artist, software engineer, UX designer, textile artist"
-template="resume.html"
 sort_by="date"
+[extra]
+[extra.poly]
+use_taxonomies=["employer"]
 +++
 
 ### Skills
