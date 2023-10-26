@@ -1,6 +1,6 @@
 +++
 title="Contact"
-description="Let's Connect and Create Together! I'm just an email away. Reach out with your inquiries, project ideas, or collaboration opportunities."
+description="Let's Connect and Create Together! I'm just one message away. Reach out with your inquiries, project ideas, or collaboration opportunities."
 +++
 
 # Get in touch
