@@ -2,7 +2,7 @@
 title="Bloobls"
 weight=3
 [taxonomies]
-expertise=["Project management", "UX design"]
+expertise=["UX design", "Project management"]
 period=["Sep 2013", "Jun 2014"]
 [extra]
 employer=["Mozgy"]

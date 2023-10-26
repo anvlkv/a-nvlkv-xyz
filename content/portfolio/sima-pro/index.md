@@ -2,7 +2,7 @@
 title="SimaPro"
 weight=0
 [taxonomies]
-expertise=["Web development", "UX design"]
+expertise=["UX design", "Web development"]
 period=["Oct 2016", "Sep 2023"]
 [extra]
 employer=["PRé sustainability"]

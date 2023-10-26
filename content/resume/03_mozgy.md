@@ -3,7 +3,7 @@ title="UI/UX designer, Project manager"
 date="2014-06-01"
 [taxonomies]
 period=["Mar 2013", "Jun 2014"]
-expertise=["UX design", "Project management", "Mobile design"]
+expertise=["Project management", "UX design", "Mobile design"]
 [extra]
 employer=["Mozgy"]
 location=["Saint-Petersburg, Russia"]

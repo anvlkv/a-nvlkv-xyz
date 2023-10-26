@@ -2,7 +2,7 @@
 title="DDG"
 weight=1
 [taxonomies]
-expertise=["Web development", "UX design"]
+expertise=["UX design", "Web development"]
 period=["Oct 2014"]
 [extra]
 employer=["DDG"]
