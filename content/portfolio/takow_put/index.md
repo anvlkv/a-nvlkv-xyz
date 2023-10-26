@@ -5,5 +5,5 @@ weight=6
 expertise=["Art"]
 period=["Sep 2021"]
 [extra.poly]
-hero="the way.jpeg"
+hero="the_way.jpeg"
 +++

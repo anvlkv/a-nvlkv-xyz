@@ -5,7 +5,7 @@ weight=6
 expertise=["Art"]
 period=["May 2019"]
 [extra.poly]
-hero="gaian suicide II,III.jpeg"
+hero="gaian_suicide_II_III.jpeg"
 +++
 
 The story goes like this:

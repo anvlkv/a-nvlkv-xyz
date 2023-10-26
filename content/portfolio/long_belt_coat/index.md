@@ -5,5 +5,5 @@ weight=6
 expertise=["Fashion"]
 period=["Jan 2010"]
 [extra.poly]
-hero="long belt coat.jpeg"
+hero="long_belt_coat.jpeg"
 +++

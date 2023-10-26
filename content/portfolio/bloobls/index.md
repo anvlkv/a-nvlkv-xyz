@@ -7,7 +7,7 @@ period=["Sep 2013", "Jun 2014"]
 [extra]
 employer=["Mozgy"]
 [extra.poly]
-hero="levels map.jpg"
+hero="levels_map.jpg"
 +++
 
 Bloobls was intended as an educational game. Our team only made one level, which we presented at Winter Nights. Sadly we had to part with our founder.

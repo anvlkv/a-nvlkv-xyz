@@ -5,5 +5,5 @@ weight=4
 expertise=["Art"]
 period=["Jan 2021"]
 [extra.poly]
-hero="mama, life had just begun.jpeg"
+hero="mama__life_had_just_begun.jpeg"
 +++
