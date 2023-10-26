@@ -1,6 +1,9 @@
 # The URL the site will be built for
 base_url = "https://a.nvlkv.xyz"
 
+title = "Aleksandr Novolokov"
+description= "User experience engineer, full stack developer, artist."
+
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
 
@@ -8,10 +11,9 @@ compile_sass = true
 build_search_index = true
 
 taxonomies = [
-    { name = "period", feed = false, render = false },
-    { name = "category", feed = false, render = true },
-    { name = "employer", feed = false, render = true },
-    { name = "location", feed = false, render = false },
+    { name = "period", feed = false, render = true },
+    { name = "expertise", feed = false, render = true },
+    { name = "stack", feed = false, render = true },
 ]
 
 theme = "polymathic"
@@ -25,7 +27,14 @@ highlight_code = true
 [extra]
 [extra.poly]
 menu_order = [
-  "resume/_index.md",
   "portfolio/_index.md",
+  "resume/_index.md",
   "contact.md"
 ]
+social_outlink=[
+  {href="https://www.linkedin.com/in/anvlkv", title="LinkedIn"},
+  {href="https://github.com/anvlkv", title="GitHub"},
+  {href="https://exercism.org/profiles/anvlkv", title="Exercism"},
+  {href="https://stackoverflow.com/users/1774187/anvlkv", title="StackOverflow"},
+]
+license="license.md"

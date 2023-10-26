@@ -2,5 +2,7 @@
 title="Mirror selfie"
 weight=9
 [taxonomies]
-category=["photography", "art"]
+expertise=["Art"]
+[extra.poly]
+hero="mirror selfie-1.jpeg"
 +++

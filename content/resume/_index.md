@@ -1,65 +1,25 @@
 +++
-title="Resume a.nvlkv"
-description="Resume of a.nvlkv communication artist, software engineer, UX designer, textile artist"
+title="Resume"
+description="Step into my professional world, a journey that has traversed multiple disciplines, culminating in a well-rounded skill set in user experience design and development"
 sort_by="date"
-[extra]
 [extra.poly]
-use_taxonomies=["employer"]
+use_taxonomies=["expertise","stack"]
+page_thumbnails="contents"
 +++
 
-### Skills
 
-<article>
+#### Designer, user experience engineer, full-stack developer
 
-**Research**: Concept testing, Data and artefact analysis, Qualitative UX research, Shadow sessions, User interviews, User research, User testing, Web analytics.
+In my professional journey, I've embraced a variety of roles and perspectives. Even when focused on one discipline, I maintain a curiosity about how others experience my work. My best tool in work and study is empathy, allowing me to find meaningful and deliverable solutions, and learn from my teachers as if in person.
 
-**Approach**: Human-centered design, Systems thinking, Personas, Rapid prototyping, Service design, Design thinking, Progressive enhancement, Mobile first, Responsive web design.
+I also empathize deeply with the materials, mediums, and individuals I work with. My empathy is forensic, leading me to explore source code, research W3C discussions and drafts, or study activity logs to gain a comprehensive understanding.
 
-**Design**: Adobe Creative Cloud (CC), Condens, Customer journey mapping, Design systems, Figma, Interactive prototypes, iOS and Android app design, Micro interaction design, Sketch.
-Front-end Development: Angular, HTML, React, RxJS, Redux Toolkit (RTK), Sass, Storybook, TypeScript, Vite, Webpack, web a11y.
+My approach is holistic. Through desk study, interviews, and experimentation, I learn the problem area, stakeholders, users, customers, competition, and other forces. Basing my design and implementation decisions on both technical and domain-specific knowledge.
 
-**Data Visualization**: D3.js, Go.js, Observablehq.
+##### Natural languages
 
-**Full stack Development**: Arango DB, Azure, MongoDB, Redis, REST API, Rust, SQL, .Net 
+- Dutch - Intermediate
+- English - Fluent, advanced
+- Japanese - Beginner
+- Russian - Native
 
-**Project Management and Collaboration**: Azure DevOps, Git, GV design sprints, IDEO design kit, Scrum.
-
-</article>
-
-### Education
-
-<article>
-
-**Systems thinking in public health** — John Hopkins University, Coursera, Sep 2023
-
-**Effective LCA with SimaPro Desktop** — Netherlands, PRé Sustainability, Jan 2017
-
-**Quantitative Methods** — University of Amsterdam, Coursera, Jun 2016
-
-**Input and Interaction** — UC San Diego, Coursera, May 2016
-
-**Web Application Development with JavaScript and MongoDB** — University of London, Coursera, May 2016
-
-**Design Kit: The Course for Human-Centered Design** — IDEO, +Acumen, NovoEdNovoEd, Feb 2016
-
-**Introduction to Meteor.js Development** — University of London, Coursera, Feb 2016
-
-**Social Computing** — UC San Diego, Coursera, Jan 2016
-
-**Responsive Web Design** — University of London, Coursera, Dec 2015
-
-**Design Principles: an Introduction** — UC San Diego, Coursera, Oct 2015
-
-**Responsive Website Basics: Code with HTML, CSS, and JavaScript** — University of London, Coursera, Oct 2015
-
-**Human-Centered Design: an Introduction** — UC San Diego, Coursera, Sep 2015
-
-**Introduction to Communication Science** — University of Amsterdam, Coursera, Sep 2015
-
-**Introduction to Data Science** — University of Washington, Coursera, Sep 2014
-
-**Human-Computer Interaction** — UC San Diego, Coursera, Dec 2013
-
-**Associates in fashion design** — High school of fashion and applicable arts (technical college), Saint Petersburg, Russia, 2007-2010
-
-</article>

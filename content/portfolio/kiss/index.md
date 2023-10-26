@@ -2,5 +2,7 @@
 title="Kiss"
 weight=9
 [taxonomies]
-category=["art"]
+expertise=["Art"]
+[extra.poly]
+hero="kiss.jpeg"
 +++

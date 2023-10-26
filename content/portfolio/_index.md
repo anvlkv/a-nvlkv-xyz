@@ -1,8 +1,8 @@
 +++
-title="Portfolio. a.nvlkv"
-description="Portfolio of communication artist, software engineer, UX designer, textile artist a.nvlkv"
-render=true
+title="Portfolio"
+description="Take a peek at a variety of my projects from a wide range of fields, each with its unique design journey."
 sort_by="weight"
-[extra]
-use_taxonomies=["category","employer"]
+paginate_by=9
+[extra.poly]
+use_taxonomies=["expertise","stack"]
 +++

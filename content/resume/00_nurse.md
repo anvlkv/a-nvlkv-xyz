@@ -3,6 +3,7 @@ title="Junior Nurse"
 date="2006-07-01"
 [taxonomies]
 period=["Jun 2006", "Jul 2006"]
+[extra]
 employer=["Emergency hospital #1"]
 location=["Kurgan, Russia"]
 +++

@@ -2,6 +2,8 @@
 title="body of water"
 weight=10
 [taxonomies]
-category=["art"]
+expertise=["Art"]
 period=["Jun 2023"]
+[extra.poly]
+hero="body of water.jpeg"
 +++

@@ -1,5 +1,7 @@
 +++
 weight=9
 [taxonomies]
-category=["photography"]
+expertise=["Art"]
+[extra.poly]
+hero="untitled-9.jpeg"
 +++

@@ -1,7 +1,9 @@
 +++
-title="Таков путь"
+title="such is the way"
 weight=6
 [taxonomies]
-category=["photography", "art"]
+expertise=["Art"]
 period=["Sep 2021"]
+[extra.poly]
+hero="the way.jpeg"
 +++

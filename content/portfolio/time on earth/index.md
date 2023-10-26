@@ -2,8 +2,10 @@
 title="Time on Earth"
 weight=7
 [taxonomies]
-category=["photography", "art"]
+expertise=["Art"]
 period=["Aug 2020"]
+[extra.poly]
+hero="time on earth.jpeg"
 +++
 
 This image is a result of approximately 2 hours long exposure done at night. Most of the light here is coming from the Moon.

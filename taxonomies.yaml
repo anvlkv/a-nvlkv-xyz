@@ -1,0 +1,16 @@
+expertise:
+  title: Areas of expertise
+  description:  My skills and experiences in various fields, summarized.
+  terms:
+    - UX design
+    - Web development
+    - Project management
+    - Mobile design
+    - title: Art
+      description: I'm also an aspiring artist
+    - title: Fashion
+      description: My educational background, it inspires my study of mediums and materials.
+
+stack:
+  title: Technology stack
+  description: Reflecting my hands-on experience with a current set of tech tools and platforms.

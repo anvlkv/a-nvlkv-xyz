@@ -2,8 +2,10 @@
 title="Gaian suicide"
 weight=6
 [taxonomies]
-category=["art"]
+expertise=["Art"]
 period=["May 2019"]
+[extra.poly]
+hero="gaian suicide II,III.jpeg"
 +++
 
 The story goes like this:
