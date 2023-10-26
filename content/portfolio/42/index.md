@@ -9,3 +9,5 @@ hero="42.jpeg"
 +++
 
 This depicts two things I admire the number 42 and the tactile paving.
+
+{{assetGallery()}}

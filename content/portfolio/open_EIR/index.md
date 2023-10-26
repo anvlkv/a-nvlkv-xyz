@@ -9,3 +9,5 @@ hero="openeir-1.jpeg"
 +++
 
 Feeling curious about Kodak Aerochrome - the color infra red film used for aerial photography, I bid on couple rolls and shared them with my friends. These are the photos we've made.
+
+{{assetGallery()}}

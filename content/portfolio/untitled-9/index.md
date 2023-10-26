@@ -5,3 +5,5 @@ expertise=["Art"]
 [extra.poly]
 hero="untitled-9.jpeg"
 +++
+
+{{assetGallery()}}

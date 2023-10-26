@@ -7,3 +7,7 @@ period=["Sep 2021"]
 [extra.poly]
 hero="the_way.jpeg"
 +++
+
+
+
+{{assetGallery()}}

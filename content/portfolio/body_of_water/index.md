@@ -7,3 +7,5 @@ period=["Jun 2023"]
 [extra.poly]
 hero="body_of_water.jpeg"
 +++
+
+{{assetGallery()}}

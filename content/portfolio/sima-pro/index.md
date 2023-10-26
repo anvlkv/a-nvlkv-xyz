@@ -33,6 +33,8 @@ Due to personal circumstances I concluded to leave the Netherlands and we starte
 During my last days I worked on documenting design system of our custom components. The design system implementation followed atomic design and gradual release principles. Enabling more developers to jump-start building new features in SimaPro, staying aligned with our desired look and feel.
 
 
+{{assetGallery()}}
+
 
 
 

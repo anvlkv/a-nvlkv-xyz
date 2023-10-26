@@ -17,3 +17,5 @@ Building the picket navigator we collaborated closely with developers and our cl
 I created interactive prototypes and tested them with our customer. We later prepared the app for a field test.
 
 Finalizing my work on picket navigator I designed an integration with external equipment allowing more precision in the field work.
+
+{{assetGallery()}}

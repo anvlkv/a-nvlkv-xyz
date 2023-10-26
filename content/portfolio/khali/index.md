@@ -7,3 +7,5 @@ period=["Aug 2021"]
 [extra.poly]
 hero="khali.jpeg"
 +++
+
+{{assetGallery()}}

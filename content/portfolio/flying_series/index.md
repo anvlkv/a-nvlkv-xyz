@@ -9,3 +9,5 @@ hero="collection.jpeg"
 +++
 
 Together with my friend Kamil Rezakov who made shoes we created this collection.
+
+{{assetGallery()}}

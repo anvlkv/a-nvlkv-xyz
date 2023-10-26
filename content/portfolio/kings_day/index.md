@@ -9,3 +9,5 @@ hero="kinds_day_-_1.jpeg"
 +++
 
 I took these pictures during my first days in the Netherlands, to me these are of ethnographic nature.
+
+{{assetGallery()}}
