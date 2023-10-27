@@ -21,7 +21,7 @@ My process involves data modeling, prototyping, proof of concept, testing workfl
 
 {% heroCard(href="/expertise/ux-design") %}
 
-  ### UX design 
+  ##### UX design 
 
   Extensive experience in various team and project setups, prioritizing user advocacy and growth through tactical and strategic design.
 
@@ -29,7 +29,7 @@ My process involves data modeling, prototyping, proof of concept, testing workfl
 
 {% heroCard(href="/expertise/mobile-design") %}
 
-  ### Mobile design
+  ##### Mobile design
 
   While my primary tech focus is web, I have valuable experience with native mobile development, ensuring versatile solutions.
 
@@ -39,7 +39,7 @@ Extensive development experience, which grew out of the desire for fine control 
 
 {% heroCard(href="/expertise/web-development") %}
 
-  ### Web development
+  ##### Web development
 
   Full-stack web development, design system implementation, detailed handover, experimentation
 
@@ -47,7 +47,7 @@ Extensive development experience, which grew out of the desire for fine control 
 
 {% heroCard(href="/expertise/project-management") %}
 
-  ### Project management
+  ##### Project management
 
   Sharp focus on delivery and efficiency
 
@@ -59,7 +59,7 @@ Driven by curiosity yet rooted in past experience, I continually seek new horizo
 
 {% heroCard(href="/expertise/art") %}
 
-  ### Art projects
+  ##### Art projects
 
   Exploration of media and techniques
 
@@ -70,7 +70,7 @@ Driven by curiosity yet rooted in past experience, I continually seek new horizo
 
 {% heroCard(href="/portfolio/polymathic") %}
 
-  ### polymathic
+  ##### polymathic
 
   Crafting a Zola theme for effective presentation, with information architecture and accessibility in mind
 
@@ -78,7 +78,7 @@ Driven by curiosity yet rooted in past experience, I continually seek new horizo
 
 {% heroCard(href="/portfolio/sima-pro") %}
 
-  ### SimaPro @ PRé sustainability
+  ##### SimaPro @ PRé sustainability
 
   Design and development of web platform for environmental impact assessment
 
@@ -86,7 +86,7 @@ Driven by curiosity yet rooted in past experience, I continually seek new horizo
 
 {% heroCard(href="/portfolio/twopack-gallery") %}
 
-  ### twopack.gallery
+  ##### twopack.gallery
 
   Ongoing research of artistic world
 
