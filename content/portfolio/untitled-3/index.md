@@ -1,5 +1,9 @@
 +++
 weight=6
 [taxonomies]
-category=["photography"]
+expertise=["Art"]
+[extra.poly]
+hero="untitled-3.jpeg"
 +++
+
+{{assetGallery()}}

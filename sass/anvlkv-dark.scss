@@ -1,0 +1,7 @@
+@use './config';
+@use '../themes/polymathic/sass/polymathic.scss' as theme with (
+    // theme config
+    $poly-config: config.$poly-config-dark,
+);
+
+@import "./animation";

@@ -3,6 +3,8 @@ title="Medior developer"
 date="2023-09-01"
 [taxonomies]
 period=["Oct 2016", "Sep 2023"]
+expertise=["Web development", "UX design"]
+[extra]
 employer=["PRé sustainability"]
 location=["Amersfoort, Netherlands"]
 +++

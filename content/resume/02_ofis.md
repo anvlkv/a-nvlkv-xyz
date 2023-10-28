@@ -3,6 +3,8 @@ title="Web designer"
 date="2013-03-01"
 [taxonomies]
 period=["Apr 2012", "Mar 2013"]
+expertise=["Web development", "UX design"]
+[extra]
 employer=["O.F.I.S."]
 location=["Saint-Petersburg, Russia"]
 +++

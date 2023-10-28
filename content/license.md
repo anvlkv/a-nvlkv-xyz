@@ -1,5 +1,5 @@
 +++
-title="CC-BY-SA 4.0 a.nvlkv"
+title="CC-BY-SA 4.0 Aleksandr Novolokov (a.nvlkv)"
 description="Design and implementation of this website are licensed under Creative Commons, requires attribution share alike license 4.0"
 +++
 

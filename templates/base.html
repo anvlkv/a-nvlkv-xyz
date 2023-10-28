@@ -1,44 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="MobileOptimized" content="320" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="referrer" content="no-referrer" />
-    <meta name="color-scheme" content="light dark" />
-    {% block page_meta %} {% endblock %}
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="{{current_url | default(value=config.base_url)}}" />
-
-    <link rel="stylesheet" href="/style.css" />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/favicon/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/favicon/favicon-16x16.png"
-    />
-    <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
-    <link rel="manifest" href="/favicon/site.webmanifest" />
-    <meta name="application-name" content="a.nvlkv" />
-    <meta name="msapplication-TileColor" content="#E2DFD6" />
-  </head>
-
-  <body>
-    {% block content %} {% endblock %}
-  </body>
-  {% block scripts %} {% endblock %}
-</html>
+{% extends "polymathic/templates/base.html" %}
+{% block page_style %}
+    <link rel="stylesheet" media="screen and (prefers-color-scheme: light)" href="{{ get_url(path='anvlkv.css') | safe }}" />
+    <link rel="stylesheet" media="screen and (prefers-color-scheme: dark)" href="{{ get_url(path='anvlkv-dark.css') | safe }}" />
+{% endblock %}
