@@ -12,8 +12,7 @@ content="My invitation to connect is very open-ended. Please let me know anythin
 But first, let's connect via a form or through one of these links: <a href="https://www.linkedin.com/in/anvlkv" target="_blank">LinkedIn</a>, <a href="https://github.com/anvlkv" target="_blank">GitHub</a>, <a href="https://stackoverflow.com/users/1774187/anvlkv" target="_blank">Stack Overflow</a>,<a href="https://exercism.org/profiles/anvlkv" target="_blank">exercism</a>.
 
 
-<form ata-netlify="true" method="POST" name="contact"
-  action="/contact-success/">
+<form data-netlify="true" method="POST" name="contact" action="/contact-success/">
   
   {{ field(name="name", required=true, label="Name", autocomplete="given-name" ) }}
 
