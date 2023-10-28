@@ -2,7 +2,7 @@
 base_url = "https://a.nvlkv.xyz"
 
 title = "Aleksandr Novolokov"
-description= "User experience engineer, full stack developer, artist."
+description = "Designer, user experience engineer, full stack developer, artist"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
@@ -20,9 +20,9 @@ external_links_target_blank = true
 smart_punctuation = true
 
 taxonomies = [
-    { name = "period", feed = false, render = true },
-    { name = "expertise", feed = false, render = true },
-    { name = "stack", feed = false, render = true },
+  { name = "period", feed = false, render = true },
+  { name = "expertise", feed = false, render = true },
+  { name = "stack", feed = false, render = true },
 ]
 
 theme = "polymathic"
@@ -35,15 +35,36 @@ highlight_code = true
 # Put all your custom variables here
 [extra]
 [extra.poly]
-menu_order = [
-  "portfolio/_index.md",
-  "resume/_index.md",
-  "contact.md"
+menu_order = ["portfolio/_index.md", "resume/_index.md", "contact.md"]
+social_outlink = [
+  { href = "https://www.linkedin.com/in/anvlkv", title = "LinkedIn" },
+  { href = "https://github.com/anvlkv", title = "GitHub" },
+  { href = "https://exercism.org/profiles/anvlkv", title = "Exercism" },
+  { href = "https://stackoverflow.com/users/1774187/anvlkv", title = "StackOverflow" },
 ]
-social_outlink=[
-  {href="https://www.linkedin.com/in/anvlkv", title="LinkedIn"},
-  {href="https://github.com/anvlkv", title="GitHub"},
-  {href="https://exercism.org/profiles/anvlkv", title="Exercism"},
-  {href="https://stackoverflow.com/users/1774187/anvlkv", title="StackOverflow"},
+license = "license.md"
+logo = "/logo.png"
+manifest = "/site.webmanifest"
+favicon = [
+  { rel = "apple-touch-icon-precomposed", size = "57x57", path = "/favicon/apple-touch-icon-57x57.png" },
+  { rel = "apple-touch-icon-precomposed", size = "114x114", path = "/favicon/apple-touch-icon-114x114.png" },
+  { rel = "apple-touch-icon-precomposed", size = "72x72", path = "/favicon/apple-touch-icon-72x72.png" },
+  { rel = "apple-touch-icon-precomposed", size = "144x144", path = "/favicon/apple-touch-icon-144x144.png" },
+  { rel = "apple-touch-icon-precomposed", size = "60x60", path = "/favicon/apple-touch-icon-60x60.png" },
+  { rel = "apple-touch-icon-precomposed", size = "120x120", path = "/favicon/apple-touch-icon-120x120.png" },
+  { rel = "apple-touch-icon-precomposed", size = "76x76", path = "/favicon/apple-touch-icon-76x76.png" },
+  { rel = "apple-touch-icon-precomposed", size = "152x152", path = "/favicon/apple-touch-icon-152x152.png" },
+  { rel = "icon", type = "image/png", path = "/favicon/favicon-196x196.png", size = "196x196" },
+  { rel = "icon", type = "image/png", path = "/favicon/favicon-96x96.png", size = "96x96" },
+  { rel = "icon", type = "image/png", path = "/favicon/favicon-32x32.png", size = "32x32" },
+  { rel = "icon", type = "image/png", path = "/favicon/favicon-16x16.png", size = "16x16" },
+  { rel = "icon", type = "image/png", path = "/favicon/favicon-128.png", size = "128x128" },
+  { rel = "icon", type = "image/x-icon", size = "", path = "/favicon/favicon.ico" },
+  {meta=true, name="msapplication-TileColor", content="#FFBCD9"},
+  {meta=true, name="msapplication-TileImage", content="/favicon/mstile-144x144.png"},
+  {meta=true, name="msapplication-square70x70logo", content="/favicon/mstile-70x70.png"},
+  {meta=true, name="msapplication-square150x150logo", content="/favicon/mstile-150x150.png"},
+  {meta=true, name="msapplication-wide310x150logo", content="/favicon/mstile-310x150.png"},
+  {meta=true, name="msapplication-square310x310logo", content="/favicon/mstile-310x310.png"},
 ]
-license="license.md"
+
