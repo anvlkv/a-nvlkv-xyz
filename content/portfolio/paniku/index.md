@@ -1,6 +1,7 @@
 +++
 title="Coat of panic"
 weight=3
+date=2021-01-01
 [taxonomies]
 expertise=["Art"]
 period=["Mar 2020", "Jan 2021"]

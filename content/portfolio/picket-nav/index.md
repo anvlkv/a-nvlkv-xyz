@@ -1,6 +1,7 @@
 +++
 title="Picket navigator"
 weight=1
+date=2015-02-01
 [taxonomies]
 expertise=["Mobile design", "UX design", "Project management"]
 period=["Aug 2014", "Feb 2015"]

@@ -1,6 +1,7 @@
 +++
 title="Mirror selfie"
 weight=9
+date=2020-08-01
 [taxonomies]
 expertise=["Art"]
 [extra.poly]

@@ -1,6 +1,7 @@
 +++
 title="Gaian suicide"
 weight=6
+date=2019-05-01
 [taxonomies]
 expertise=["Art"]
 period=["May 2019"]

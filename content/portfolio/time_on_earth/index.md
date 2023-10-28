@@ -1,6 +1,7 @@
 +++
 title="Time on Earth"
 weight=7
+date=2020-08-01
 [taxonomies]
 expertise=["Art"]
 period=["Aug 2020"]

@@ -1,6 +1,7 @@
 +++
 title="Dove"
 weight=5
+date=2022-04-01
 [taxonomies]
 expertise=["Art"]
 period=["Apr 2022"]

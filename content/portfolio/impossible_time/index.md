@@ -1,6 +1,7 @@
 +++
 title="lights"
 weight=6
+date=2018-08-01
 [taxonomies]
 expertise=["Art"]
 [extra.poly]

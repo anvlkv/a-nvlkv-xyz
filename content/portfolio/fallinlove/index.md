@@ -1,6 +1,7 @@
 +++
 title="Fall in love"
 weight=4
+date=2014-08-01
 [taxonomies]
 expertise=["UX design", "Web development"]
 period=["Jul 2014", "Aug 2014"]

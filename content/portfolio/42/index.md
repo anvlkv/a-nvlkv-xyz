@@ -1,6 +1,7 @@
 +++
 title="42"
 weight=10
+date=2013-08-01
 [taxonomies]
 expertise=["Art"]
 period=["Aug 2013"]

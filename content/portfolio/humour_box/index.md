@@ -1,6 +1,7 @@
 +++
 title="HumourBox"
 weight=4
+date=2013-08-01
 [taxonomies]
 expertise=["Mobile design", "UX design"]
 period=["Mar 2013", "Aug 2013"]

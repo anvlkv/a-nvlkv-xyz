@@ -1,6 +1,7 @@
 +++
 title="Smokin˚ the city"
 weight=6
+date=2022-02-01
 [taxonomies]
 expertise=["Art"]
 period=["Feb 2022"]

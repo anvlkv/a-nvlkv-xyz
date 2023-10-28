@@ -1,6 +1,7 @@
 +++
 title="TAKE IT EASY"
 weight=8
+date=2020-01-01
 [taxonomies]
 expertise=["Art"]
 period=["Jan 2020"]

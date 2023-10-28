@@ -1,6 +1,7 @@
 +++
 title="CIR"
 weight=5
+date=2017-05-01
 [taxonomies]
 expertise=["Art"]
 period=["May 2017"]

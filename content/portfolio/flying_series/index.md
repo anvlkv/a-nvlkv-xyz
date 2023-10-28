@@ -1,6 +1,7 @@
 +++
 title="flying series"
 weight=9
+date=2010-06-01
 [taxonomies]
 expertise=["Fashion"]
 period=["Mar 2010", "Jun 2010"]
