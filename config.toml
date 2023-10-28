@@ -45,6 +45,7 @@ social_outlink = [
 license = "license.md"
 logo = "/logo.png"
 manifest = "/site.webmanifest"
+font_url = "https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400&display=swap"
 favicon = [
   { rel = "apple-touch-icon-precomposed", size = "57x57", path = "/favicon/apple-touch-icon-57x57.png" },
   { rel = "apple-touch-icon-precomposed", size = "114x114", path = "/favicon/apple-touch-icon-114x114.png" },

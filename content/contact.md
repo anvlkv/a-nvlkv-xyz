@@ -1,6 +1,8 @@
 +++
 title="Contact"
 description="Let's Connect and Create Together! I'm just one message away. Reach out with your inquiries, project ideas, or collaboration opportunities."
+[extra.poly.aside]
+content="My invitation to connect is very open-ended. Please let me know anything you find important to know beforehand about your project or communication preferences. <br/><br/> I'm fluent in English, Dutch, and Russian. Please express yourself freely in one of those languages, and I'll be of thousand ears."
 +++
 
 # Get in touch

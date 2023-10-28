@@ -15,7 +15,7 @@ My expertise lies in information architecture, systems thinking, UX engineering,
 
 Equipped with empathy, I strive to understand the problems and motivations of customers, businesses, and other entities. My research approach combines desk study and hands-on engagement, incorporating qualitative, quantitative, and mixed methods.
 
-## Case studies and work experience
+### Case studies and work experience
 
 My process involves data modeling, prototyping, proof of concept, testing workflows, and researching technical feasibility. It enables more insightful user tests, bringing to life robust and meaningful solutions.
 
@@ -53,7 +53,7 @@ Extensive development experience, which grew out of the desire for fine control 
 
 {% end %}
 
-## Artistic personality
+### Artistic endeavors
 
 Driven by curiosity yet rooted in past experience, I continually seek new horizons, exploring the fusion of colors and textures across diverse art forms, spanning traditional, mixed media, and digital art. My interests include yoga, hiking, languages, and analog photography.
 
@@ -65,14 +65,15 @@ Driven by curiosity yet rooted in past experience, I continually seek new horizo
 
 {% end %}
 
-## Recent projects
+### Recent projects
 
+While some may describe me as ridiculously fast, my personal experience reveals systematic planning, drafting, and experimentation. I approach each project with a keen eye for detail at the right moments, ensuring I don't become attached to unnecessary elements or traits.
 
 {% heroCard(href="/portfolio/polymathic") %}
 
   ##### polymathic
 
-  Crafting a Zola theme for effective presentation, with information architecture and accessibility in mind
+  Crafting a Zola theme with a strong focus on effective presentation, underpinned by thoughtful information architecture and accessibility.
 
 {% end %}
 
@@ -80,7 +81,7 @@ Driven by curiosity yet rooted in past experience, I continually seek new horizo
 
   ##### SimaPro @ PRé sustainability
 
-  Design and development of web platform for environmental impact assessment
+  Fostering collaboration and embracing diverse ideas within my team. Design and development of an environmental impact assessment web platform.
 
 {% end %}
 
@@ -92,3 +93,14 @@ Driven by curiosity yet rooted in past experience, I continually seek new horizo
 
 {% end %}
 
+### Open for collaboration and consulting
+
+I'm currently open to engage with a new project opportunities and am eager to contribute to a wide range of projects, including those related to social and environmental good, education, mindfulness, and healthcare.
+
+{% heroCard(href="/contact") %}
+
+  ##### Let's get in touch and discuss your project
+
+  There are countless ways we can collaborate; let's find the perfect fit for your project.
+
+{% end %}

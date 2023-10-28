@@ -1,0 +1,5 @@
+{% extends "polymathic/templates/base.html" %}
+{% block page_style %}
+    <link rel="stylesheet" media="screen and (prefers-color-scheme: light)" href="{{ get_url(path='anvlkv.css') | safe }}" />
+    <link rel="stylesheet" media="screen and (prefers-color-scheme: dark)" href="{{ get_url(path='anvlkv-dark.css') | safe }}" />
+{% endblock %}
