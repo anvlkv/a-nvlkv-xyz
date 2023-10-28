@@ -1,6 +1,7 @@
 +++
 title="SimaPro"
 weight=0
+date=2023-09-01
 [taxonomies]
 expertise=["UX design", "Web development"]
 period=["Oct 2016", "Sep 2023"]
@@ -10,7 +11,11 @@ employer=["PRé sustainability"]
 hero="edit_process_details_experssion_editor_example.png"
 +++
 
-SimaPro is a leading solution for <abbr>LCA</abbr> (Life Cycle Assessment) and I was honored to work on SimaPro web platform. 
+### SimaPro
+
+SimaPro is a leading solution for <abbr>LCA</abbr> (Life Cycle Assessment) and I was honored to work on SimaPro web platform during 7 years. 
+
+{{assetGallery()}}
 
 When I joined PRé sustainability - the developer of SimaPro, we had a small team of two back-end developers and two QA engineers. At the same time SimaPro platform was a living product, users could run assessments and collect data from their suppliers.
 
@@ -33,7 +38,6 @@ Due to personal circumstances I concluded to leave the Netherlands and we starte
 During my last days I worked on documenting design system of our custom components. The design system implementation followed atomic design and gradual release principles. Enabling more developers to jump-start building new features in SimaPro, staying aligned with our desired look and feel.
 
 
-{{assetGallery()}}
 
 
 
