@@ -1,5 +1,6 @@
 +++
 title="Bloobls"
+description="UX consulting of educational game design, project management"
 weight=3
 date=2014-07-01
 [taxonomies]

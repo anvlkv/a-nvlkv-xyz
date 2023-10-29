@@ -1,5 +1,6 @@
 +++
 title="DDG"
+description="Company portfolio website"
 weight=1
 date=2014-10-01
 [taxonomies]

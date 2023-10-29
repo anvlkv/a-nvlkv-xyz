@@ -1,5 +1,5 @@
 +++
-title="Junior Nurse"
+title="Junior Nurse @ Emergency hospital #1, Kurgan, Russia  Jun 2006 - Jul 2006"
 date="2006-07-01"
 [taxonomies]
 period=["Jun 2006", "Jul 2006"]

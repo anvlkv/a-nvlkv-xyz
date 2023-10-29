@@ -1,5 +1,6 @@
 +++
 title="HumourBox"
+description="Creative designs of an app for entertainment"
 weight=4
 date=2013-08-01
 [taxonomies]

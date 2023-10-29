@@ -1,5 +1,5 @@
 +++
-title="Medior developer"
+title="Medior developer @ PRé sustainability, Amersfoort, Netherlands  Oct 2016 - Sep 2023"
 date="2023-09-01"
 [taxonomies]
 period=["Oct 2016", "Sep 2023"]

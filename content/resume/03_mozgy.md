@@ -1,5 +1,5 @@
 +++
-title="UI/UX designer, Project manager"
+title="UI/UX designer, Project manager @ Mozgy, Saint-Petersburg, Russia  Mar 2013 - Jun 2014"
 date="2014-06-01"
 [taxonomies]
 period=["Mar 2013", "Jun 2014"]

@@ -1,5 +1,6 @@
 +++
 title="SimaPro"
+description="Web platform for life cycle assessment design and development"
 weight=0
 date=2023-09-01
 [taxonomies]
@@ -8,7 +9,7 @@ period=["Oct 2016", "Sep 2023"]
 [extra]
 employer=["PRé sustainability"]
 [extra.poly]
-hero="edit_process_details_experssion_editor_example.png"
+hero="edit_process_details_expression_editor_example.png"
 +++
 
 ### SimaPro

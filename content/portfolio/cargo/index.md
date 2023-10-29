@@ -1,5 +1,6 @@
 +++
 title="Cargo online"
+description="Complimentary app for logistics solution"
 weight=2
 date=2015-04-01
 [taxonomies]
