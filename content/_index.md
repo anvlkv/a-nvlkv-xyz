@@ -11,13 +11,14 @@ As a UX engineer and developer, I've woven a path through various media and tech
 > _– Marshal McLuhan, 1964_
 
 
+
+### Case studies and work experience
+
 My expertise lies in information architecture, systems thinking, UX engineering, and development, with a foresightful strategic approach.
 
 Equipped with empathy, I strive to understand the problems and motivations of customers, businesses, and other entities. My research approach combines desk study and hands-on engagement, incorporating qualitative, quantitative, and mixed methods.
 
-### Case studies and work experience
-
-My process involves data modeling, prototyping, proof of concept, testing workflows, and researching technical feasibility. It enables more insightful user tests, bringing to life robust and meaningful solutions.
+My further process involves data modeling, prototyping, proof of concept, testing workflows, and researching technical feasibility. It enables more insightful user tests, bringing to life robust and meaningful solutions.
 
 {% heroCard(href="/expertise/ux-design") %}
 
