@@ -2,9 +2,9 @@
 title="Medior developer @ PRé sustainability, Amersfoort, Netherlands  Oct 2016 - Sep 2023"
 date="2023-09-01"
 [taxonomies]
-expertise=["Web development", "UX design"]
+expertise=["Web dev", "UX design"]
 [extra]
-employer=["PRé sustainability"]
+employer="PRé sustainability"
 location=["Amersfoort, Netherlands"]
 +++
 

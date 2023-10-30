@@ -6,7 +6,7 @@ date=2013-08-01
 [taxonomies]
 expertise=["Mobile design", "UX design"]
 [extra]
-employer=["Mozgy"]
+employer="Mozgy"
 [extra.poly]
 hero="humour_box.jpg"
 +++

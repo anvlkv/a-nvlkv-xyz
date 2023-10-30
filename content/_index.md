@@ -45,7 +45,7 @@ Extensive development experience, which grew out of the desire for fine control 
 
 {% end %}
 
-{% heroCard(href="/expertise/project-management") %}
+{% heroCard(href="/expertise/project-manager") %}
 
   ##### Project management
 

@@ -2,9 +2,9 @@
 title="Web designer @ of.is,  Saint-Petersburg, Russia  Apr 2012 - Mar 2013"
 date="2013-03-01"
 [taxonomies]
-expertise=["Web development", "UX design"]
+expertise=["Web dev", "UX design"]
 [extra]
-employer=["of.is"]
+employer="of.is"
 location=["Saint-Petersburg, Russia"]
 +++
 

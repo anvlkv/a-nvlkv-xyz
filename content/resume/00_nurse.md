@@ -3,7 +3,7 @@ title="Junior Nurse @ Emergency hospital #1, Kurgan, Russia  Jun 2006 - Jul 2006
 date="2006-07-01"
 [taxonomies]
 [extra]
-employer=["Emergency hospital #1"]
+employer="Emergency hospital #1"
 location=["Kurgan, Russia"]
 +++
 

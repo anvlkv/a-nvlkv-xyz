@@ -4,7 +4,7 @@ description="Art hostel website"
 weight=4
 date=2014-08-01
 [taxonomies]
-expertise=["UX design", "Web development"]
+expertise=["UX design", "Web dev"]
 [extra.poly]
 hero="fallinlove.jpg"
 +++

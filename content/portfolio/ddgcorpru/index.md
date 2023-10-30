@@ -4,9 +4,9 @@ description="Company portfolio website"
 weight=1
 date=2014-10-01
 [taxonomies]
-expertise=["UX design", "Web development"]
+expertise=["UX design", "Web dev"]
 [extra]
-employer=["DDG"]
+employer="DDG"
 [extra.poly]
 hero="ddgcorpru.jpg"
 +++

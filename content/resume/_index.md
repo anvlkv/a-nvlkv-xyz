@@ -2,6 +2,7 @@
 title="Resume"
 description="Step into my professional world, a journey that has traversed multiple disciplines, culminating in a well-rounded skill set in user experience design and development"
 sort_by="date"
+page_template="employer.html"
 [extra.poly]
 use_taxonomies=["expertise","stack"]
 page_thumbnails="contents"

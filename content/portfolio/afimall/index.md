@@ -6,7 +6,7 @@ date=2014-10-01
 [taxonomies]
 expertise=["Mobile design", "UX design"]
 [extra]
-employer=["DDG"]
+employer="DDG"
 [extra.poly]
 hero="afimall.jpg"
 +++

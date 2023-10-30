@@ -4,7 +4,7 @@ description="zola theme developed during the work on my portfolio"
 weight=1
 date=2023-10-01
 [taxonomies]
-expertise=["UX design", "Web development"]
+expertise=["UX design", "Web dev"]
 [extra.poly]
 hero="polymathic.png"
 +++

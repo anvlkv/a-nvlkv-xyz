@@ -4,9 +4,9 @@ description="Android app for pipeline engineers"
 weight=1
 date=2015-02-01
 [taxonomies]
-expertise=["Mobile design", "UX design", "Project management"]
+expertise=["Mobile design", "UX design", "Project manager"]
 [extra]
-employer=["DDG"]
+employer="DDG"
 [extra.poly]
 hero="profile_view.jpg"
 +++

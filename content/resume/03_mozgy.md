@@ -2,9 +2,9 @@
 title="UI/UX designer, Project manager @ Mozgy, Saint-Petersburg, Russia  Mar 2013 - Jun 2014"
 date="2014-06-01"
 [taxonomies]
-expertise=["Project management", "UX design", "Mobile design"]
+expertise=["Project manager", "UX design", "Mobile design"]
 [extra]
-employer=["Mozgy"]
+employer="Mozgy"
 location=["Saint-Petersburg, Russia"]
 +++
 

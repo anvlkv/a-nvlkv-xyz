@@ -13,7 +13,7 @@ toc=true
 
 Welcome to my portfolio, where you can explore a diverse collection of projects, each with its own distinctive design journey. 
 
-While I have intentionally kept a diverse portfolio to provide a comprehensive view of my work, you can choose to focus on specific topics: [UX design](/expertise/ux-design), [Web development](/expertise/web-development/), [Mobile design](/expertise/mobile-design), [Project management](/expertise/project-management).
+While I have intentionally kept a diverse portfolio to provide a comprehensive view of my work, you can choose to focus on specific topics: [UX design](/expertise/ux-design), [Web development](/expertise/web-dev/), [Mobile design](/expertise/mobile-design), [Project management](/expertise/project-manager).
 
 In addition to my professional work, I also showcase some of my [art](/expertise/art) and, owing to my educational background, [fashion](/expertise/fashion). These pieces may not appeal to everyone, but they are undoubtedly expressions of my artistic side.
 

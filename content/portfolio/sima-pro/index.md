@@ -4,9 +4,9 @@ description="Web platform for life cycle assessment design and development"
 weight=0
 date=2023-09-01
 [taxonomies]
-expertise=["UX design", "Web development"]
+expertise=["UX design", "Web dev"]
 [extra]
-employer=["PRé sustainability"]
+employer="PRé sustainability"
 [extra.poly]
 hero="edit_process_details_expression_editor_example.png"
 +++

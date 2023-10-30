@@ -6,7 +6,7 @@ date=2015-04-01
 [taxonomies]
 expertise=["Mobile design", "UX design"]
 [extra]
-employer=["DDG"]
+employer="DDG"
 [extra.poly]
 hero="Cargo_online.jpg"
 +++
