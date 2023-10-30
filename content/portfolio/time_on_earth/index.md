@@ -4,7 +4,6 @@ weight=7
 date=2020-08-01
 [taxonomies]
 expertise=["Art"]
-period=["Aug 2020"]
 [extra.poly]
 hero="time_on_earth.jpeg"
 +++

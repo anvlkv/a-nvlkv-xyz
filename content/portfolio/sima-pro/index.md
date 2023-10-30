@@ -5,7 +5,6 @@ weight=0
 date=2023-09-01
 [taxonomies]
 expertise=["UX design", "Web development"]
-period=["Oct 2016", "Sep 2023"]
 [extra]
 employer=["PRé sustainability"]
 [extra.poly]

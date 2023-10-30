@@ -5,7 +5,6 @@ weight=1
 date=2023-10-01
 [taxonomies]
 expertise=["UX design", "Web development"]
-period=["Oct 2023"]
 [extra.poly]
 hero="twopack_gallery_desktop.png"
 +++

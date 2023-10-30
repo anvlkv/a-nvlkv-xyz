@@ -2,7 +2,6 @@
 title="Web designer @ of.is,  Saint-Petersburg, Russia  Apr 2012 - Mar 2013"
 date="2013-03-01"
 [taxonomies]
-period=["Apr 2012", "Mar 2013"]
 expertise=["Web development", "UX design"]
 [extra]
 employer=["of.is"]

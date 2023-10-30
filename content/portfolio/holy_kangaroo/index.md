@@ -4,7 +4,6 @@ weight=9
 date=2019-07-01
 [taxonomies]
 expertise=["Art"]
-period=["Apr 2019", "Jul 2019"]
 [extra.poly]
 hero="holy_kangaroo-4.jpeg"
 +++

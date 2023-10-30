@@ -11,7 +11,6 @@ As a UX engineer and developer, I've woven a path through various media and tech
 > _– Marshal McLuhan, 1964_
 
 
-
 ### Case studies and work experience
 
 My expertise lies in information architecture, systems thinking, UX engineering, and development, with a foresightful strategic approach.

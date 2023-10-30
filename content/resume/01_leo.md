@@ -2,7 +2,6 @@
 title="Project manager, Fashion designer, Buyer @ Leonid Alexeev design studio, Saint-Petersburg, Russia  Aug 2010 - Oct 2011"
 date="2011-10-01"
 [taxonomies]
-period=["Aug 2010", "Oct 2011"]
 expertise=["Project management", "Fashion"]
 [extra]
 employer=["Leonid Alexeev design studio"]

@@ -4,7 +4,6 @@ weight=9
 date=2014-04-01
 [taxonomies]
 expertise=["Art"]
-period=["Apr 2014"]
 [extra.poly]
 hero="kinds_day_-_1.jpeg"
 +++

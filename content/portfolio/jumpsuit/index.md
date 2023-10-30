@@ -4,7 +4,6 @@ weight=7
 date=2009-01-01
 [taxonomies]
 expertise=["Fashion"]
-period=["2009"]
 [extra.poly]
 hero="jumpsuit-1.jpeg"
 +++

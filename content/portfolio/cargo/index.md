@@ -5,7 +5,6 @@ weight=2
 date=2015-04-01
 [taxonomies]
 expertise=["Mobile design", "UX design"]
-period=["Apr 2015"]
 [extra]
 employer=["DDG"]
 [extra.poly]

@@ -5,7 +5,6 @@ weight=3
 date=2014-07-01
 [taxonomies]
 expertise=["UX design", "Project management"]
-period=["Sep 2013", "Jun 2014"]
 [extra]
 employer=["Mozgy"]
 [extra.poly]

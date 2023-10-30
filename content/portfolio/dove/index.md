@@ -4,7 +4,6 @@ weight=5
 date=2022-04-01
 [taxonomies]
 expertise=["Art"]
-period=["Apr 2022"]
 [extra.poly]
 hero="original_dove_in_red.jpeg"
 +++

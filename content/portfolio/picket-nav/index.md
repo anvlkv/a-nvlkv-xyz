@@ -5,7 +5,6 @@ weight=1
 date=2015-02-01
 [taxonomies]
 expertise=["Mobile design", "UX design", "Project management"]
-period=["Aug 2014", "Feb 2015"]
 [extra]
 employer=["DDG"]
 [extra.poly]
@@ -18,6 +17,6 @@ Building the picket navigator we collaborated closely with developers and our cl
 
 I created interactive prototypes and tested them with our customer. We later prepared the app for a field test.
 
-Finalizing my work on picket navigator I designed an integration with external equipment allowing more precision in the field work.
+Finalizing the work on picket navigator we designed an integration with external equipment allowing more precision in the field work.
 
 {{assetGallery()}}

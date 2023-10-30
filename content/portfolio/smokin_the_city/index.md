@@ -4,7 +4,6 @@ weight=6
 date=2022-02-01
 [taxonomies]
 expertise=["Art"]
-period=["Feb 2022"]
 [extra.poly]
 hero="smokin_the_city-1.jpg"
 +++

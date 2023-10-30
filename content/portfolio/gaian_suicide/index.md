@@ -4,7 +4,6 @@ weight=6
 date=2019-05-01
 [taxonomies]
 expertise=["Art"]
-period=["May 2019"]
 [extra.poly]
 hero="gaian_suicide_II_III.jpeg"
 +++

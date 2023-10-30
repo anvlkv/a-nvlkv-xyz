@@ -4,7 +4,6 @@ weight=4
 date=2014-08-01
 [taxonomies]
 expertise=["Art"]
-period=["Jul 2014", "Aug 2014"]
 [extra.poly]
 hero="openeir-1.jpeg"
 +++
