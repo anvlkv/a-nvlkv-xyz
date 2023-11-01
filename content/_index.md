@@ -83,7 +83,7 @@ Crafting a Zola theme with a strong focus on effective presentation, underpinned
 
 {% end %}
 
-{% heroCard(href="/portfolio/sima-pro", banner=true, hero="highlight2.png" color="darkorange") %}
+{% heroCard(href="/portfolio/sima-pro", banner=true, hero="highlight2.png" color="white") %}
 
 ##### SimaPro @ PRé sustainability
 
