@@ -75,7 +75,7 @@ Exploration of media and techniques
 
 While some may describe me as ridiculously fast, my personal experience reveals systematic planning, drafting, and experimentation. I approach each project with a keen eye for detail at the right moments, ensuring I don't become attached to unnecessary elements or traits.
 
-{% heroCard(href="/portfolio/polymathic") %}
+{% heroCard(href="/portfolio/polymathic", banner=true, hero="highlight1.png", color="black") %}
 
 ##### polymathic
 
@@ -83,7 +83,7 @@ Crafting a Zola theme with a strong focus on effective presentation, underpinned
 
 {% end %}
 
-{% heroCard(href="/portfolio/sima-pro") %}
+{% heroCard(href="/portfolio/sima-pro", banner=true, hero="highlight2.png" color="darkorange") %}
 
 ##### SimaPro @ PRé sustainability
 
@@ -91,7 +91,7 @@ Fostering collaboration and embracing diverse ideas within my team. Design and d
 
 {% end %}
 
-{% heroCard(href="/portfolio/twopack-gallery") %}
+{% heroCard(href="/portfolio/twopack-gallery", banner=true, hero="highlight3.jpg", color="darkgoldenrod") %}
 
 ##### twopack.gallery
 
