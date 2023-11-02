@@ -1,0 +1,17 @@
+{% extends "polymathic/templates/index.html" %}
+
+{% block index_content %}
+  <main class="poly-page-content">
+    <section class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
+      <article class="poly-page-main poly-container">
+        {{section.content | safe}}
+      </article>
+    </section>
+    <div class="section">
+      <h2 class="title">All updates</h2>
+    </div>
+    <section class="animate__animated animate__fadeIn animate__delay-2s animate__faster">
+      {% include "partials/timeline-content.html" %}
+    </section>
+  </main>
+{% endblock %}

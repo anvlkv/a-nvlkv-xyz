@@ -24,3 +24,8 @@ My approach is holistic. Through desk study, interviews, and experimentation, I 
 - Japanese - Beginner
 - Russian - Native
 
+<br/>
+
+##### Personality
+
+My interests include yoga, hiking, languages, art, and analog photography.
