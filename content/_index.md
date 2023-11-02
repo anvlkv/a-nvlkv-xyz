@@ -72,7 +72,7 @@ Exploration of media and techniques
 
 {% end %}
 
-### Recent projects
+### Highlights
 
 While some may describe me as ridiculously fast, my personal experience reveals systematic planning, drafting, and experimentation. I approach each project with a keen eye for detail at the right moments, ensuring I don't become attached to unnecessary elements or traits.
 
