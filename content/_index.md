@@ -8,7 +8,7 @@ content=[
   "resume/_index.md",
   "portfolio/_index.md",
 ]
-lazy_batch={ preview=2, batch=10, text="Show more" }
+limit={ count=4, url="/timeline", text="See all updates..." }
 +++
 
 As a UX engineer and developer, I've woven a path through various media and technology, crafting authentic user experiences.
