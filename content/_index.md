@@ -6,6 +6,7 @@ reverse=true
 format="%b %Y"
 content=[
   "resume/_index.md",
+  "resume/education/_index.md",
   "portfolio/_index.md",
 ]
 limit={ count=4, url="/timeline", text="See all updates..." }
