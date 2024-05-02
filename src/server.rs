@@ -32,10 +32,9 @@ async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
             log::warn!("redirecting: {url} to {redirect}");
 
             let res = OutgoingResponse::new(
-                Fields::from_list(&[(http::header::LOCATION.to_string(), redirect.into_bytes())])
-                    .unwrap(),
+                TEMPORARY_REDIRECT_CODE,
+                &Fields::new(&[(http::header::LOCATION.to_string(), redirect.into_bytes())]),
             );
-            res.set_status_code(TEMPORARY_REDIRECT_CODE).unwrap();
 
             resp_out.set(res);
         }
