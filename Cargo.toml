@@ -9,18 +9,27 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
+uuid = { version = "1.8.0", features = ["v4", "serde"] }
+rust-i18n = "3"
+log = "0.4"
 anyhow = "1"
 cfg-if = "1"
 console_error_panic_hook = "0.1"
 http = "1"
-leptos = "0.6"
-leptos_integration_utils = { version = "0.6", optional = true }
-leptos_meta = "0.6"
-leptos_router = "0.6"
-leptos-spin = { version = "0.1.0", optional = true }
+leptos = "0.6.6"
+leptos_integration_utils = { version = "0.6.6", optional = true }
+leptos_meta = "0.6.6"
+leptos_router = "0.6.6"
+leptos-spin = { version = "0.1", optional = true }
 serde = "1"
 spin-sdk = { version = "2", optional = true }
 wasm-bindgen = { version = "0.2", optional = true }
+web-sys = { version = "0.3", features = ["EventTarget", "HtmlSelectElement"] }
+env_logger = { version = "0.11.3", optional = true }
+console_log = { version = "1.0.0", features = [
+    "wasm-bindgen",
+], optional = true }
+accept-language = { version = "3.1.0", optional = true }
 
 [workspace]
 
@@ -31,6 +40,7 @@ hydrate = [
     "leptos_meta/hydrate",
     "leptos_router/hydrate",
     "dep:wasm-bindgen",
+    "dep:console_log",
 ]
 ssr = [
     "leptos/ssr",
@@ -40,12 +50,16 @@ ssr = [
     "dep:spin-sdk",
     "dep:leptos-spin",
     "dep:leptos_integration_utils",
+    "dep:env_logger",
+    "dep:accept-language",
 ]
 
 [package.metadata.leptos]
 # The name used by wasm-bindgen/cargo-leptos for the JS/WASM bundle. Defaults to the crate name
 output-name = "a_nvlkv_xyz"
 style-file = "style/main.scss"
+tailwind-input-file = "style/tailwind.css"
+tailwind-config-file = "style/tailwind.config.js"
 bin-features = ["ssr"]
 bin-default-features = false
 lib-features = ["hydrate"]

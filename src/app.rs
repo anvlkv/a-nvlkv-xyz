@@ -1,6 +1,15 @@
+mod components;
+mod pages;
+mod process;
+mod state;
+
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
+use pages::*;
+use state::StoreProvider;
+
+use crate::app::components::{FooterView, HeaderView};
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -8,65 +17,80 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     view! {
-      <Stylesheet id="leptos" href="/pkg/a_nvlkv_xyz.css"/>
+        <StoreProvider>
+            <Stylesheet id="leptos" href="/pkg/a_nvlkv_xyz.css"/>
 
-      // sets the document title
-      <Title text="Welcome to Leptos"/>
+            <Title text="Welcome to Leptos"/>
 
-      // content for this welcome page
-      <Router>
-        <main>
-          <Routes>
-            <Route path="" view=HomePage/>
-            <Route path="/*any" view=NotFound/>
-          </Routes>
-        </main>
-      </Router>
+            <div class="font-sans h-screen w-screen overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50">
+                <Router>
+                    <Routes>
+                        <Route path="/:lang" view=LocalizedView>
+                            <Route path="/:step?" view=ProcessView />
+                            <Route path="/:step/:example_id" view=ProcessView />
+                            <Route path="/projects" view=ContactView />
+                            <Route path="/projects/:id" view=ContactView />
+                            <Route path="/contact" view=ContactView />
+                            <Route path="/resume" view=ContactView />
+                            <Route path="/links" view=ContactView />
+                        </Route>
+                        <Route path="/*any" view=NotFound/>
+                    </Routes>
+                </Router>
+            </div>
+        </StoreProvider>
     }
 }
 
-/// Renders the home page of your application.
+#[derive(Clone, PartialEq, Eq, Params)]
+struct LocalizeParams {
+    lang: Option<String>,
+}
+
+#[derive(Clone)]
+pub struct Language(pub String);
+
 #[component]
-fn HomePage() -> impl IntoView {
-    // Creates a reactive value to update the button
-    let (count, set_count) = create_signal(0);
-    let on_click = move |_| {
-        set_count.update(|count| *count += 1);
-        spawn_local(async move {
-            save_count(count.get()).await.unwrap();
-        });
+fn LocalizedView() -> impl IntoView {
+    let route = use_params::<LocalizeParams>();
+
+    let lang = Signal::derive(move || {
+        Language(
+            route
+                .get()
+                .map(|p| p.lang)
+                .ok()
+                .flatten()
+                .unwrap_or_else(|| rust_i18n::available_locales!().first().unwrap().to_string()),
+        )
+    });
+
+    provide_context(lang);
+
+    let localized = move || {
+        rust_i18n::set_locale(lang.get().0.as_str());
+
+        view! {
+            <HeaderView/>
+            <main class="overflow-auto grow">
+                <Outlet/>
+            </main>
+            <FooterView/>
+        }
     };
 
     view! {
-      <h1>"Welcome to Leptos - served from Spin!"</h1>
-      <button on:click=on_click>"Click Me: " {count}</button>
+        <Html lang={move || lang.get().0}/>
+        {localized}
     }
-}
-
-/// 404 - Not Found
-#[component]
-fn NotFound() -> impl IntoView {
-    // set an HTTP status code 404
-    // this is feature gated because it can only be done during
-    // initial server-side rendering
-    // if you navigate to the 404 page subsequently, the status
-    // code will not be set because there is not a new HTTP request
-    // to the server
-    #[cfg(feature = "ssr")]
-    {
-        // this can be done inline because it's synchronous
-        // if it were async, we'd use a server function
-        let resp = expect_context::<leptos_spin::ResponseOptions>();
-        resp.set_status(404);
-    }
-
-    view! { <h1>"Not Found"</h1> }
 }
 
 #[server(SaveCount, "/api")]
 pub async fn save_count(count: u32) -> Result<(), ServerFnError<String>> {
     println!("Saving value {count}");
     let store = spin_sdk::key_value::Store::open_default().map_err(|e| e.to_string())?;
-    store.set_json("a_nvlkv_xyz_count", &count).map_err(|e| ServerFnError::ServerError(e.to_string()))?;
+    store
+        .set_json("a_nvlkv_xyz_count", &count)
+        .map_err(|e| ServerFnError::ServerError(e.to_string()))?;
     Ok(())
 }

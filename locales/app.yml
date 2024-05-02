@@ -1,0 +1,251 @@
+_version: 2
+
+name:
+  en: Aleksandr Novolokov
+  nl: Aleksandr Novolokov
+  ru: Александр Новолоков
+  ja: アレクサンダー・ノボロコフ
+site_title:
+  en:
+lang_en:
+  long:
+    en: English
+    ru: Английский
+    ja: 英語
+    nl: Engels
+  short:
+    en: EN
+lang_ru:
+  long:
+    en: Russian
+    ru: Русский
+    ja: ロシア語
+    nl: Russisch
+  short:
+    en: RU
+lang_ja:
+  long:
+    en: Japanese
+    ru: Японский
+    ja: 日本語
+    nl: Japans
+  short:
+    en: JA
+lang_nl:
+  long:
+    en: Dutch
+    ru: Нидерландский
+    ja: オランダ語
+    nl: Nederlands
+  short:
+    en: NL
+let_talk:
+  en: Let's talk in
+  nl: Praten wij even
+  ru: Поговорим по
+  ja: 話しましょう。
+letters:
+  row_1:
+    en: Let's
+    nl: Laten wij
+    ru: Пусть
+    ja: "\n"
+  row_2:
+    en: get
+    nl: de dingen maken.
+    ru: всё
+    ja: ""
+  row_3:
+    en: things
+    nl: De dingen zijn
+    ru: будет
+    ja: 目標を
+  done:
+    en: Done
+    nl: Klaar
+    ru: Готово
+    ja: 完了
+menu:
+  resume:
+    en: CV
+    nl: Cv
+    ru: Резюме
+    ja: 履歴書
+  projects:
+    en: Projects
+    nl: Projecten
+    ru: Проекты
+    ja: プロジェクト
+  process:
+    en: Process
+    nl: Proces
+    ru: Процесс
+    ja: 手順
+  links:
+    en: Links
+    nl: Links
+    ru: Ссылки
+    ja: リンク
+  contact:
+    en: Contact
+    nl: Contact
+    ru: Связь
+    ja: お問い合わせ
+landing:
+  p1_s1:
+    en: In the name of harmony and peace on planet Earth, may we communicate with each other in sincere, concise, and helpful ways. May we all live meaningful and fulfilling lives. May we get the most important work
+    ru: Ради гармонии и мира на Земле, пусть наша коммуникация будет искрення, лаконична и полезна. Пусть все мы живем значимой и полноценной жизнью. Пусть самую важную работу мы
+    nl:
+  p1_link:
+    en: done
+    nl: klaar
+    ru: выполним
+    ja: 完了
+  p1_s2:
+    en: with care and compassion.
+    ru: с заботой и пониманием.
+  p1_s3:
+    en: ""
+    ru: ""
+  p2_s1:
+    en: Problem solver, developer, designer, artist. Through this web app (a.nvlkv.xyz), I'm seeking to join projects that would benefit from my skills and experience.
+    ru: Находчивый, разработчик, дизайнер, художник. Через эту веб-приложение (a.nvlkv.xyz) я стремлюсь присоеднится к проектам, в которых будут полезны мои навыки и опыт.
+  p2_s2:
+    en: Enjoy the journey or take one of the shortcuts.
+    ru: Насладитесь опытом или используйте одну из ссылок.
+process_intro:
+  title:
+    en: Getting things done with a mindful awarenes.
+  description_1:
+    en: Whenever we are doing our work we shape our future and that of others. We may have such intention or even a particular outcome in mind. We may as well intend to complete our work, only wishing to benefit ourself. Either way the future never comes out exactly the way it was intended; reality takes place, shaping further our perception of it. But as some wise people said “it's not the dots but the arrows that matter” therefore, may we look forward to the journey and not a destination, .
+  description_2:
+    en: The app will guide you through a 5 step process of getting from problems to testable solutions. Each step is an interactive worksheet with examples. Complete the workbook on your own or in collaboration with others.
+  s_1:
+    title:
+      en: The problem
+    description:
+      en: Falling in love with the right problem for all the right reasons is 80% of the success.
+  s_2:
+    title:
+      en: Solutions
+    description:
+      en: Dreaming big and quick, one problem has nearly as many solutions as there're perspectives.
+  s_3:
+    title:
+      en: Compromise
+    description:
+      en: The reality check. What We Must Do Now?
+  s_4:
+    title:
+      en: Implement
+    description:
+      en: Lovingly crafting artifacts.
+  s_5:
+    title:
+      en: Test & Iterate
+    description:
+      en: Learn from the process, learn from the outcomes, celebrate the wins, fearlesly start over.
+worksheets:
+  problem:
+    title:
+      en: The problem
+    description:
+      en: Finding the right problem means getting out of the comfort zone, accepting that different people may have different takes on it, looking far out as well as deep within.
+    instruction_1:
+      en: List any problems that come to mind, for every problem add a stakeholder (who suffers the most). Avoid lengthy descriptions at this step.
+    label_problems:
+      en: Problem
+    label_stakeholders:
+      en: Stakeholder
+    instruction_2:
+      en: Make one problem statement. It should describe the most important problem or a combination of problems from your list, which stakeholders it affects and how.
+    label_statement:
+      en: Problem statement
+  solutions:
+    title:
+      en: Solutions
+    description:
+      en: What are possible solutions to the problem? Avoid thinking of limitations, or whether you're going to implement it, whether it's even possible. The only criteria for solutions at this step is it must solve the problem.
+    instruction:
+      en: List all solutions that come to mind. Go for quantity. Keep the titles short. Dream.
+    label_solutions:
+      en: How might we solve the problem?
+  compromise:
+    title:
+      en: Compromise
+    description:
+      en: Every solution comes to oneself and those around with costs and uncertainty. Costs beyond monetary or time and effort. Every path brings its learnings.
+    instruction_1:
+      en: "Looking at each solution, ask yourself: What can you learn from bringing this solution to life? Does it benefit the stakeholders? Does it place any burden on other stakeholders? Select one or two that will get you the best insight at the smallest cost and uncertainty."
+    label_solutions:
+      en: Solutions
+    label_stakeholders:
+      en: Stakeholders
+    instruction_2:
+      en: "Describe the research to be done on an implemented solution. Answer the questions: How will you find out if the solution is not working? How can you get insight from the stakeholders? How can you keep your ears open to new stakeholders?"
+    label_question:
+      en: Research design note
+  implement:
+    title:
+      en: Implement
+    description_1:
+      en: "Depending on the scale and your research question it is important to choose the right means and scope for delivering the solution. The fidelity can be anything: paper prototype, service prototype, mockup, interactive prototype, a coded prototype, phone call or presentation, limited release of software, etc."
+    description_2:
+      en: "May the outcome of this step guide your choice of tools, features, and approaches when crafting the solution."
+    instruction:
+      en: "List the most important distinct features of your solution. Place the features in two sections: “Now” and “Best”."
+    label_col_1:
+      en: Now
+    label_col_2:
+      en: Best
+    hint_col_1:
+      en: How does the solution solve the problem?
+    hint_col_2:
+      en: What makes it the most efficient?
+  iterate:
+    title:
+      en: Test & Iterate
+    description:
+      en: "Keep your artifacts everevolving. Have invested in crafting an artifact we can now collect our tangible returns: all the positive impact we've had, all the research findings."
+    instruction_1:
+      en: Run your artifact, gather data, answer the research question.
+    instruction_2:
+      en: Celebrate all the positive impact your artifact have brought!
+    instruction_3:
+      en: In a constructive way digest what you've learned.
+    instruction_4:
+      en: With all the new insight, fearlesly start over.
+contact:
+  title:
+    en: Inquiries
+    nl: Vragen
+    ru: Запросы
+    ja: お問い合わせ
+  description:
+    en: Whether you like me involved or simply answer your questions about the process, don't hesitate to ask.
+  label_worksheets:
+    en: Send your completed worksheets along with your messagge
+  disabled_worksheets:
+    en: Complete the worksheets to enable this option
+  name:
+    label:
+      en: Name
+    placeholder:
+      en: Enter your name
+  email:
+    label:
+      en: Email
+    placeholder:
+      en: Enter your email
+  message:
+    label:
+      en: Message
+    placeholder:
+      en: Enter your message
+  send:
+    en: Send your inquiry
+  success:
+    title:
+      en: Message sent
+    description:
+      en: Thank you for your interest! We'll be in touch with you shortly
