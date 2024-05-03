@@ -3,6 +3,8 @@ mod pages;
 mod process;
 mod state;
 
+use std::collections::HashSet;
+
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
@@ -12,15 +14,32 @@ use state::StoreProvider;
 pub use components::Language;
 use components::LocalizedView;
 
+#[derive(Clone)]
+pub struct JsLibs(pub ReadSignal<HashSet<String>>);
+
 #[component]
 pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
 
-    view! {
-        <StoreProvider>
-            <Stylesheet id="leptos" href="/pkg/a_nvlkv_xyz.css"/>
+    let (js_libs, set_js_libs) = create_signal(HashSet::new());
 
+    provide_context(JsLibs(js_libs));
+
+    view! {
+        // site head
+        <Stylesheet id="leptos" href="/pkg/a_nvlkv_xyz.css"/>
+        <Link rel="icon" attr:type="image/ico" href="/pkg/favicon.ico" />
+        <Link rel="icon" attr:type="image/png" href="/pkg/favicon-32x32.png" sizes="32x32" />
+        <Link rel="icon" attr:type="image/png" href="/pkg/favicon-16x16.png" sizes="16x16" />
+        // js libs
+        <Script async_="async" on:load={move |_| {
+            log::info!("loaded rive");
+            set_js_libs.update(|s| {s.insert("Rive".to_string());})
+        }} src="https://unpkg.com/@rive-app/canvas@2.15.2"/>
+
+        // app
+        <StoreProvider>
             <div class="font-sans h-screen w-screen overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50">
                 <Router>
                     <Routes>

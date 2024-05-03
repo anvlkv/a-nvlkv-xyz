@@ -13,6 +13,7 @@ dependencies = [
  "console_log",
  "env_logger",
  "http 1.1.0",
+ "js-sys",
  "leptos",
  "leptos-spin",
  "leptos_integration_utils",
