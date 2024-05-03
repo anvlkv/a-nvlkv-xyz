@@ -5,8 +5,11 @@ name:
   nl: Aleksandr Novolokov
   ru: Александр Новолоков
   ja: アレクサンダー・ノボロコフ
-site_title:
-  en:
+specialty:
+  en: Full-stack User Experience Engineer
+  nl: Full-stack Gebruikerservaring Ingenieur
+  ru: Full-stack Инженер Пользовательского Опыта
+  ja: フルスタック ユーザー エクスペリエンス エンジニア
 lang_en:
   long:
     en: English
@@ -249,3 +252,38 @@ contact:
       en: Message sent
     description:
       en: Thank you for your interest! We'll be in touch with you shortly
+resume:
+  title:
+    en: CV
+    nl: Cv
+    ru: Резюме
+    ja: 履歴書
+projects:
+  title:
+    en: Projects
+    nl: Projecten
+    ru: Проекты
+    ja: プロジェクト
+process:
+  title:
+    en: Process
+    nl: Proces
+    ru: Процесс
+    ja: 手順
+case:
+  title:
+    en: Case study
+    nl: Casestudy
+    ru: Kейс стади
+    ja: ケーススタディ
+links:
+  title:
+    en: Links
+    nl: Links
+    ru: Ссылки
+    ja: リンク
+not_found:
+  en: Page not found
+  nl: Pagina niet gevonded
+  ru: Страница не найдена
+  ja: ページが見つかりません

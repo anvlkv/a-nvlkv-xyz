@@ -5,14 +5,14 @@ use crate::app::Language;
 
 #[component]
 pub fn HeaderView() -> impl IntoView {
-    let route = use_route();
+    let location = use_location();
     let navigate = use_navigate();
     let lang = use_context::<Signal<Language>>().unwrap();
 
     let title = move || {
         let lang = format!("/{}", lang.get().0);
 
-        match route.path() {
+        match location.pathname.get() {
             l if l == lang => view! {
                 <h1>{t!("name")}</h1>
             }

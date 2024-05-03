@@ -1,4 +1,5 @@
 use leptos::*;
+use leptos_meta::*;
 
 #[component]
 pub fn NotFound() -> impl IntoView {
@@ -8,5 +9,8 @@ pub fn NotFound() -> impl IntoView {
     //     resp.set_status(404);
     // }
 
-    view! { <h1>"Not Found"</h1> }
+    view! {
+        <Title text={move || t!("not_found")}/>
+        <h1>"Not Found"</h1>
+    }
 }

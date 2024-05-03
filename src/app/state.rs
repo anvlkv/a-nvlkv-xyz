@@ -88,4 +88,5 @@ pub struct InquireForm {
     pub name: String,
     pub email: String,
     pub message: String,
+    pub include_worksheets: bool,
 }

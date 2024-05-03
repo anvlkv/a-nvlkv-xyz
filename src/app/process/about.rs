@@ -1,6 +1,7 @@
 use super::StepperView;
 
 use leptos::*;
+use leptos_meta::*;
 
 /// step 1
 #[component]
@@ -21,6 +22,7 @@ pub fn AboutView() -> impl IntoView {
         .collect_view();
 
     view! {
+        <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>
         <section class="self-stretch w-full flex flex-col justify-between">
             <div class="p-8 my-8 dark:bg-stone-800 rounded-lg">
                 <h2 class="w-full text-center text-2xl md:text-3x xl:text-4xl pb-6">{t!("process_intro.title")}</h2>

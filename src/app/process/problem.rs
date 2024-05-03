@@ -1,4 +1,5 @@
 use leptos::*;
+use leptos_meta::*;
 
 use super::StepperView;
 
@@ -6,6 +7,7 @@ use super::StepperView;
 #[component]
 pub fn ProblemView() -> impl IntoView {
     view! {
+        <Title text={move || format!("{} | {} | {}", t!("worksheets.problem.title"), t!("process.title"), t!("name"))}/>
         <section class="self-stretch w-full flex flex-col justify-between">
             <div class="p-8 my-8 dark:bg-stone-800 rounded-lg">
                 <h3 class="w-full text-center text-2xl md:text-3x xl:text-4xl pb-6">{t!("worksheets.problem.title")}</h3>

@@ -11,7 +11,7 @@ pub fn ContactFormView() -> impl IntoView {
             <div class="max-w-prose">
                 <p class="pb-4">{t!("contact.description")}</p>
             </div>
-            <form>
+            <form class="flex flex-col">
                 <fieldset>
                     <label>
                         <p>{t!("contact.label_worksheets")}</p>
