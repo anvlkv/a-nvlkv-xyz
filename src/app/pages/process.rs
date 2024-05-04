@@ -1,8 +1,13 @@
 use leptos::*;
 use leptos_router::*;
+use strum::VariantArray;
 use uuid::Uuid;
 
-use crate::app::{process::*, state::use_store, Language};
+use crate::app::{
+    process::*,
+    state::{use_store, ProcessStep, SeqStep},
+    Language,
+};
 
 #[derive(Params, PartialEq, Clone)]
 struct ProcessParams {
@@ -31,15 +36,14 @@ pub fn ProcessView() -> impl IntoView {
             let lang = lang.get().0;
 
             store.update(|s| {
-                s.sequence = vec![
-                    format!("/{}/1", lang),
-                    format!("/{}/2", lang),
-                    format!("/{}/3", lang),
-                    format!("/{}/4", lang),
-                    format!("/{}/5", lang),
-                    format!("/{}/6", lang),
-                    format!("/{}/7", lang),
-                ];
+                s.sequence = ProcessStep::VARIANTS
+                    .iter()
+                    .enumerate()
+                    .map(|(i, step)| SeqStep {
+                        href: format!("/{lang}/{}", i + 1),
+                        process_step: *step,
+                    })
+                    .collect();
             })
         }
     });
@@ -59,8 +63,11 @@ pub fn ProcessView() -> impl IntoView {
     };
 
     view! {
-        <div class="mx-auto max-w-screen-2xl px-6 md:px-8 lg:px-16 min-h-full flex justify-center items-center">
+        <div class="mx-auto max-w-screen-2xl px-6 md:px-8 lg:px-16 min-h-full flex flex-col justify-stretch items-center">
             {step_view}
+            <Show when={move || step() > 0}>
+                <StepperView/>
+            </Show>
         </div>
     }
 }

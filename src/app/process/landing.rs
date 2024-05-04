@@ -22,9 +22,6 @@ mod rv_animation {
 /// step 0
 #[component]
 pub fn LandingView() -> impl IntoView {
-    // let onclick = props.on_click.clone();
-    // let LocaleLang(selected_lang) = use_context::<LocaleLang>().unwrap();
-    // rust_i18n::set_locale(selected_lang.as_str());
     let lang = use_context::<Signal<Language>>().unwrap();
 
     let (button_height, set_button_height) = create_signal::<f64>(0.0);
@@ -74,11 +71,11 @@ pub fn LandingView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {}", t!("name"), t!("specialty"))}/>
-        <section>
-            <div class="grid grid-cols-2 md:grid-cols-4 content-center">
+        <section class="contents">
+            <div class="grow grid grid-cols-2 md:grid-cols-4 content-center">
                 <div class="relative col-span-2 row-span-4 md:col-start-2 py-3 margin-0 flex flex-col-reverse justify-stretch items-stretch text-4xl sm:text-5xl md:text-6xl lg:text-8xl 2xl:text-9xl ">
                     <canvas id="process_animation" style={move || format!("height: {}px;", button_height.get() * 2.75)} class="absolute box-border self-center bottom-0 mb-3 md:mb-7 min-w-full"/>
-                    <button id="the-done-button" on:click={on_click_done} node_ref=button_element class="mt-4 md:mt-8 md:mb-4 mx-auto shrink-0 px-10 md:px-16 py-2 lg:px-20 lg:py-3 2xl:px-24 2xl:py-6 rounded-full bg-purple-900 text-stone-100 border-4 border-solid border-slate-50 drop-shadow-md">
+                    <button id="the-done-button" on:click={on_click_done} node_ref=button_element class="mt-4 md:mt-8 md:mb-4 mx-auto shrink-0 px-10 md:px-16 py-2 lg:px-20 lg:py-3 2xl:px-24 2xl:py-6 rounded-full bg-purple-900 text-stone-100 border-4 border-solid border-slate-50 drop-shadow-md text-center">
                         {t!("letters.done")}
                     </button>
                     <div class="flex flex-col min-w-32 items-stretch self-center whitespace-nowrap">

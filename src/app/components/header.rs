@@ -18,7 +18,7 @@ pub fn HeaderView() -> impl IntoView {
             }
             .into_view(),
             _ => view! {
-                <A href={lang} attr:class="underline hover:text-purple-800 dark:hover:text-purple-200">
+                <A href={lang} attr:class="underline hover:text-purple-800 active:text-purple-950">
                     {t!("name")}
                 </A>
             }
@@ -44,7 +44,6 @@ pub fn HeaderView() -> impl IntoView {
             .collect_view()
     };
 
-    let route = use_route();
     #[allow(unused_variables)]
     let onchange_lang = move |e: ev::Event| {
         #[cfg(feature = "hydrate")]
@@ -55,10 +54,10 @@ pub fn HeaderView() -> impl IntoView {
             let target: Option<EventTarget> = e.target();
             let select = target.and_then(|t| t.dyn_into::<HtmlSelectElement>().ok());
 
-            if let Some(val) = select.map(|s| s.value()) {
-                let path = route.path();
+            if let Some(lang) = select.map(|s| s.value()) {
+                let path = location.pathname.get();
                 let it = path.split("/").skip(2);
-                let next_path = it.fold(format!("/{val}"), |acc, param| format!("{acc}/param"));
+                let next_path = it.fold(format!("/{lang}"), |acc, param| format!("{acc}/{param}"));
                 navigate(next_path.as_str(), Default::default());
             }
         }
@@ -69,7 +68,7 @@ pub fn HeaderView() -> impl IntoView {
             <div class="max-w-screen-2xl px-6 md:px-8 lg:px-16 py-3 flex justify-between grow shrink-0">
                 {title}
                 <div class="flex gap-2">
-                    <A href={move || format!("/{}/contact", lang.get().0)} >{ t!("let_talk") }</A>
+                    <A class="hover:underline hover:text-purple-800 active:text-purple-950" exact=true href={move || format!("/{}/contact", lang.get().0)} >{ t!("let_talk") }</A>
                     <select on:change={onchange_lang} value={move || lang.get().0} class="bg-transparent max-w-min pr-2 border-r-2 border-solid border-stone:700 dark:border-stone-200">
                         {options}
                     </select>

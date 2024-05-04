@@ -8,6 +8,10 @@ a {
     transition-timing-function: ease-in;
 }
 
+button:disabled {
+    pointer-events: none;
+}
+
 #the-done-button {
     background: $gradient, #581c87;
     z-index: 2;

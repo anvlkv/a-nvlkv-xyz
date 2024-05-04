@@ -1,109 +1,131 @@
 use leptos::*;
 use leptos_router::*;
+use strum::VariantArray;
 
-use crate::app::state::use_store;
+use crate::app::{
+    state::{use_store, ProcessStep},
+    Language,
+};
+
+#[cfg(any(feature = "csr", feature = "hydrate"))]
+mod rv_animation {
+    use wasm_bindgen::prelude::*;
+
+    #[wasm_bindgen(module = "/src/app/process/stepper.mjs")]
+    extern "C" {
+
+        #[wasm_bindgen(js_name=mountArtboards)]
+        pub fn mount_artboards();
+
+        #[wasm_bindgen(js_name=setActive)]
+        pub fn set_active(artboard: String);
+
+        #[wasm_bindgen(js_name=setVisible)]
+        pub fn set_visible(artboard: String);
+
+        #[wasm_bindgen(js_name=forgetVisible)]
+        pub fn forget_visible();
+
+        #[wasm_bindgen(js_name=cleanUp)]
+        pub fn clean_up();
+    }
+}
 
 #[component]
 pub fn StepperView() -> impl IntoView {
     let state = use_store();
+    let location = use_location();
+    let lang = use_context::<Signal<Language>>().unwrap();
 
-    let mut prev_button_disabled = false;
+    let step_idx = Signal::derive(move || {
+        let current = location.pathname.get();
+        state
+            .get()
+            .sequence
+            .iter()
+            .position(|s| s.href == current)
+            .unwrap_or_default()
+    });
+
+    let prev_button_disabled = Signal::derive(move || step_idx.get() == 0);
     let mut prev_button_text = "Previous";
 
-    let mut next_button_disabled = false;
+    let next_button_disabled =
+        Signal::derive(move || step_idx.get() == state.get().sequence.len() - 1);
     let mut next_button_text = "Next";
 
-    // match route.unwrap() {
-    //     Route::Process { step: 1 } => {
-    //         prev_button_disabled = true;
-    //         next_button_text = "Continue";
-    //     }
-    //     Route::Process { step: 2 } => {
-    //         prev_button_text = "Return to introduction";
-    //         next_button_text = if !state.problem.complete {
-    //             "See examples"
-    //         } else {
-    //             "Create solutions"
-    //         };
-    //     }
-    //     Route::ProcessExample { step: 2, id } => {
-    //         prev_button_text = "Return to problem worksheet";
-    //         if let Some((example, pos)) = state
-    //             .examples_problem
-    //             .iter()
-    //             .position(|e| e.id == id)
-    //             .map(|pos| (state.examples_problem.iter().nth(pos).unwrap(), pos))
-    //         {
-    //             next_button_text = if !state.examples_problem.last().map {
-    //                 "See examples"
-    //             } else {
-    //                 "Create solutions"
-    //             };
-    //         }
-    //     }
-    //     Route::Process { step: 3 } => {
-    //         prev_button_text = "Return to problem space";
-    //         next_button_text = if !state.solutions.complete {
-    //             "See examples"
-    //         } else {
-    //             "Find the compromise"
-    //         };
-    //     }
-    //     Route::Process { step: 4 } => {
-    //         prev_button_text = "Return to solutions";
-    //         next_button_text = if !state.solutions.complete {
-    //             "See examples"
-    //         } else {
-    //             "Find the compromise"
-    //         };
-    //     }
-    //     Route::Process { step: 4 } => {
-    //         prev_button_text = "Return to solutions";
-    //         next_button_text = if !state.solutions.complete {
-    //             "See examples"
-    //         } else {
-    //             "Find the compromise"
-    //         };
-    //     }
-    //     Route::ProcessExample { step, id } => {}
-    //     _ => {}
-    // }
-
     let navigate = use_navigate();
-    let route = use_route();
     let on_next = move |_| {
-        let route = route.path();
         let seq = state.get().sequence;
 
-        let next = seq.iter().skip_while(|r| *r != &route).skip(1).next();
+        let next = seq.iter().nth(step_idx.get() + 1);
         if let Some(next) = next {
-            navigate(next.as_str(), Default::default())
+            navigate(next.href.as_str(), Default::default());
         } else if let Some(first) = seq.first() {
-            navigate(first.as_str(), Default::default())
+            navigate(first.href.as_str(), Default::default());
         } else {
-            log::warn!("current step not found")
+            log::error!("current step not found");
         }
     };
 
     let navigate = use_navigate();
-    let route = use_route();
     let on_prev = move |_| {
-        let route = route.path();
         let seq = state.get().sequence;
 
-        let prev = seq.iter().take_while(|r| *r != &route).last();
+        let prev = seq.iter().nth(step_idx.get().saturating_sub(1));
         if let Some(prev) = prev {
-            navigate(prev.as_str(), Default::default())
+            navigate(prev.href.as_str(), Default::default())
         }
     };
 
-    let prev_button = view! {<button on:click={on_prev} disabled={prev_button_disabled}>{prev_button_text}</button>};
-    let next_button = view! {<button on:click={on_next} disabled={next_button_disabled}>{next_button_text}</button>};
+    #[cfg(any(feature = "csr", feature = "hydrate"))]
+    {
+        create_effect(move |_| {
+            rv_animation::mount_artboards();
+        });
+
+        on_cleanup(move || {
+            rv_animation::clean_up();
+        });
+
+        create_effect(move |_| {
+            let artboard = state.get().sequence[step_idx.get()]
+                .process_step
+                .to_string();
+            rv_animation::set_active(artboard);
+            rv_animation::forget_visible();
+        });
+    }
+
+    #[allow(unused_variables)]
+    let activate_cb = Callback::new(move |step: Option<ProcessStep>| {
+        #[cfg(any(feature = "csr", feature = "hydrate"))]
+        {
+            if let Some(step) = step {
+                rv_animation::set_visible(step.to_string());
+            } else {
+                rv_animation::forget_visible();
+            }
+        }
+    });
+
+    let steps = ProcessStep::VARIANTS.iter().enumerate().map(move |(i, artboard)| {
+        let label = format!("stepper.{}", artboard.to_string().to_lowercase());
+        let label = t!(label.as_str()).to_string();
+
+        view!{
+            <A on:pointerenter={move |_| activate_cb.call(Some(*artboard))} on:pointerleave={move |_| activate_cb.call(None)} href={move || format!("/{}/{}", lang.get().0, i + 1)} active_class="pointer-events-none" class="block flex flex-col items-center w-28 hover:underline hover:text-purple-800 active:text-purple-950">
+                <canvas id={move || format!("stepper_icon_{}", artboard)} class="mt-1 w-8 h-8 xl:w-12 xl:h-12"/>
+                <span class="my-2 text-sm block">{label}</span>
+            </A>
+        }
+    }).collect_view();
 
     view! {
-        <aside class="flex justify-between items-center w-full pt-6 pb-3 border-t-2 border-solid border-slate-400">
-            {prev_button}
-            {next_button}
+        <aside class="grow-0 flex flex-col md:flex-row justify-between items-center w-full pt-6 pb-3 border-t-2 border-solid border-slate-400">
+            <button class="px-3 py-2 rounded-full bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-2 border-solid border-slate-50 drop-shadow-sm" on:click={on_prev} disabled={prev_button_disabled}>{prev_button_text}</button>
+            {steps}
+            <button class="px-3 py-2 rounded-full bg-purple-900 hover:bg-purple-800 text-stone-100 active:bg-purple-950 border-2 border-solid border-slate-50 drop-shadow-sm" on:click={on_next} disabled={next_button_disabled}>{next_button_text}</button>
         </aside>
     }
 }

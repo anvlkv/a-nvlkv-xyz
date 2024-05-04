@@ -116,13 +116,15 @@ landing:
   p2_s2:
     en: Enjoy the journey or take one of the shortcuts.
     ru: Насладитесь опытом или используйте одну из ссылок.
-process_intro:
+about:
   title:
     en: Getting things done with a mindful awarenes.
   description_1:
-    en: Whenever we are doing our work we shape our future and that of others. We may have such intention or even a particular outcome in mind. We may as well intend to complete our work, only wishing to benefit ourself. Either way the future never comes out exactly the way it was intended; reality takes place, shaping further our perception of it. But as some wise people said “it's not the dots but the arrows that matter” therefore, may we look forward to the journey and not a destination, .
+    en: Whenever we are doing our work we shape our future and that of others. Whether we have such intention or even a particular outcome in mind the future never comes out exactly the way it was intended; reality takes place, shaping further our perception of it. But as some wise people said “it's not the dots but the arrows that matter” therefore, may we look forward to the journey and not a destination.
   description_2:
     en: The app will guide you through a 5 step process of getting from problems to testable solutions. Each step is an interactive worksheet with examples. Complete the workbook on your own or in collaboration with others.
+  cta:
+    en: Get started →
   s_1:
     title:
       en: The problem
@@ -287,3 +289,18 @@ not_found:
   nl: Pagina niet gevonded
   ru: Страница не найдена
   ja: ページが見つかりません
+stepper:
+  about:
+    en: About
+  problem:
+    en: Problem
+  solution:
+    en: Solutions
+  compromise:
+    en: Compromise
+  implement:
+    en: Implement
+  iterate:
+    en: Test & Iterate
+  inquire:
+    en: Inquiries

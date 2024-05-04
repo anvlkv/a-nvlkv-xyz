@@ -1,4 +1,5 @@
 use leptos::*;
+use strum::{Display, VariantArray};
 use uuid::Uuid;
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
@@ -14,7 +15,7 @@ pub struct State {
     pub iterate: FormState<IterateForm>,
     pub examples_iterate: Vec<ExampleState<IterateForm>>,
     pub inquire: FormState<InquireForm>,
-    pub sequence: Vec<String>,
+    pub sequence: Vec<SeqStep>,
 }
 
 #[derive(Clone)]
@@ -30,6 +31,24 @@ pub fn StoreProvider(children: Children) -> impl IntoView {
 pub fn use_store() -> RwSignal<State> {
     let ctx = use_context::<Store>().expect("State not provided");
     ctx.0
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
+pub struct SeqStep {
+    pub href: String,
+    pub process_step: ProcessStep,
+}
+
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Display, VariantArray)]
+pub enum ProcessStep {
+    #[default]
+    About,
+    Problem,
+    Solution,
+    Compromise,
+    Implement,
+    Iterate,
+    Inquire,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]

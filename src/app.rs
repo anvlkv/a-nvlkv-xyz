@@ -28,7 +28,7 @@ pub fn App() -> impl IntoView {
 
         // app
         <StoreProvider>
-            <div class="font-sans h-screen w-screen overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50">
+            <div class="font-sans md:h-screen w-screen overflow-auto md:overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50">
                 <Router>
                     <Routes>
                         <Route path="/:lang" view=LocalizedView>
