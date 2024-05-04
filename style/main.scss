@@ -25,40 +25,6 @@ a {
         margin-bottom: 0;
     }
 
-    & + div + #emojies {
-        width: 100%;
-        font-size: 42%;
-        display: flex;
-        justify-content: center;
-        align-items: end;
-        pointer-events: none;
-        > span {
-            display: block;
-            box-sizing: border-box;
-
-            transition-property: margin, opacity, z-index;
-            transition-duration: $hover-duration;
-            transition-timing-function: ease-out;
-            opacity: 0;
-
-            background-color: rgba(#f5f5f4, 0.75);
-
-            padding: 0.2em 0.42em;
-            height: 2em;
-            width: 2em;
-            border-radius: 2em;
-            line-height: 1.5em;
-
-            @media (min-width: 640px) {
-                padding: 0.25em;
-                height: 1.5em;
-                width: 1.5em;
-                border-radius: 2em;
-                line-height: unset;
-            }
-        }
-    }
-
     &:hover {
         background: $gradient, #5b21b6;
 
@@ -69,42 +35,6 @@ a {
         & + div > span {
             margin-top: -$hover-offset;
             margin-bottom: $hover-offset;
-        }
-
-        & + div + #emojies {
-            span {
-                opacity: 1;
-            }
-            span:nth-child(1) {
-                margin-right: calc(0.35em + 7%);
-                margin-bottom: 2.5em;
-                transition-delay: $hover-duration * 0.25;
-            }
-            span:nth-child(2) {
-                margin-bottom: 3.85em;
-                margin-right: 2em;
-                transition-delay: $hover-duration * 0.45;
-            }
-            span:nth-child(3) {
-                margin-bottom: 4.35em;
-                margin-right: 1em;
-                transition-delay: $hover-duration * 0.65;
-            }
-            span:nth-child(4) {
-                margin-bottom: 4.35em;
-                margin-left: 1em;
-                transition-delay: $hover-duration * 0.65;
-            }
-            span:nth-child(5) {
-                margin-bottom: 3.85em;
-                margin-left: 2em;
-                transition-delay: $hover-duration * 0.85;
-            }
-            span:nth-child(6) {
-                margin-left: calc(0.35em + 7%);
-                margin-bottom: 2.5em;
-                transition-delay: $hover-duration;
-            }
         }
     }
 
@@ -137,4 +67,8 @@ div:has(#the-done-button:hover) {
         transition-property: margin;
         transition-duration: $hover-duration;
     }
+}
+
+#process_animation {
+    aspect-ratio: 1522 / 496;
 }

@@ -17,7 +17,7 @@ key_value_stores = ["default"]
 environment = { RUST_LOG = "a-nvlkv-xyz=trace" }
 [component.a-nvlkv-xyz.build]
 command = "cargo leptos build --release && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --release --no-default-features --features ssr"
-watch = ["src/**/*.rs", "Cargo.toml"]
+watch = ["src/**/*.rs", "src/**/*.mjs", "Cargo.toml", "style/*"]
 
 [[trigger.http]]
 route = "/pkg/..."

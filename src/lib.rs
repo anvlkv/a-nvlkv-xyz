@@ -6,9 +6,6 @@ mod app;
 #[cfg(feature = "ssr")]
 mod server;
 
-#[cfg(any(feature = "csr", feature = "hydrate"))]
-mod bindings;
-
 use cfg_if::cfg_if;
 
 i18n!();
