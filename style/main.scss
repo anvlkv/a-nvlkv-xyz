@@ -12,6 +12,12 @@ button:disabled {
     pointer-events: none;
 }
 
+.worksheet-tab {
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
 #the-done-button {
     background: $gradient, #581c87;
     z-index: 2;

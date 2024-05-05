@@ -17,11 +17,12 @@ export function mountArtboards() {
       autoplay: true,
       artboard,
       layout: new window.rive.Layout({
-        fit: "fit",
+        fit: "contain",
         alignment: "center",
       }),
       onLoad: () => {
         r.resizeDrawingSurfaceToCanvas();
+        console.log(r);
       },
     });
     return r;

@@ -114,7 +114,7 @@ pub fn StepperView() -> impl IntoView {
         let label = t!(label.as_str()).to_string();
 
         view!{
-            <A on:pointerenter={move |_| activate_cb.call(Some(*artboard))} on:pointerleave={move |_| activate_cb.call(None)} href={move || format!("/{}/{}", lang.get().0, i + 1)} active_class="pointer-events-none" class="block flex flex-col items-center w-28 hover:underline hover:text-purple-800 active:text-purple-950">
+            <A on:pointerenter={move |_| activate_cb.call(Some(*artboard))} on:pointerleave={move |_| activate_cb.call(None)} href={move || format!("/{}/{}", lang.get().0, i + 1)} active_class="pointer-events-none" class="block flex flex-col items-center px-6 hover:underline hover:text-purple-800 active:text-purple-950">
                 <canvas id={move || format!("stepper_icon_{}", artboard)} class="mt-1 w-8 h-8 xl:w-12 xl:h-12"/>
                 <span class="my-2 text-sm block">{label}</span>
             </A>
@@ -123,9 +123,9 @@ pub fn StepperView() -> impl IntoView {
 
     view! {
         <aside class="grow-0 flex flex-col md:flex-row justify-between items-center w-full pt-6 pb-3 border-t-2 border-solid border-slate-400">
-            <button class="px-3 py-2 rounded-full bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-2 border-solid border-slate-50 drop-shadow-sm" on:click={on_prev} disabled={prev_button_disabled}>{prev_button_text}</button>
+            <button class="px-3 py-2 min-w-28 rounded-full bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-2 border-solid border-slate-50 drop-shadow-sm" on:click={on_prev} disabled={prev_button_disabled}>{prev_button_text}</button>
             {steps}
-            <button class="px-3 py-2 rounded-full bg-purple-900 hover:bg-purple-800 text-stone-100 active:bg-purple-950 border-2 border-solid border-slate-50 drop-shadow-sm" on:click={on_next} disabled={next_button_disabled}>{next_button_text}</button>
+            <button class="px-3 py-2 min-w-28 rounded-full bg-purple-900 hover:bg-purple-800 text-stone-100 active:bg-purple-950 border-2 border-solid border-slate-50 drop-shadow-sm" on:click={on_next} disabled={next_button_disabled}>{next_button_text}</button>
         </aside>
     }
 }

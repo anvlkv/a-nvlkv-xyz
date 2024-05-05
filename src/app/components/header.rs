@@ -69,7 +69,7 @@ pub fn HeaderView() -> impl IntoView {
                 {title}
                 <div class="flex gap-2">
                     <A class="hover:underline hover:text-purple-800 active:text-purple-950" exact=true href={move || format!("/{}/contact", lang.get().0)} >{ t!("let_talk") }</A>
-                    <select on:change={onchange_lang} value={move || lang.get().0} class="bg-transparent max-w-min pr-2 border-r-2 border-solid border-stone:700 dark:border-stone-200">
+                    <select on:change={onchange_lang} value={move || lang.get().0} class="bg-transparent max-w-min pr-2 border-r-2 border-solid border-slate-400">
                         {options}
                     </select>
                 </div>
