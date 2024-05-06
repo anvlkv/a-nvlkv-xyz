@@ -1,10 +1,11 @@
 use leptos::*;
+use leptos_meta::*;
 use leptos_router::*;
 use strum::VariantArray;
 use uuid::Uuid;
 
 use crate::app::{
-    components::{Tab, WorksheetView},
+    components::{Tab, WorksheetDummy, WorksheetView},
     process::*,
     state::{use_store, ProcessStep, SeqStep},
     Language,
@@ -84,7 +85,7 @@ pub fn ProcessView() -> impl IntoView {
             .into_view(),
             2 => view! {
                 <section class={section_class}>
-                    <Transition>
+                    <Transition fallback={WorksheetDummy}>
                         <WorksheetView title={t!("worksheets.problem.title")}
                         description_id="problem"
                         description={move || view!{
@@ -99,7 +100,7 @@ pub fn ProcessView() -> impl IntoView {
             .into_view(),
             3 => view! {
                 <section class={section_class}>
-                    <Transition>
+                    <Transition fallback={WorksheetDummy}>
                         <WorksheetView title={t!("worksheets.solutions.title")}
                          description_id="solutions"
                         description={move || view! {
@@ -113,7 +114,7 @@ pub fn ProcessView() -> impl IntoView {
             .into_view(),
             4 => view! {
                 <section class={section_class}>
-                    <Transition>
+                    <Transition fallback={WorksheetDummy}>
                         <WorksheetView
                         title={t!("worksheets.compromise.title")}
                         description_id="compromise"
@@ -129,7 +130,7 @@ pub fn ProcessView() -> impl IntoView {
             .into_view(),
             5 => view! {
                 <section class={section_class}>
-                    <Transition>
+                    <Transition fallback={WorksheetDummy}>
                         <WorksheetView title={t!("worksheets.implement.title")}
                         description_id="implement"
                         description={move || view! {
@@ -144,7 +145,7 @@ pub fn ProcessView() -> impl IntoView {
             .into_view(),
             6 => view! {
                 <section class={section_class}>
-                    <Transition>
+                    <Transition fallback={WorksheetDummy}>
                         <WorksheetView title={t!("worksheets.iterate.title")}
                         description_id="iterate"
                         description={move || view!{
@@ -166,6 +167,7 @@ pub fn ProcessView() -> impl IntoView {
     };
 
     view! {
+        <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>
         <div class="grow mx-auto lg:mx-0 max-w-screen-2xl px-6 md:px-8 lg:px-16 flex flex-row-reverse lg:flex-col lg:justify-stretch lg:items-center">
             {step_view}
             <Show when={move || step() > 0}>
