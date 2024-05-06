@@ -6,8 +6,8 @@ use leptos_meta::*;
 pub fn ProblemView() -> impl IntoView {
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.problem.title"), t!("process.title"), t!("name"))}/>
+
         <div class="max-w-prose">
-            <p class="pb-4">{t!("worksheets.problem.description")}</p>
             <p>{t!("worksheets.problem.instruction_1")}</p>
         </div>
         <div class="grid grid-cols-2 text-center">

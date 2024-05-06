@@ -62,7 +62,8 @@ pub fn ProcessView() -> impl IntoView {
         ]
     });
 
-    let section_class = "grow w-full p-8 my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow";
+    let section_class =
+        "grow lg:w-full p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow";
 
     let step_view = move || {
         let step = step();
@@ -70,49 +71,88 @@ pub fn ProcessView() -> impl IntoView {
             0 => view! {<LandingView/>}.into_view(),
             1 => view! {
                 <section class={section_class}>
-                    <WorksheetView title={t!("about.title")} >
-                        <AboutView/>
-                    </WorksheetView>
+                    <div class="flex flex-col">
+                        <div class="grow-0 flex items-end flex-wrap w-full mb-6">
+                            <h2 class="shrink-0 text-2xl md:text-3xl xl:text-4xl block mr-3">{t!("about.title")}</h2>
+                        </div>
+                        <div class="grow w-full">
+                            <AboutView/>
+                        </div>
+                    </div>
                 </section>
             }
             .into_view(),
             2 => view! {
                 <section class={section_class}>
-                    <WorksheetView title={t!("worksheets.problem.title")} tabs={mock_tabs}>
-                        <ProblemView/>
-                    </WorksheetView>
+                    <Transition>
+                        <WorksheetView title={t!("worksheets.problem.title")}
+                        description_id="problem"
+                        description={move || view!{
+                                <p>{t!("worksheets.problem.description")}</p>
+                        }}
+                        tabs={mock_tabs}>
+                                <ProblemView/>
+                        </WorksheetView>
+                    </Transition>
                 </section>
             }
             .into_view(),
             3 => view! {
                 <section class={section_class}>
-                    <WorksheetView title={t!("worksheets.solutions.title")} >
-                        <SolutionView/>
-                    </WorksheetView>
+                    <Transition>
+                        <WorksheetView title={t!("worksheets.solutions.title")}
+                         description_id="solutions"
+                        description={move || view! {
+                            <p>{t!("worksheets.solutions.description")}</p>
+                        }} >
+                                <SolutionView/>
+                        </WorksheetView>
+                    </Transition>
                 </section>
             }
             .into_view(),
             4 => view! {
                 <section class={section_class}>
-                    <WorksheetView title={t!("worksheets.compromise.title")} >
-                        <CompromiseView/>
-                    </WorksheetView>
+                    <Transition>
+                        <WorksheetView
+                        title={t!("worksheets.compromise.title")}
+                        description_id="compromise"
+                        description={move || view! {
+                                <p>{t!("worksheets.compromise.description")}</p>
+                        }}
+                        >
+                                <CompromiseView/>
+                        </WorksheetView>
+                    </Transition>
                 </section>
             }
             .into_view(),
             5 => view! {
                 <section class={section_class}>
-                    <WorksheetView title={t!("worksheets.implement.title")} >
-                        <ImplementView/>
-                    </WorksheetView>
+                    <Transition>
+                        <WorksheetView title={t!("worksheets.implement.title")}
+                        description_id="implement"
+                        description={move || view! {
+                            <p class="pb-4">{t!("worksheets.implement.description_1")}</p>
+                            <p>{t!("worksheets.implement.description_2")}</p>
+                        }} >
+                                <ImplementView/>
+                        </WorksheetView>
+                    </Transition>
                 </section>
             }
             .into_view(),
             6 => view! {
                 <section class={section_class}>
-                    <WorksheetView title={t!("worksheets.iterate.title")} >
-                        <IterateView/>
-                    </WorksheetView>
+                    <Transition>
+                        <WorksheetView title={t!("worksheets.iterate.title")}
+                        description_id="iterate"
+                        description={move || view!{
+                                <p>{t!("worksheets.iterate.description")}</p>
+                        }}>
+                                <IterateView/>
+                        </WorksheetView>
+                    </Transition>
                 </section>
             }
             .into_view(),
@@ -126,7 +166,7 @@ pub fn ProcessView() -> impl IntoView {
     };
 
     view! {
-        <div class="mx-auto max-w-screen-2xl px-6 md:px-8 lg:px-16 min-h-full flex flex-col justify-stretch items-center">
+        <div class="grow mx-auto lg:mx-0 max-w-screen-2xl px-6 md:px-8 lg:px-16 flex flex-row-reverse lg:flex-col lg:justify-stretch lg:items-center">
             {step_view}
             <Show when={move || step() > 0}>
                 <StepperView/>

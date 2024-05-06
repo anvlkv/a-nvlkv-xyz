@@ -3,22 +3,29 @@ const artboard = "Done button stage";
 
 let rv = null;
 
+const observer = new ResizeObserver(() => {
+  if (rv) {
+    rv.resizeDrawingSurfaceToCanvas();
+  }
+});
+
 export function cleanUp() {
   if (rv) {
     rv.cleanup();
     rv = null;
+    observer.disconnect();
   }
 }
 
 export function landingAnimation() {
   const layout = new window.rive.Layout({
-    fit: "cover",
+    fit: "fitHeight",
     alignment: "bottomCenter",
   });
-
+  const el = document.getElementById("process_animation");
   rv = new window.rive.Rive({
     src: "/pkg/anvlkv-done-button.riv",
-    canvas: document.getElementById("process_animation"),
+    canvas: el,
     autoplay: true,
     stateMachines: mainState,
     artboard,
@@ -38,6 +45,8 @@ export function landingAnimation() {
       button.addEventListener("pointerleave", () => {
         showInput.value = false;
       });
+
+      observer.observe(el);
     },
   });
 }

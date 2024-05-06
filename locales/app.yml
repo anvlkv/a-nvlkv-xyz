@@ -1,5 +1,16 @@
 _version: 2
 
+util:
+  close:
+    en: Close
+    ru: Закрыть
+    nl: Sluiten
+    ja: 閉じる
+  info:
+    en: Description
+    ru: Описание
+    nl: Omschrijving
+    ja: 説明
 name:
   en: Aleksandr Novolokov
   nl: Aleksandr Novolokov

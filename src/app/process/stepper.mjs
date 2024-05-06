@@ -12,10 +12,17 @@ let rvHandles = null;
 let visible = null;
 let active = null;
 
+const observer = new ResizeObserver(() => {
+  if (rvHandles) {
+    rvHandles.forEach(({ r }) => r.resizeDrawingSurfaceToCanvas());
+  }
+});
+
 export function cleanUp() {
   if (rvHandles) {
     rvHandles.forEach(({ r }) => r.cleanup());
     rvHandles = null;
+    observer.disconnect();
   }
 }
 
@@ -23,9 +30,10 @@ export function mountArtboards() {
   rvHandles = artboards.map((artboard) => {
     const stateMachines = `${artboard} State Machine`;
     const handle = {};
+    const el = document.getElementById(`stepper_icon_${artboard}`);
     handle.r = new window.rive.Rive({
       src: "/pkg/anvlkv-done-button.riv",
-      canvas: document.getElementById(`stepper_icon_${artboard}`),
+      canvas: el,
       autoplay: true,
       stateMachines,
       artboard,
@@ -43,6 +51,7 @@ export function mountArtboards() {
           .find((input) => input.name === "Visible");
         handle.inactiveInput.value = active != artboard;
         handle.visibleInput.value = visible == artboard;
+        observer.observe(el);
       },
     });
     return handle;

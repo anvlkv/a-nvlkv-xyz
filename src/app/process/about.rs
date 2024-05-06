@@ -1,5 +1,4 @@
-use crate::app::state::ProcessStep;
-use crate::app::Language;
+use crate::app::{state::ProcessStep, Language};
 
 use leptos::*;
 use leptos_meta::*;

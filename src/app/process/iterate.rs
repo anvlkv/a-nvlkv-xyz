@@ -6,10 +6,6 @@ use leptos_meta::*;
 pub fn IterateView() -> impl IntoView {
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.iterate.title"), t!("process.title"), t!("name"))}/>
-        <div class="max-w-prose">
-            <p class="pb-4">{t!("worksheets.iterate.description")}</p>
-        </div>
-
         <label>
             <p>{t!("worksheets.iterate.instruction_1")}</p>
             <input type="checkbox"/>

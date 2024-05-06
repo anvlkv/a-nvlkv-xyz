@@ -7,7 +7,6 @@ pub fn CompromiseView() -> impl IntoView {
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.compromise.title"), t!("process.title"), t!("name"))}/>
         <div class="max-w-prose">
-            <p class="pb-4">{t!("worksheets.compromise.description")}</p>
             <p>{t!("worksheets.compromise.instruction_1")}</p>
         </div>
         <div class="grid grid-cols-2 text-center">

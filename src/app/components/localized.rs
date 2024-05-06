@@ -34,7 +34,7 @@ pub fn LocalizedView() -> impl IntoView {
 
         view! {
             <HeaderView/>
-            <main class="overflow-auto grow">
+            <main class="overflow-auto grow flex flex-col">
                 <Outlet/>
             </main>
             <FooterView/>
