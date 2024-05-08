@@ -6,11 +6,18 @@ util:
     ru: Закрыть
     nl: Sluiten
     ja: 閉じる
+  delete:
+    en: Delete
+    ru: Удалить
+    nl: Verwijder
+    ja: 削除
   info:
     en: Description
     ru: Описание
     nl: Omschrijving
     ja: 説明
+  js:
+    en: Please enable JavaScript in your browser and reload this page to use the app.
 name:
   en: Aleksandr Novolokov
   nl: Aleksandr Novolokov
@@ -54,7 +61,7 @@ lang_nl:
   short:
     en: NL
 let_talk:
-  en: Let's talk in
+  en: Let's speak
   nl: Praten wij even
   ru: Поговорим по
   ja: 話しましょう。
@@ -166,15 +173,28 @@ worksheets:
     title:
       en: The problem
     description:
-      en: Finding the right problem means getting out of the comfort zone, accepting that different people may have different takes on it, looking far out as well as deep within.
+      en: Finding the right problem means getting out of the comfort zone, accepting that different people may have different stakes in it, looking far out as well as deep within.
     instruction_1:
-      en: List any problems that come to mind, for every problem add a stakeholder (who suffers the most). Avoid lengthy descriptions at this step.
+      en: List any problems that come to mind, for every problem add a stakeholder. Avoid lengthy descriptions at this step.
     label_problems:
       en: Problem
     label_stakeholders:
       en: Stakeholder
+    placeholder_problem:
+      en: |
+        For example: Environmental pollution
+    placeholder_stakeholders:
+      en: |
+        For example: Ecosystems
+    add_problem:
+      en: Add a problem
+    add_stakeholder:
+      en: Add a stakeholder
     instruction_2:
       en: Make one problem statement. It should describe the most important problem or a combination of problems from your list, which stakeholders it affects and how.
+    placeholder_2:
+      en: |
+        For example: Because of the "Problem A" the "Stakeholder B" experiences "Undesirable effects C"
     label_statement:
       en: Problem statement
   solutions:

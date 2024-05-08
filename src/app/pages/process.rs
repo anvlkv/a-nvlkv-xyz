@@ -168,7 +168,18 @@ pub fn ProcessView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>
-        <div class="grow mx-auto lg:mx-0 max-w-screen-2xl px-6 md:px-8 lg:px-16 flex flex-row-reverse lg:flex-col lg:justify-stretch lg:items-center">
+        <div class="grow mx-auto w-full max-w-screen-2xl px-6 md:px-8 lg:px-16 flex flex-row-reverse lg:flex-col lg:justify-stretch lg:items-stretch">
+            <Show when={move || step() > 0}>
+                <noscript>
+                    <section class="grow lg:w-full p-8 my-6 lg:my-8 flex items-start mb-3 rounded-lg max-w-prose p-4 bg-amber-200 dark:bg-amber-950 border border-amber-400 dark:brder-amber-800 text-sky-800 dark:text-sky-200 text-lg rounded-xl shadow">
+                        <div class="flex flex-col">
+                            <div class="grow-0 flex items-end flex-wrap w-full mb-6">
+                                <h2 class="shrink-0 text-2xl md:text-3xl xl:text-4xl block mr-3 text-wrap whitespace-break-spaces w-full">{t!("util.js")}</h2>
+                            </div>
+                        </div>
+                    </section>
+                </noscript>
+            </Show>
             {step_view}
             <Show when={move || step() > 0}>
                 <StepperView/>

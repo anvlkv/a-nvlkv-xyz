@@ -2,6 +2,8 @@ use leptos::*;
 use strum::{Display, VariantArray};
 use uuid::Uuid;
 
+use super::form::*;
+
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct State {
     pub problem: FormState<ProblemForm>,
@@ -59,30 +61,15 @@ pub struct ExampleState<T> {
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub enum FormStatus {
-    #[default]
-    Prestine,
-    Touched,
-    Dirty,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct FormState<T> {
-    pub value: T,
-    pub status: FormStatus,
-    pub complete: bool,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct ProblemForm {
-    pub problems: Vec<String>,
-    pub stakeholders: Vec<String>,
-    pub problem_statement: String,
+    pub problems: Vec<FormState<String>>,
+    pub stakeholders: Vec<FormState<String>>,
+    pub problem_statement: FormState<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct SolutionsForm {
-    pub solutions: Vec<String>,
+    pub solutions: Vec<FormState<String>>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
@@ -93,8 +80,8 @@ pub struct CompromiseForm {
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct ImplementForm {
-    pub now: Vec<String>,
-    pub best: Vec<String>,
+    pub now: Vec<FormState<String>>,
+    pub best: Vec<FormState<String>>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]

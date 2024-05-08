@@ -9,7 +9,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-uuid = { version = "1.8.0", features = ["v4", "serde"] }
+uuid = { version = "1.8.0", features = ["v5", "v4", "serde"] }
 rust-i18n = "3"
 log = "0.4"
 anyhow = "1"
@@ -42,6 +42,8 @@ features = [
     "ResizeObserver",
     "ResizeObserverEntry",
     "DomRectReadOnly",
+    "HtmlLiElement",
+    "DomTokenList",
 ]
 
 [workspace]

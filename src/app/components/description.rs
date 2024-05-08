@@ -8,7 +8,7 @@ pub fn DescriptionView(
 ) -> impl IntoView {
     view! {
         <Show when={move || hidden.get().map(|h| !h).unwrap_or(true)}>
-            <div class="flex items-start mb-3 rounded-lg max-w-prose p-4 bg-sky-200 dark:bg-sky-950 border border-sky-400 dark:brder-sky-800 text-sky-800 dark:text-sky-200">
+            <div class="flex items-start mb-3 rounded-lg max-w-prose p-4 bg-sky-200 dark:bg-sky-950 border border-sky-400 dark:brder-sky-800 text-sky-800 dark:text-sky-200 text-lg">
                 <div>
                     {children()}
                 </div>

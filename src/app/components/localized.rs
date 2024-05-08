@@ -4,6 +4,8 @@ use leptos_router::*;
 
 use super::*;
 
+pub const APP_MAIN: &str = "app-main";
+
 #[derive(Clone, PartialEq, Eq, Params)]
 struct LocalizeParams {
     lang: Option<String>,
@@ -34,7 +36,7 @@ pub fn LocalizedView() -> impl IntoView {
 
         view! {
             <HeaderView/>
-            <main class="overflow-auto grow flex flex-col">
+            <main class="overflow-auto grow flex flex-col" id=APP_MAIN>
                 <Outlet/>
             </main>
             <FooterView/>

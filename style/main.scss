@@ -2,6 +2,10 @@ $hover-offset: 0.86em;
 $hover-duration: 250ms;
 $dummy-duration: 1250ms;
 
+body {
+    position: relative;
+}
+
 a {
     transition-property: color;
     transition-duration: $hover-duration;
@@ -28,17 +32,20 @@ button:disabled {
     &::before {
         content: " ";
         position: absolute;
-        width: 100%;
+        width: 200%;
         height: 100%;
         background: linear-gradient(
-            85deg,
+            45deg,
             rgba($color, 0) 0%,
             rgba($color, 0) 15%,
             rgba($color, $alpha) 20%,
-            rgba($color, 0) 27%,
-            rgba($color, 0) 47%,
-            rgba($color, $alpha) 67%,
-            rgba($color, 0) 83%
+            rgba($color, 0) 25%,
+            rgba($color, 0) 40%,
+            rgba($color, $alpha) 45%,
+            rgba($color, 0) 50%,
+            rgba($color, 0) 65%,
+            rgba($color, $alpha) 70%,
+            rgba($color, 0) 75%
         );
         @media (prefers-color-scheme: dark) {
             background: linear-gradient(
@@ -62,9 +69,17 @@ button:disabled {
 @keyframes dummy-line-animation {
     from {
         left: -100%;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 0;
     }
     to {
         left: 100%;
+        opacity: 0;
     }
 }
 
