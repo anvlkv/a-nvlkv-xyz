@@ -13,6 +13,8 @@ use state::StoreProvider;
 pub use components::Language;
 use components::LocalizedView;
 
+pub const STYLED_ROOT: &str = "app-styled-root";
+
 #[component]
 pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
@@ -29,7 +31,7 @@ pub fn App() -> impl IntoView {
 
         // app
         <StoreProvider>
-            <div class="font-sans min-h-screen w-screen overflow-auto md:overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50">
+            <div class="font-sans min-h-screen w-screen overflow-auto md:overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50" id={STYLED_ROOT}>
                 <Router>
                     <Routes>
                         <Route path="/:lang" view=LocalizedView>
@@ -49,12 +51,12 @@ pub fn App() -> impl IntoView {
     }
 }
 
-#[server(SaveCount, "/api")]
-pub async fn save_count(count: u32) -> Result<(), ServerFnError<String>> {
-    println!("Saving value {count}");
-    let store = spin_sdk::key_value::Store::open_default().map_err(|e| e.to_string())?;
-    store
-        .set_json("a_nvlkv_xyz_count", &count)
-        .map_err(|e| ServerFnError::ServerError(e.to_string()))?;
-    Ok(())
-}
+// #[server(SaveCount, "/api")]
+// pub async fn save_count(count: u32) -> Result<(), ServerFnError<String>> {
+//     println!("Saving value {count}");
+//     let store = spin_sdk::key_value::Store::open_default().map_err(|e| e.to_string())?;
+//     store
+//         .set_json("a_nvlkv_xyz_count", &count)
+//         .map_err(|e| ServerFnError::ServerError(e.to_string()))?;
+//     Ok(())
+// }

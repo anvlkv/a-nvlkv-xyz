@@ -5,6 +5,9 @@ mod header;
 mod input;
 mod list_input;
 mod localized;
+mod modal;
+mod privacy_notice;
+mod radio_input;
 mod worksheet;
 
 pub use contact_form::*;
@@ -14,4 +17,7 @@ pub use header::*;
 pub use input::*;
 pub use list_input::*;
 pub use localized::*;
+pub use modal::*;
+pub use privacy_notice::*;
+pub use radio_input::*;
 pub use worksheet::*;

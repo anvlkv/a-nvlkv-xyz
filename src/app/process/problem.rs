@@ -69,7 +69,7 @@ pub fn ProblemView() -> impl IntoView {
             <div class="max-w-prose mb-4">
                 <p>{t!("worksheets.problem.instruction_1")}</p>
             </div>
-            <div class="grid grid-cols-2 text-center mb-4 gap-6">
+            <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
                 <div>
                     <h4 class="text-lg mb-4">
                         {t!("worksheets.problem.label_problems")}

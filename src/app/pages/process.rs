@@ -5,7 +5,7 @@ use strum::VariantArray;
 use uuid::Uuid;
 
 use crate::app::{
-    components::{Tab, WorksheetDummy, WorksheetView},
+    components::{PrivacyNoticeView, Tab, WorksheetDummy, WorksheetView},
     process::*,
     state::{use_store, ProcessStep, SeqStep},
     Language,
@@ -168,7 +168,7 @@ pub fn ProcessView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>
-        <div class="grow mx-auto w-full max-w-screen-2xl px-6 md:px-8 lg:px-16 flex flex-row-reverse lg:flex-col lg:justify-stretch lg:items-stretch">
+        <div class="grow mx-auto w-full max-w-screen-2xl px-6 md:px-8 lg:px-16 flex flex-col sm:flex-row-reverse lg:flex-col lg:justify-stretch lg:items-stretch">
             <Show when={move || step() > 0}>
                 <noscript>
                     <section class="grow lg:w-full p-8 my-6 lg:my-8 flex items-start mb-3 rounded-lg max-w-prose p-4 bg-amber-200 dark:bg-amber-950 border border-amber-400 dark:brder-amber-800 text-sky-800 dark:text-sky-200 text-lg rounded-xl shadow">
@@ -184,6 +184,7 @@ pub fn ProcessView() -> impl IntoView {
             <Show when={move || step() > 0}>
                 <StepperView/>
             </Show>
+            // <PrivacyNoticeView/>
         </div>
     }
 }

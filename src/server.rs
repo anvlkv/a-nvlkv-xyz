@@ -17,7 +17,7 @@ async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
     conf.leptos_options.output_name = "a_nvlkv_xyz".to_owned();
 
     // Register server functions
-    register_explicit::<crate::app::SaveCount>();
+    // register_explicit::<crate::app::SaveCount>();
 
     let app = crate::app::App;
 

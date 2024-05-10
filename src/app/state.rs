@@ -74,8 +74,8 @@ pub struct SolutionsForm {
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct CompromiseForm {
-    pub choices: Vec<Option<bool>>,
-    pub assumption: String,
+    pub choices: Vec<FormState<Option<bool>>>,
+    pub assumption: FormState<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
@@ -86,13 +86,13 @@ pub struct ImplementForm {
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct IterateForm {
-    pub test: String,
+    pub test: FormState<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct InquireForm {
-    pub name: String,
-    pub email: String,
-    pub message: String,
-    pub include_worksheets: bool,
+    pub name: FormState<String>,
+    pub email: FormState<String>,
+    pub message: FormState<String>,
+    pub include_worksheets: FormState<bool>,
 }

@@ -59,7 +59,7 @@ where
                     <div class="flex justify-end grow items-end h-full">
                         <div class="border-b-2 px-2 border-slate-400 grow rounded-t-lg after:content-[' ']">
                             <Show when={move || description_hidden.get().unwrap_or(false)}>
-                                <button on:click={move |_| toggle_hidden.call(())} title=t!("util.info") class="text-2xl text-sky-800 dark:text-sky-200">{"ⓘ"}</button>
+                                <button on:click={move |_| toggle_hidden.call(())} title=t!("util.info") class="text-2xl -mb-0.5 text-sky-800 dark:text-sky-200">{"ⓘ"}</button>
                             </Show>
                         </div>
                         <Show when={move || tabs.map(|t| t.get().len() > 0).unwrap_or(false)}>

@@ -43,11 +43,33 @@ where
     let element = create_node_ref::<html::Div>();
     let button_element = create_node_ref::<html::Input>();
 
+    let is_multiline = input_type == "textarea".to_string();
+
     let cleanup_listener = use_event_listener(element, ev::keydown, move |e: ev::KeyboardEvent| {
         if e.key().to_lowercase().as_str() == "enter" {
+            if is_multiline && e.shift_key() {
+                return;
+            }
             e.prevent_default();
             e.stop_propagation();
-            on_add()
+            on_add();
+        } else if e.key().to_lowercase().as_str() == "backspace" {
+            if let Some((id, next)) = focused_id
+                .get()
+                .map(|id| {
+                    let data = data.get();
+                    data.iter()
+                        .enumerate()
+                        .find(|(_, d)| d.id == id)
+                        .filter(|(_, d)| d.value.get().is_empty())
+                        .map(|(i, d)| (d.id, data.iter().nth(i.saturating_sub(1)).map(|d| d.id)))
+                })
+                .flatten()
+            {
+                e.prevent_default();
+                remove_value.call(id);
+                focused_id.set(next);
+            }
         }
     });
 
@@ -64,10 +86,8 @@ where
                 .unwrap_or(false)
             {
                 e.prevent_default();
-                log::debug!("focus keept");
             } else {
                 focused_id.set(None);
-                log::debug!("focus none");
             }
         }
     };
@@ -98,7 +118,7 @@ where
                 </For>
             </ol>
             <div class="contents">
-                <input attr:type="button" class="px-2 py-1 mt-4 mx-20 md:px-3 md:py-2 md:min-w-28 rounded-full bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-2 border-solid border-purple-800 drop-shadow-sm text-purple-700 font-bold" value={add_entry_text} on:click={move |e| {
+                <input attr:type="button" class="px-2 py-1 mt-4 mx-8 lg:mx-15 xl:mx-20 md:px-3 md:py-2 md:min-w-28 rounded-full bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-2 border-solid border-purple-800 drop-shadow-sm text-purple-700 font-bold" value={add_entry_text} on:click={move |e| {
                     e.prevent_default();
                     on_add()
                 }} node_ref={button_element}/>

@@ -18,6 +18,52 @@ util:
     ja: 説明
   js:
     en: Please enable JavaScript in your browser and reload this page to use the app.
+    nl: Schakel JavaScript in uw browser in en laad de pagina opnieuw om de applicatie te gebruiken.
+    ru: Пожалуйста, включите JavaScript в вашем браузере и перезагрузите страницу, чтобы пользоваться приложением.
+    ja: アプリを使用するには、ブラウザの JavaScript を有効にしてこのページを再読み込みしてください。
+  empty:
+    en: Nothing here...
+    nl: Niks hier...
+    ru: Здесь ничего нет...
+    ja: ここには何もない...
+  ok:
+    en: Ok
+    nl: Oké
+    ja: オーケー
+    ru: Ок
+  cancel:
+    en: Cancel
+    nl: Annuleren
+    ja: キャンセル
+    ru: Отмена
+privacy:
+  notice:
+    en: Your privacy matters. This app won't store or send any data unless you  explicitly choose to share it.
+    ru: Ваша конфиденциальность имеет значение. Это приложение не будет сохранять или отправлять данные, если вы не решите поделиться ими.
+    nl: Uw privacy is van belang. Deze app slaat geen gegevens op of verzendt deze niet, tenzij u er expliciet voor kiest deze te delen.
+    ja: あなたのプライバシーは重要です。 このアプリは、明示的に共有を選択しない限り、データを保存または送信しません。
+  prompt:
+    en: Select a storage option. You can change your choice later.
+    ru: Выберите вариант хранения. Вы можете изменить ваш выбор позже.
+    nl: Selecteer een opslagoptie. U kunt uw keuze later wijzigen.
+    ja: ストレージ オプションを選択します。 選択は後で変更できます。
+  local:
+    en: Local storage
+    nl: Lokale opslag
+    ru: Локальное хранилище
+    ja: ローカルストレージ
+  local_description:
+    en: Store data in your browser local storage. Stored data will be available when you use this app again.
+    ru: Данные будут сохранены в локальном хранилище вашего браузера. Сохраненные данные будут доступны вам, когда вы решите вновь воспользоваться приложением.
+    nl: Bewaar gegevens in de lokale opslag van uw browser. Opgeslagen gegevens zijn beschikbaar wanneer u deze app opnieuw gebruikt.
+    ja: データをブラウザのローカル ストレージに保存します。 保存されたデータは、このアプリを再度使用するときに利用できます。
+  session:
+    en: Session storage
+  session_description:
+    en: All data is cleared once you close or reload this page.
+    nl: Alle gegevens worden gewist zodra u deze pagina sluit of opnieuw laadt.
+    ru: Все данные будут удалены как только вы закроете или презагрузите эту страницу.
+    ja: このページを閉じるかリロードすると、すべてのデータがクリアされます。
 name:
   en: Aleksandr Novolokov
   nl: Aleksandr Novolokov
@@ -203,9 +249,14 @@ worksheets:
     description:
       en: What are possible solutions to the problem? Avoid thinking of limitations, or whether you're going to implement it, whether it's even possible. The only criteria for solutions at this step is it must solve the problem.
     instruction:
-      en: List all solutions that come to mind. Go for quantity. Keep the titles short. Dream.
+      en: Look at your problem statement. List all solutions that come to mind. Go for quantity. Keep the titles short. Dream.
     label_solutions:
       en: How might we solve the problem?
+    add_solution:
+      en: Add a solution
+    placeholder_solution:
+      en: |
+        For example: Incentivise positive impact over revenue
   compromise:
     title:
       en: Compromise
