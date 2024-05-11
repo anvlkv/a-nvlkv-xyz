@@ -1,15 +1,18 @@
 use proc_macro2::{Span, TokenStream};
 use quote::{quote, ToTokens};
 use syn::{
-    parse_macro_input, parse_quote, spanned::Spanned, Attribute, DataStruct, DeriveInput, Ident,
-    LitInt, Type,
+    parse_macro_input, parse_quote, spanned::Spanned, Attribute, DataStruct, DeriveInput, Fields,
+    Generics, Ident, LitInt, Type,
 };
 
 /// Given a `struct StructName { value: String }`
 /// generates a corresponding `struct StructNameFormState { value: FormState<String> }`
-/// along with required `.into()` and `.from()` implementations
+/// along with required `.into()` and `.from()` implementations.
+///
+/// The derived `FormState` also implements `leptos::SignalGet`
 ///
 /// use `#[nested]` field attribute for fields which represent nested forms
+/// turning `Nested` into `NestedFormState` where `Nested` must derive `FormState`
 ///
 /// use `#[iterable]` field attribute for fields with iterable values
 #[proc_macro_derive(FormState, attributes(nested, iterable))]
@@ -34,10 +37,172 @@ pub fn derive_form_state(item: proc_macro::TokenStream) -> proc_macro::TokenStre
         return proc_macro::TokenStream::new();
     };
 
-    let is_tuple = fields.iter().any(|f| f.ident.is_none());
-
     let struct_name = syn::Ident::new(format!("{}FormState", ident).as_str(), Span::mixed_site());
 
+    let form_state_fields = make_form_state_fields(&fields);
+
+    let impl_from = make_impl_from(&fields, &ident, &generics, &struct_name);
+
+    let impl_into = make_impl_into(&fields, &ident, &generics, &struct_name);
+
+    let impl_signal_get = make_signal_get(&fields, &ident, &generics, &struct_name);
+
+    let expanded = quote! {
+        #[derive(Default, Clone, Debug, PartialEq, Eq)]
+        #vis #struct_token #struct_name #generics #form_state_fields #semi_token
+
+        #impl_from
+
+        #impl_into
+
+        #impl_signal_get
+    };
+
+    proc_macro::TokenStream::from(expanded)
+}
+
+fn make_signal_get(
+    fields: &Fields,
+    ident: &Ident,
+    generics: &Generics,
+    struct_name: &Ident,
+) -> TokenStream {
+    let is_tuple = fields.iter().any(|f| f.ident.is_none());
+
+    let (expressions, get_fields): (Vec<(TokenStream, TokenStream)>, Vec<TokenStream>) = fields
+        .iter()
+        .enumerate()
+        .map(|(i, field)| {
+            let ident = field.ident.clone().map(|i| i.to_token_stream()).unwrap_or(
+                LitInt::new(format!("{i}").as_str(), Span::mixed_site()).to_token_stream(),
+            );
+
+            if is_nested(field.attrs.as_slice()) {
+                (
+                    (
+                        quote! {
+                            leptos::SignalGet::get(
+                                &self.#ident
+                            ).get(),
+                        },
+                        quote! {
+                            leptos::SignalGet::try_get(
+                                &self.#ident
+                            ).map(|v| v.try_get().is_some()).unwrap_or(false),
+                        },
+                    ),
+                    ident,
+                )
+            } else if is_iterable(field.attrs.as_slice()) {
+                let ty = field.ty.clone();
+
+                (
+                    (
+                        quote! {
+                            self.#ident.iter().map(|v| {
+                                leptos::SignalGet::get(v)
+                            }).collect::<#ty>(),
+                        },
+                        quote! {
+                            {
+                                self.#ident
+                                    .iter()
+                                    .any(|v| leptos::SignalGet::try_get(v).is_some())
+                            },
+                        },
+                    ),
+                    ident,
+                )
+            } else {
+                (
+                    (
+                        quote! {
+                            leptos::SignalGet::get(
+                                &self.#ident
+                            ),
+                        },
+                        quote! {
+                            leptos::SignalGet::try_get(
+                                &self.#ident
+                            ).is_some(),
+                        },
+                    ),
+                    ident,
+                )
+            }
+        })
+        .unzip();
+
+    let (get_expressions, try_get_tests): (Vec<TokenStream>, Vec<TokenStream>) =
+        expressions.into_iter().unzip();
+
+    let (collect_get_fields, collect_try_get_fields) = if is_tuple {
+        let try_get_expressions = get_expressions.clone();
+
+        (
+            quote! {
+                #ident (
+                    #(#get_expressions)*
+                )
+            },
+            quote! {
+                let fields = vec![#(#try_get_tests)*];
+
+                if fields.iter().any(|f| !f) {
+                    None
+                }
+                else {
+                    Some(#ident (
+                        #(#try_get_expressions)*
+                    ))
+                }
+            },
+        )
+    } else {
+        let named_fields = get_expressions
+            .iter()
+            .zip(get_fields.clone())
+            .map(|(e, f)| quote! {#f: #e});
+
+        let try_named_fields = named_fields.clone();
+
+        (
+            quote! {
+                #ident  {
+                    #(#named_fields)*
+                }
+            },
+            quote! {
+                let fields = vec![#(#try_get_tests)*];
+
+                if fields.iter().any(|f| !f) {
+                    None
+                }
+                else {
+                    Some(#ident {
+                        #(#try_named_fields)*
+                    })
+                }
+            },
+        )
+    };
+
+    quote! {
+        impl #generics leptos::SignalGet for #struct_name #generics {
+            type Value = #ident;
+
+            fn get(&self) -> Self::Value {
+                #collect_get_fields
+            }
+
+            fn try_get(&self) -> Option<Self::Value> {
+                #collect_try_get_fields
+            }
+        }
+    }
+}
+
+fn make_form_state_fields(fields: &Fields) -> Fields {
     let mut form_state_fields = fields.clone();
     form_state_fields.iter_mut().for_each(|field| {
         let ty = field.ty.clone();
@@ -56,6 +221,17 @@ pub fn derive_form_state(item: proc_macro::TokenStream) -> proc_macro::TokenStre
 
         field.attrs = vec![];
     });
+
+    form_state_fields
+}
+
+fn make_impl_from(
+    fields: &Fields,
+    ident: &Ident,
+    generics: &Generics,
+    struct_name: &Ident,
+) -> TokenStream {
+    let is_tuple = fields.iter().any(|f| f.ident.is_none());
 
     let (from_impl_expressions, from_impl_fields): (Vec<TokenStream>, Vec<TokenStream>) = fields
         .iter()
@@ -113,13 +289,22 @@ pub fn derive_form_state(item: proc_macro::TokenStream) -> proc_macro::TokenStre
         }
     };
 
-    let impl_from = quote! {
+    quote! {
         impl #generics From<#ident #generics> for #struct_name #generics {
             fn from(value: #ident #generics) -> Self {
                 #from_fields_collect
             }
         }
-    };
+    }
+}
+
+fn make_impl_into(
+    fields: &Fields,
+    ident: &Ident,
+    generics: &Generics,
+    struct_name: &Ident,
+) -> TokenStream {
+    let is_tuple = fields.iter().any(|f| f.ident.is_none());
 
     let (into_impl_expressions, into_impl_fields): (Vec<TokenStream>, Vec<TokenStream>) = fields
         .iter()
@@ -180,24 +365,13 @@ pub fn derive_form_state(item: proc_macro::TokenStream) -> proc_macro::TokenStre
         }
     };
 
-    let impl_into = quote! {
+    quote! {
         impl #generics Into<#ident #generics> for &#struct_name #generics {
             fn into(self) -> #ident #generics {
                 #into_fields_collect
             }
         }
-    };
-
-    let expanded = quote! {
-        #[derive(Default, Clone, Debug, PartialEq, Eq)]
-        #vis #struct_token #struct_name #generics #form_state_fields #semi_token
-
-        #impl_from
-
-        #impl_into
-    };
-
-    proc_macro::TokenStream::from(expanded)
+    }
 }
 
 fn is_nested(attrs: &[Attribute]) -> bool {

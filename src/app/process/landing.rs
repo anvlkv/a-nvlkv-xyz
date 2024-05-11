@@ -71,7 +71,7 @@ pub fn LandingView() -> impl IntoView {
                 <div class="relative col-span-2 row-span-4 md:col-start-2 py-3 margin-0 flex flex-col-reverse justify-stretch items-stretch text-4xl sm:text-5xl md:text-6xl lg:text-8xl 2xl:text-9xl ">
                     <canvas id="process_animation" style={move || format!("height: {}px;", button_height.get() * 2.75)} class="absolute box-border self-center bottom-0 mb-3 md:mb-7 min-w-full"/>
                     <A id="the-done-button" attr:type="button" href={move || format!("/{}/1", lang.get().0)} class="contents">
-                        <span node_ref=button_element class="mt-4 block md:mt-8 md:mb-4 mx-auto shrink-0 px-10 md:px-16 py-2 lg:px-20 lg:py-3 2xl:px-24 2xl:py-6 rounded-full bg-purple-900 text-stone-100 border-4 border-solid border-slate-50 drop-shadow-md text-center">
+                        <span node_ref=button_element class="mt-4 block md:mt-8 md:mb-4 mx-auto shrink-0 px-10 md:px-16 py-2 lg:px-20 lg:py-3 2xl:px-24 2xl:py-6 rounded-full bg-purple-900 text-stone-100 border-4 border-solid border-slate-50 drop-shadow-md text-center animate__animated animate__zoomIn">
                             {t!("letters.done")}
                         </span>
                     </A>

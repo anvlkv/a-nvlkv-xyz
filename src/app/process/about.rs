@@ -1,4 +1,7 @@
-use crate::app::{state::ProcessStep, Language};
+use crate::app::{
+    state::{use_store, ProcessStep},
+    Language,
+};
 
 use leptos::*;
 use leptos_meta::*;
@@ -23,6 +26,10 @@ mod rv_animation {
 #[component]
 pub fn AboutView() -> impl IntoView {
     let lang = use_context::<Signal<Language>>().unwrap();
+    let state = use_store();
+
+    let show_privacy_choice =
+        create_read_slice(state, move |s| s.storage_preference.get().is_some());
 
     #[cfg(any(feature = "csr", feature = "hydrate"))]
     {
@@ -65,14 +72,25 @@ pub fn AboutView() -> impl IntoView {
     view! {
         <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>
         <div class="grid lg:grid-cols-2 gap-10 content-stretch">
-            <div class="max-w-prose flex flex-col self-stretch">
-                <p class="pb-4">{t!("about.description_1")}</p>
-                <p class="pb-4">{t!("about.description_2")}</p>
-                <A attr:type="button" href={move || format!("/{}/2", lang.get().0)} class="mb-3 mt-auto w-full py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center">{t!("about.cta")}</A>
-            </div>
-            <ol class="max-w-prose">
+            <p class="max-w-prose pb-4 col-start-1">
+                {t!("about.description_1")}
+            </p>
+            <p class="max-w-prose pb-4 col-start-1">
+                {t!("about.description_2")}
+            </p>
+            <ol class="max-w-prose row-span-3 lg:col-start-2 lg:row-start-1">
                 {steps}
             </ol>
+            <div class="max-w-prose col-start-1 lg:row-start-3 flex mb-3 mt-auto items-center">
+                <button
+                    on:click={move |_| state.get().show_privacy_prompt.set(true)}
+                    class={move || if show_privacy_choice.get() { "contents" } else { "hidden" }}
+                    title={t!("privacy.short")}
+                >
+                    <canvas id="about_icon_Privacy" class="grow-0 shrink-0 h-14 aspect-square mr-4"/>
+                </button>
+                <A attr:type="button" href={move || format!("/{}/2", lang.get().0)} class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center">{t!("about.cta")}</A>
+            </div>
         </div>
     }
 }

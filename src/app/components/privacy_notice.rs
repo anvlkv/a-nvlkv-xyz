@@ -1,19 +1,11 @@
-use leptos::*;
-use serde::{Deserialize, Serialize};
-use strum::Display;
+use std::str::FromStr;
 
 use form_signal::FormState;
+use leptos::*;
 
 use super::{CheckedOption, ModalView, RadioInputView};
 
-#[derive(Serialize, Deserialize, Default, Display)]
-pub enum StorageMode {
-    #[default]
-    #[strum(to_string = "local")]
-    Local,
-    #[strum(to_string = "session")]
-    Session,
-}
+use crate::app::state::{use_store, StorageMode};
 
 #[cfg(any(feature = "csr", feature = "hydrate"))]
 mod rv_animation {
@@ -32,21 +24,42 @@ mod rv_animation {
 
 #[component]
 pub fn PrivacyNoticeView() -> impl IntoView {
-    let (storage, set_storage) = create_signal::<Option<StorageMode>>(None);
+    let state = use_store();
 
-    let (storage_option, _) = create_signal(FormState::new(StorageMode::Local.to_string()));
+    let when = create_read_slice(state, move |s| s.show_privacy_prompt.get());
 
-    let when = Signal::derive(|| true);
+    let (storage_option_form, _) = create_signal({
+        FormState::<String>::new(
+            state
+                .get_untracked()
+                .storage_preference
+                .get_untracked()
+                .unwrap_or_default()
+                .to_string(),
+        )
+    });
 
     let on_resolve = move |accepted| {
+        let state = state.get();
+        let next = storage_option_form.get().get();
+
         if accepted {
+            state
+                .storage_preference
+                .set(Some(StorageMode::from_str(next.as_str()).unwrap()));
         } else {
+            let old = state.storage_preference.get();
+            storage_option_form
+                .get()
+                .update(|o| *o = old.unwrap_or_default().to_string());
         }
+
+        state.show_privacy_prompt.set(false);
     };
 
     view! {
         <ModalView when={when} curtain=true on_resolve=on_resolve>
-            <PrivacyContent storage_option/>
+            <PrivacyContent storage_option=storage_option_form/>
         </ModalView>
     }
 }
@@ -75,10 +88,10 @@ fn PrivacyContent(#[prop(into)] storage_option: Signal<FormState<String>>) -> im
                 .into_view(),
             },
             CheckedOption {
-                value: StorageMode::Session.to_string(),
+                value: StorageMode::None.to_string(),
                 label: view! {
-                    <p class="font-lg font-bold">{t!("privacy.session")}</p>
-                    <p>{t!("privacy.session_description")}</p>
+                    <p class="font-lg font-bold">{t!("privacy.no_storage")}</p>
+                    <p>{t!("privacy.no_storage_description")}</p>
                 }
                 .into_view(),
             },

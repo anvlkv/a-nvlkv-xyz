@@ -1,4 +1,11 @@
-const artboards = ["Problem", "Solution", "Compromise", "Implement", "Iterate"];
+const artboards = [
+  "Problem",
+  "Solution",
+  "Compromise",
+  "Implement",
+  "Iterate",
+  "Privacy",
+];
 
 let rv = null;
 

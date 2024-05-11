@@ -7,7 +7,7 @@ body {
 }
 
 a {
-    transition-property: color;
+    transition-property: color, border-color, background;
     transition-duration: $hover-duration;
     transition-timing-function: ease-in;
 }

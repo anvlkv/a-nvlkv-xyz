@@ -32,7 +32,7 @@ console_log = { version = "1.0.0", features = [
 accept-language = { version = "3.1.0", optional = true }
 js-sys = { version = "0.3.69", optional = true }
 strum = { version = "0.26", features = ["derive"] }
-leptos-use = { version = "0.10.9", features = ["serde_json", "serde"] }
+leptos-use = { version = "0.10.10", features = ["serde_json", "serde"] }
 form-signal-macro = { path = "./form-signal-macro" }
 
 [dependencies.web-sys]
@@ -65,6 +65,7 @@ ssr = [
     "leptos_meta/ssr",
     "leptos_router/ssr",
     "leptos-use/ssr",
+    "leptos-use/wasm_ssr",
     "leptos/spin",
     "dep:spin-sdk",
     "dep:leptos-spin",

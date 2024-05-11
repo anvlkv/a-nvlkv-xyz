@@ -1,10 +1,18 @@
-use std::rc::Rc;
+use std::{collections::VecDeque, rc::Rc};
 
 use leptos::*;
 use leptos_router::*;
-use leptos_use::{storage::use_local_storage, utils::JsonCodec};
+use leptos_use::{
+    signal_throttled,
+    storage::{use_storage, use_storage_with_options, UseStorageOptions},
+    use_event_listener,
+    utils::JsonCodec,
+};
 
-use crate::app::components::DescriptionView;
+use crate::app::{
+    components::DescriptionView,
+    state::{use_store, StorageMode, WorkSheets},
+};
 
 #[derive(PartialEq, Clone)]
 pub struct Tab {
@@ -12,18 +20,62 @@ pub struct Tab {
     pub href: String,
 }
 
+pub const WK_STORAGE: &str = "worksheet_storage";
+
 #[component]
 pub fn WorksheetView<F, IV>(
     #[prop(into)] title: String,
     #[prop(into, optional)] tabs: Option<Signal<Vec<Tab>>>,
     #[prop(into)] description: Rc<F>,
     #[prop(into)] description_id: String,
+    storage_type: StorageMode,
     children: ChildrenFn,
 ) -> impl IntoView
 where
     F: Fn() -> IV + 'static,
     IV: IntoView,
 {
+    let (_, set_wk_storage, del_wk_storage) =
+        use_storage_with_options::<Option<WorkSheets>, JsonCodec>(
+            (&storage_type).into(),
+            WK_STORAGE,
+            UseStorageOptions::default().listen_to_storage_changes(false),
+        );
+    let (hidden_stored, set_hidden, del_hidden) = use_storage::<Option<bool>, JsonCodec>(
+        (&storage_type).into(),
+        format!("description_{description_id}_hidden"),
+    );
+
+    let state = use_store();
+    let worksheet = signal_throttled(Signal::derive(move || state.get().wk.get()), 750.0);
+
+    create_effect(move |_| match state.get().storage_preference.get() {
+        Some(StorageMode::Local) => {
+            log::debug!("update wk");
+            let wk = worksheet.get();
+            set_wk_storage.update(|w| *w = Some(wk))
+        }
+        None => {
+            if worksheet.with(|wk| *wk != WorkSheets::default()) {
+                state.get().show_privacy_prompt.set(true);
+            }
+        }
+        _ => {
+            del_wk_storage();
+            del_hidden();
+        }
+    });
+
+    let description_hidden = create_local_resource(
+        move || hidden_stored.get(),
+        |hidden| async move { hidden.unwrap_or(false) },
+    );
+
+    let toggle_hidden = Callback::new(move |_| {
+        let next = description_hidden.get().map(|h| !h).unwrap_or(false);
+        set_hidden.set(Some(next));
+    });
+
     let tabs_view = move || {
         tabs.unwrap()
             .get()
@@ -37,20 +89,6 @@ where
             })
             .collect_view()
     };
-
-    let (hidden_stored, set_hidden, _) = use_local_storage::<Option<bool>, JsonCodec>(format!(
-        "description_{description_id}_hidden"
-    ));
-
-    let description_hidden = create_local_resource(
-        move || hidden_stored.get(),
-        |hidden| async move { hidden.unwrap_or(false) },
-    );
-
-    let toggle_hidden = Callback::new(move |_| {
-        let next = description_hidden.get().map(|h| !h).unwrap_or(false);
-        set_hidden.set(Some(next));
-    });
 
     view! {
         <div class="flex flex-col">

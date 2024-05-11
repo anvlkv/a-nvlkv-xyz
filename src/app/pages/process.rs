@@ -5,9 +5,9 @@ use strum::VariantArray;
 use uuid::Uuid;
 
 use crate::app::{
-    components::{Tab, WorksheetDummy, WorksheetView},
+    components::{PrivacyNoticeView, Tab, WorksheetDummy, WorksheetView},
     process::*,
-    state::{use_store, ProcessStep, SeqStep},
+    state::{use_store, ProcessStep, SeqStep, StorageMode},
     Language,
 };
 
@@ -22,6 +22,10 @@ pub fn ProcessView() -> impl IntoView {
     let params = use_params::<ProcessParams>();
     let store = use_store();
     let lang = use_context::<Signal<Language>>().unwrap();
+
+    let storage_type = create_read_slice(store, |s| {
+        s.storage_preference.get().unwrap_or(StorageMode::None)
+    });
 
     let step = move || {
         params
@@ -66,8 +70,11 @@ pub fn ProcessView() -> impl IntoView {
     let section_class =
         "grow lg:w-full p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow";
 
+    let storage_type = move || storage_type.get();
     let step_view = move || {
         let step = step();
+        let storage_type = storage_type();
+
         match step {
             0 => view! {<LandingView/>}.into_view(),
             1 => view! {
@@ -86,12 +93,15 @@ pub fn ProcessView() -> impl IntoView {
             2 => view! {
                 <section class={section_class}>
                     <Transition fallback={WorksheetDummy}>
-                        <WorksheetView title={t!("worksheets.problem.title")}
-                        description_id="problem"
-                        description={move || view!{
-                                <p>{t!("worksheets.problem.description")}</p>
-                        }}
-                        tabs={mock_tabs}>
+                        <WorksheetView
+                            title={t!("worksheets.problem.title")}
+                            description_id="problem"
+                            description={move || view!{
+                                    <p>{t!("worksheets.problem.description")}</p>
+                            }}
+                            tabs={mock_tabs}
+                            storage_type=storage_type
+                        >
                                 <ProblemView/>
                         </WorksheetView>
                     </Transition>
@@ -101,11 +111,14 @@ pub fn ProcessView() -> impl IntoView {
             3 => view! {
                 <section class={section_class}>
                     <Transition fallback={WorksheetDummy}>
-                        <WorksheetView title={t!("worksheets.solutions.title")}
-                         description_id="solutions"
-                        description={move || view! {
-                            <p>{t!("worksheets.solutions.description")}</p>
-                        }} >
+                        <WorksheetView
+                            title={t!("worksheets.solutions.title")}
+                            description_id="solutions"
+                            description={move || view! {
+                                <p>{t!("worksheets.solutions.description")}</p>
+                            }}
+                            storage_type=storage_type
+                        >
                                 <SolutionView/>
                         </WorksheetView>
                     </Transition>
@@ -116,11 +129,12 @@ pub fn ProcessView() -> impl IntoView {
                 <section class={section_class}>
                     <Transition fallback={WorksheetDummy}>
                         <WorksheetView
-                        title={t!("worksheets.compromise.title")}
-                        description_id="compromise"
-                        description={move || view! {
-                                <p>{t!("worksheets.compromise.description")}</p>
-                        }}
+                            title={t!("worksheets.compromise.title")}
+                            description_id="compromise"
+                            description={move || view! {
+                                    <p>{t!("worksheets.compromise.description")}</p>
+                            }}
+                            storage_type=storage_type
                         >
                                 <CompromiseView/>
                         </WorksheetView>
@@ -131,12 +145,15 @@ pub fn ProcessView() -> impl IntoView {
             5 => view! {
                 <section class={section_class}>
                     <Transition fallback={WorksheetDummy}>
-                        <WorksheetView title={t!("worksheets.implement.title")}
-                        description_id="implement"
-                        description={move || view! {
-                            <p class="pb-4">{t!("worksheets.implement.description_1")}</p>
-                            <p>{t!("worksheets.implement.description_2")}</p>
-                        }} >
+                        <WorksheetView
+                            title={t!("worksheets.implement.title")}
+                            description_id="implement"
+                            description={move || view! {
+                                <p class="pb-4">{t!("worksheets.implement.description_1")}</p>
+                                <p>{t!("worksheets.implement.description_2")}</p>
+                            }}
+                            storage_type=storage_type
+                        >
                                 <ImplementView/>
                         </WorksheetView>
                     </Transition>
@@ -146,11 +163,14 @@ pub fn ProcessView() -> impl IntoView {
             6 => view! {
                 <section class={section_class}>
                     <Transition fallback={WorksheetDummy}>
-                        <WorksheetView title={t!("worksheets.iterate.title")}
-                        description_id="iterate"
-                        description={move || view!{
-                                <p>{t!("worksheets.iterate.description")}</p>
-                        }}>
+                        <WorksheetView
+                            title={t!("worksheets.iterate.title")}
+                            description_id="iterate"
+                            description={move || view!{
+                                    <p>{t!("worksheets.iterate.description")}</p>
+                            }}
+                            storage_type=storage_type
+                        >
                                 <IterateView/>
                         </WorksheetView>
                     </Transition>
@@ -184,7 +204,7 @@ pub fn ProcessView() -> impl IntoView {
             <Show when={move || step() > 0}>
                 <StepperView/>
             </Show>
-            // <PrivacyNoticeView/>
+            <PrivacyNoticeView/>
         </div>
     }
 }

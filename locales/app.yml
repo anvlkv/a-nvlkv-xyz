@@ -37,6 +37,11 @@ util:
     ja: キャンセル
     ru: Отмена
 privacy:
+  short:
+    en: Privacy
+    nl: Privacy
+    ru: Конфиденциальность
+    ja: プライバシー
   notice:
     en: Your privacy matters. This app won't store or send any data unless you  explicitly choose to share it.
     ru: Ваша конфиденциальность имеет значение. Это приложение не будет сохранять или отправлять данные, если вы не решите поделиться ими.
@@ -57,9 +62,9 @@ privacy:
     ru: Данные будут сохранены в локальном хранилище вашего браузера. Сохраненные данные будут доступны вам, когда вы решите вновь воспользоваться приложением.
     nl: Bewaar gegevens in de lokale opslag van uw browser. Opgeslagen gegevens zijn beschikbaar wanneer u deze app opnieuw gebruikt.
     ja: データをブラウザのローカル ストレージに保存します。 保存されたデータは、このアプリを再度使用するときに利用できます。
-  session:
-    en: Session storage
-  session_description:
+  no_storage:
+    en: No storage
+  no_storage_description:
     en: All data is cleared once you close or reload this page.
     nl: Alle gegevens worden gewist zodra u deze pagina sluit of opnieuw laadt.
     ru: Все данные будут удалены как только вы закроете или презагрузите эту страницу.

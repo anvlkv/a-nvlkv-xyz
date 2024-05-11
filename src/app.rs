@@ -25,8 +25,12 @@ pub fn App() -> impl IntoView {
         <Link rel="icon" attr:type="image/ico" href="/pkg/favicon.ico" />
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-32x32.png" sizes="32x32" />
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-16x16.png" sizes="16x16" />
-        // js libs
+        // cdn libs
         <Script src="https://unpkg.com/@rive-app/canvas@2.15.2"/>
+        <Link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+        />
 
         // app
         <StoreProvider>
