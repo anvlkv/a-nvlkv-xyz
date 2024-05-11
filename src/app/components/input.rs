@@ -1,10 +1,11 @@
+use form_signal::FormState;
 use leptos::{
     html::{div, input, textarea},
     *,
 };
 use leptos_use::{use_element_bounding, UseElementBoundingReturn};
 
-use crate::app::{components::APP_MAIN, form::FormState};
+use crate::app::components::APP_MAIN;
 
 const AUTOCOMPLETE_OPTION: &str = "_autocomplete-option";
 
@@ -53,7 +54,7 @@ pub fn StringInputView(
         }
     };
 
-    let value_src = Signal::derive(move || value.get().value.get());
+    let value_src = Signal::derive(move || value.get().get());
 
     let may_blure = move |e: ev::FocusEvent| {
         if !focused.get() {
@@ -151,6 +152,7 @@ pub fn StringInputView(
                 }
             }
             .node_ref(element)
+            .attr("id", move || value.get().id.to_string())
             .attr("class", class)
             .attr("placeholder", placeholder)
             .prop("value", value_src)

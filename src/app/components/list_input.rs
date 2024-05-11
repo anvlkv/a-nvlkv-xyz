@@ -1,8 +1,9 @@
+use form_signal::FormState;
 use leptos::*;
 use leptos_use::use_event_listener;
 use uuid::Uuid;
 
-use crate::app::{components::StringInputView, form::FormState};
+use crate::app::components::StringInputView;
 
 #[component]
 pub fn ListInputView<T, G>(
@@ -33,12 +34,8 @@ where
         focused_id.set(Some(next_id));
     };
 
-    let with_placeholder_id = create_memo(move |_| {
-        data.get()
-            .iter()
-            .find(|v| v.value.get().is_empty())
-            .map(|v| v.id)
-    });
+    let with_placeholder_id =
+        create_memo(move |_| data.get().iter().find(|v| v.get().is_empty()).map(|v| v.id));
 
     let element = create_node_ref::<html::Div>();
     let button_element = create_node_ref::<html::Input>();
@@ -61,7 +58,7 @@ where
                     data.iter()
                         .enumerate()
                         .find(|(_, d)| d.id == id)
-                        .filter(|(_, d)| d.value.get().is_empty())
+                        .filter(|(_, d)| d.get().is_empty())
                         .map(|(i, d)| (d.id, data.iter().nth(i.saturating_sub(1)).map(|d| d.id)))
                 })
                 .flatten()

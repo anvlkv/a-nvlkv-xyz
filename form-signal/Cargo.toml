@@ -1,0 +1,14 @@
+[package]
+name = "form-signal"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+leptos = "0.6.11"
+uuid = { version = "1.8.0", features = ["v5", "v4", "serde"] }
+
+
+[features]
+csr = ["leptos/csr"]
+ssr = ["leptos/ssr"]
+hydrate = ["leptos/hydrate"]

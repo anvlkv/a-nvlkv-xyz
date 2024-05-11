@@ -9,6 +9,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
+form-signal = { path = "./form-signal" }
 uuid = { version = "1.8.0", features = ["v5", "v4", "serde"] }
 rust-i18n = "3"
 log = "0.4"
@@ -32,6 +33,7 @@ accept-language = { version = "3.1.0", optional = true }
 js-sys = { version = "0.3.69", optional = true }
 strum = { version = "0.26", features = ["derive"] }
 leptos-use = { version = "0.10.9", features = ["serde_json", "serde"] }
+form-signal-macro = { path = "./form-signal-macro" }
 
 [dependencies.web-sys]
 version = "0.3"
@@ -47,6 +49,7 @@ features = [
 ]
 
 [workspace]
+members = ["form-signal-macro", "form-signal"]
 
 [features]
 client = ["dep:wasm-bindgen", "dep:console_log", "dep:js-sys"]

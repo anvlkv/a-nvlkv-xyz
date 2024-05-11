@@ -1,6 +1,6 @@
 use leptos::*;
 
-use crate::app::form::FormState;
+use form_signal::FormState;
 
 #[derive(Clone)]
 pub struct CheckedOption {
@@ -23,7 +23,7 @@ pub fn RadioInputView(
                     attr:type="radio"
                     attr:name={move || value.get().id.to_string()}
                     value=child.value.clone()
-                    checked={move || value.get().value.get() == child.value}
+                    checked={move || value.get().get() == child.value}
                     class="mt-2 scale-150"
                 />
                 <div class="ml-4">

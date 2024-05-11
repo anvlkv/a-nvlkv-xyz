@@ -1,6 +1,5 @@
 use leptos::*;
 use leptos_meta::*;
-use leptos_router::*;
 
 use crate::app::components::ContactFormView;
 

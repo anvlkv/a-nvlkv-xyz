@@ -4,9 +4,10 @@ use leptos::*;
 use leptos_meta::*;
 use uuid::Uuid;
 
+use form_signal::FormState;
+
 use crate::app::{
     components::{ListInputView, StringInputView},
-    form::FormState,
     state::{use_store, State},
 };
 
@@ -14,36 +15,35 @@ use crate::app::{
 #[component]
 pub fn ProblemView() -> impl IntoView {
     let state = use_store();
-    let problem_statement =
-        create_read_slice(state, |s| s.problem.value.get().problem_statement.clone());
+    let problem_statement = create_read_slice(state, |s| s.wk.problem.get().problem_statement);
 
-    let problems_getter = |s: &State| s.problem.value.get().problems.clone();
+    let problems_getter = |s: &State| s.wk.problem.get().problems.clone();
     let problems_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
-        state.get().problem.update(move |p| {
+        state.get().wk.problem.update(move |p| {
             p.problems.insert(index.unwrap_or(p.problems.len()), next);
         });
         id
     };
     let problems_value_remove = move |id: Uuid| {
-        state.get().problem.update(move |p| {
+        state.get().wk.problem.update(move |p| {
             p.problems.retain(|v| v.id != id);
         })
     };
 
-    let stakeholders_getter = |s: &State| s.problem.value.get().stakeholders.clone();
+    let stakeholders_getter = |s: &State| s.wk.problem.get().stakeholders.clone();
     let stakeholders_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
-        state.get().problem.update(move |p| {
+        state.get().wk.problem.update(move |p| {
             p.stakeholders
                 .insert(index.unwrap_or(p.stakeholders.len()), next);
         });
         id
     };
     let stakeholders_value_remove = move |id: Uuid| {
-        state.get().problem.update(move |p| {
+        state.get().wk.problem.update(move |p| {
             p.stakeholders.retain(|v| v.id != id);
         })
     };
@@ -51,12 +51,12 @@ pub fn ProblemView() -> impl IntoView {
         BTreeSet::from_iter(
             state
                 .get()
+                .wk
                 .problem
-                .value
                 .get()
                 .stakeholders
                 .into_iter()
-                .map(|s| s.value.get()),
+                .map(|s| s.get()),
         )
         .into_iter()
         .collect::<Vec<_>>()

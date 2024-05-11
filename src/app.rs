@@ -1,8 +1,7 @@
-mod components;
-mod form;
-mod pages;
-mod process;
-mod state;
+pub mod components;
+pub mod pages;
+pub mod process;
+pub mod state;
 
 use leptos::*;
 use leptos_meta::*;

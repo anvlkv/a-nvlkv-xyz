@@ -1,7 +1,5 @@
 use leptos::*;
-use leptos_router::*;
 
-use crate::app::Language;
 
 #[component]
 pub fn ContactFormView() -> impl IntoView {

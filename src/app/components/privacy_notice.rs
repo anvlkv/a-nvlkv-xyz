@@ -1,9 +1,8 @@
 use leptos::*;
-use leptos_use::storage::use_storage;
 use serde::{Deserialize, Serialize};
 use strum::Display;
 
-use crate::app::form::FormState;
+use form_signal::FormState;
 
 use super::{CheckedOption, ModalView, RadioInputView};
 

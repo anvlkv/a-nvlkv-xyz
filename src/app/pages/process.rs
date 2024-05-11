@@ -5,7 +5,7 @@ use strum::VariantArray;
 use uuid::Uuid;
 
 use crate::app::{
-    components::{PrivacyNoticeView, Tab, WorksheetDummy, WorksheetView},
+    components::{Tab, WorksheetDummy, WorksheetView},
     process::*,
     state::{use_store, ProcessStep, SeqStep},
     Language,

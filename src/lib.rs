@@ -1,7 +1,9 @@
 #[macro_use]
 extern crate rust_i18n;
+#[macro_use]
+extern crate form_signal_macro;
 
-mod app;
+pub mod app;
 
 #[cfg(feature = "ssr")]
 mod server;

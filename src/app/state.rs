@@ -2,22 +2,36 @@ use leptos::*;
 use strum::{Display, VariantArray};
 use uuid::Uuid;
 
-use super::form::*;
-
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct State {
-    pub problem: FormState<ProblemForm>,
-    pub examples_problem: Vec<ExampleState<ProblemForm>>,
-    pub solutions: FormState<SolutionsForm>,
-    pub examples_solutions: Vec<ExampleState<SolutionsForm>>,
-    pub compromise: FormState<CompromiseForm>,
-    pub examples_compromise: Vec<ExampleState<CompromiseForm>>,
-    pub implement: FormState<ImplementForm>,
-    pub examples_implement: Vec<ExampleState<ImplementForm>>,
-    pub iterate: FormState<IterateForm>,
-    pub examples_iterate: Vec<ExampleState<IterateForm>>,
-    pub inquire: FormState<InquireForm>,
+    pub wk: WorkSheetsFormState,
+    pub examples: Examples,
     pub sequence: Vec<SeqStep>,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
+pub struct Examples {
+    pub examples_problem: Vec<ExampleState<ProblemWK>>,
+    pub examples_solutions: Vec<ExampleState<SolutionsWK>>,
+    pub examples_compromise: Vec<ExampleState<CompromiseWK>>,
+    pub examples_implement: Vec<ExampleState<ImplementWK>>,
+    pub examples_iterate: Vec<ExampleState<IterateWK>>,
+}
+
+#[derive(FormState, Default, Debug, Clone, PartialEq, Eq)]
+pub struct WorkSheets {
+    #[nested]
+    pub problem: ProblemWK,
+    #[nested]
+    pub solutions: SolutionsWK,
+    #[nested]
+    pub compromise: CompromiseWK,
+    #[nested]
+    pub implement: ImplementWK,
+    #[nested]
+    pub iterate: IterateWK,
+    #[nested]
+    pub inquire: InquireWK,
 }
 
 #[derive(Clone)]
@@ -27,6 +41,13 @@ struct Store(RwSignal<State>);
 pub fn StoreProvider(children: Children) -> impl IntoView {
     let state = create_rw_signal(State::default());
     provide_context(Store(state));
+
+    create_effect(move |_| {
+        let s = state.get();
+        let wk: WorkSheets = (&s.wk).into();
+        log::debug!("wk: {wk:#?}");
+    });
+
     children().into_view()
 }
 
@@ -60,39 +81,45 @@ pub struct ExampleState<T> {
     pub value: T,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct ProblemForm {
-    pub problems: Vec<FormState<String>>,
-    pub stakeholders: Vec<FormState<String>>,
-    pub problem_statement: FormState<String>,
+#[derive(FormState, Default, Debug, Clone, PartialEq, Eq)]
+pub struct ProblemWK {
+    #[iterable]
+    pub problems: Vec<String>,
+    #[iterable]
+    pub stakeholders: Vec<String>,
+    pub problem_statement: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct SolutionsForm {
-    pub solutions: Vec<FormState<String>>,
+#[derive(FormState, Default, Debug, Clone, PartialEq, Eq)]
+pub struct SolutionsWK {
+    #[iterable]
+    pub solutions: Vec<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct CompromiseForm {
-    pub choices: Vec<FormState<Option<bool>>>,
-    pub assumption: FormState<String>,
+#[derive(FormState, Default, Debug, Clone, PartialEq, Eq)]
+pub struct CompromiseWK {
+    #[iterable]
+    pub choices: Vec<Option<bool>>,
+    pub assumption: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct ImplementForm {
-    pub now: Vec<FormState<String>>,
-    pub best: Vec<FormState<String>>,
+#[derive(FormState, Default, Debug, Clone, PartialEq, Eq)]
+pub struct ImplementWK {
+    #[iterable]
+    pub now: Vec<String>,
+    #[iterable]
+    pub best: Vec<String>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct IterateForm {
-    pub test: FormState<String>,
+#[derive(FormState, Default, Debug, Clone, PartialEq, Eq)]
+pub struct IterateWK {
+    pub test: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct InquireForm {
-    pub name: FormState<String>,
-    pub email: FormState<String>,
-    pub message: FormState<String>,
-    pub include_worksheets: FormState<bool>,
+#[derive(FormState, Default, Debug, Clone, PartialEq, Eq)]
+pub struct InquireWK {
+    pub name: String,
+    pub email: String,
+    pub message: String,
+    pub include_worksheets: bool,
 }

@@ -2,9 +2,10 @@ use leptos::*;
 use leptos_meta::*;
 use uuid::Uuid;
 
+use form_signal::FormState;
+
 use crate::app::{
     components::ListInputView,
-    form::FormState,
     state::{use_store, State},
 };
 
@@ -13,21 +14,20 @@ use crate::app::{
 pub fn SolutionView() -> impl IntoView {
     let state = use_store();
 
-    let problem_statement = create_read_slice(state, |s| {
-        s.problem.value.get().problem_statement.value.get()
-    });
+    let problem_statement =
+        create_read_slice(state, |s| s.wk.problem.get().problem_statement.get());
 
-    let solutions_getter = |s: &State| s.solutions.value.get().solutions.clone();
+    let solutions_getter = |s: &State| s.wk.solutions.get().solutions.clone();
     let solutions_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
-        state.get().solutions.update(move |p| {
+        state.get().wk.solutions.update(move |p| {
             p.solutions.insert(index.unwrap_or(p.solutions.len()), next);
         });
         id
     };
     let solutions_value_remove = move |id: Uuid| {
-        state.get().solutions.update(move |p| {
+        state.get().wk.solutions.update(move |p| {
             p.solutions.retain(|v| v.id != id);
         })
     };
