@@ -1,17 +1,16 @@
-use std::{collections::VecDeque, rc::Rc};
+use std::rc::Rc;
 
 use leptos::*;
 use leptos_router::*;
 use leptos_use::{
     signal_throttled,
     storage::{use_storage, use_storage_with_options, UseStorageOptions},
-    use_event_listener,
     utils::JsonCodec,
 };
 
 use crate::app::{
     components::DescriptionView,
-    state::{use_store, StorageMode, WorkSheets},
+    state::{use_store, StorageMode, WorkSheets, WorkSheetsFormState},
 };
 
 #[derive(PartialEq, Clone)]
@@ -20,7 +19,15 @@ pub struct Tab {
     pub href: String,
 }
 
+#[derive(PartialEq, Clone)]
+pub struct WorksheetState(pub Resource<WorkSheetsFormState, WorkSheetsFormState>);
+
 pub const WK_STORAGE: &str = "worksheet_storage";
+
+pub fn use_wk_state() -> Signal<WorkSheetsFormState> {
+    let ctx = use_context::<WorksheetState>().unwrap();
+    Signal::derive(move || ctx.0.get().unwrap_or_default())
+}
 
 #[component]
 pub fn WorksheetView<F, IV>(
@@ -47,16 +54,28 @@ where
     );
 
     let state = use_store();
-    let worksheet = signal_throttled(Signal::derive(move || state.get().wk.get()), 750.0);
+    let wk_state = create_local_resource(move || state.get().wk, |wk| async move { wk.clone() });
+
+    let wk_data_throttled = signal_throttled(
+        Signal::derive(move || wk_state.get().map(|wk| wk.get())),
+        750.0,
+    );
 
     create_effect(move |_| match state.get().storage_preference.get() {
         Some(StorageMode::Local) => {
-            log::debug!("update wk");
-            let wk = worksheet.get();
-            set_wk_storage.update(|w| *w = Some(wk))
+            if let Some(wk) = wk_data_throttled.get() {
+                set_wk_storage.update(|w| *w = Some(wk))
+            }
         }
         None => {
-            if worksheet.with(|wk| *wk != WorkSheets::default()) {
+            if wk_data_throttled.with(|wk| {
+                log::debug!("wk: {wk:?}");
+                log::debug!("default wk: {:?}", WorkSheets::default());
+
+                wk.as_ref()
+                    .map(|wk| wk != &WorkSheets::default())
+                    .unwrap_or(false)
+            }) {
                 state.get().show_privacy_prompt.set(true);
             }
         }
@@ -89,6 +108,8 @@ where
             })
             .collect_view()
     };
+
+    provide_context(WorksheetState(wk_state));
 
     view! {
         <div class="flex flex-col">

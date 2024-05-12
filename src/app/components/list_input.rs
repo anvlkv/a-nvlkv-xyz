@@ -6,22 +6,15 @@ use uuid::Uuid;
 use crate::app::components::StringInputView;
 
 #[component]
-pub fn ListInputView<T, G>(
+pub fn ListInputView(
     #[prop(into)] input_type: String,
-    signal: RwSignal<T>,
-    getter: G,
+    #[prop(into)] data: Signal<Vec<FormState<String>>>,
     #[prop(into)] add_value: Callback<(String, Option<usize>), Uuid>,
     #[prop(into)] remove_value: Callback<Uuid>,
     #[prop(into, optional)] placeholder: MaybeSignal<String>,
     #[prop(into, optional)] add_entry_text: MaybeSignal<String>,
     #[prop(into, optional)] autocomplete: MaybeSignal<Vec<String>>,
-) -> impl IntoView
-where
-    T: Clone + 'static,
-    G: Fn(&T) -> Vec<FormState<String>> + Copy + 'static,
-{
-    let data = create_read_slice(signal, move |d| getter(d));
-
+) -> impl IntoView {
     let focused_id = create_rw_signal::<Option<Uuid>>(None);
 
     let on_add = move || {

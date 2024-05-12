@@ -7,51 +7,74 @@ use uuid::Uuid;
 use form_signal::FormState;
 
 use crate::app::{
-    components::{ListInputView, StringInputView},
-    state::{use_store, State},
+    components::{use_wk_state, ListInputView, StringInputView, UndoRemove},
+    state::WorkSheetsFormState,
 };
 
 /// step 2
 #[component]
 pub fn ProblemView() -> impl IntoView {
-    let state = use_store();
-    let problem_statement = create_read_slice(state, |s| s.wk.problem.get().problem_statement);
+    let state = use_wk_state();
+    let problem_statement = Signal::derive(move || state.get().problem.get().problem_statement);
+    let problem_delete_history = create_rw_signal(vec![]);
+    let stakeholder_delete_history = create_rw_signal(vec![]);
 
-    let problems_getter = |s: &State| s.wk.problem.get().problems.clone();
+    let problems_data = Signal::derive(move || state.get().problem.get().problems.clone());
     let problems_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
-        state.get().wk.problem.update(move |p| {
+        state.get().problem.update(move |p| {
             p.problems.insert(index.unwrap_or(p.problems.len()), next);
         });
         id
     };
     let problems_value_remove = move |id: Uuid| {
-        state.get().wk.problem.update(move |p| {
-            p.problems.retain(|v| v.id != id);
+        state.get().problem.update(move |p| {
+            let i = p.problems.iter().position(|v| v.id == id).unwrap();
+            let removed = p.problems.remove(i).get_untracked();
+            problem_delete_history.update(|h| h.push((removed, i)));
+        })
+    };
+    let problem_restore = move |(val, at): (String, usize)| {
+        state.get().problem.update(move |p| {
+            if p.problems.len() >= at {
+                p.problems.insert(at, FormState::new(val));
+            } else {
+                p.problems.push(FormState::new(val));
+            }
         })
     };
 
-    let stakeholders_getter = |s: &State| s.wk.problem.get().stakeholders.clone();
+    let stakeholders_data = Signal::derive(move || state.get().problem.get().stakeholders.clone());
     let stakeholders_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
-        state.get().wk.problem.update(move |p| {
+        state.get().problem.update(move |p| {
             p.stakeholders
                 .insert(index.unwrap_or(p.stakeholders.len()), next);
         });
         id
     };
     let stakeholders_value_remove = move |id: Uuid| {
-        state.get().wk.problem.update(move |p| {
-            p.stakeholders.retain(|v| v.id != id);
+        state.get().problem.update(move |p| {
+            let i = p.stakeholders.iter().position(|v| v.id == id).unwrap();
+            let removed = p.stakeholders.remove(i).get_untracked();
+            stakeholder_delete_history.update(|h| h.push((removed, i)));
+        })
+    };
+    let stakeholder_restore = move |(val, at): (String, usize)| {
+        state.get().problem.update(move |p| {
+            if p.stakeholders.len() >= at {
+                p.stakeholders.insert(at, FormState::new(val));
+            } else {
+                p.stakeholders.push(FormState::new(val));
+            }
         })
     };
     let stakeholders_autocomplete = Signal::derive(move || {
         BTreeSet::from_iter(
             state
                 .get()
-                .wk
                 .problem
                 .get()
                 .stakeholders
@@ -71,29 +94,30 @@ pub fn ProblemView() -> impl IntoView {
             </div>
             <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
                 <div>
-                    <h4 class="text-lg mb-4">
+                    <h4 class="text-xl mb-4">
                         {t!("worksheets.problem.label_problems")}
                     </h4>
-                    <ListInputView input_type="text"
-                       signal=state
-                       getter=problems_getter
-                       add_value=problems_value_add
-                       remove_value=problems_value_remove
-                       add_entry_text={t!("worksheets.problem.add_problem").to_string()}
-                       placeholder={t!("worksheets.problem.placeholder_problem").to_string()}/>
+                    <ListInputView
+                        input_type="text"
+                        data=problems_data
+                        add_value=problems_value_add
+                        remove_value=problems_value_remove
+                        add_entry_text={t!("worksheets.problem.add_problem").to_string()}
+                        placeholder={t!("worksheets.problem.placeholder_problem").to_string()}
+                   />
                 </div>
                 <div>
                     <h4 class="text-xl mb-4">
                         {t!("worksheets.problem.label_stakeholders")}
                     </h4>
-                    <ListInputView input_type="text"
-                       signal=state
-                       getter=stakeholders_getter
-                       add_value=stakeholders_value_add
-                       remove_value=stakeholders_value_remove
-                       add_entry_text={t!("worksheets.problem.add_stakeholder").to_string()}
-                       placeholder={t!("worksheets.problem.placeholder_stakeholders").to_string()}
-                       autocomplete=stakeholders_autocomplete
+                    <ListInputView
+                        input_type="text"
+                        data=stakeholders_data
+                        add_value=stakeholders_value_add
+                        remove_value=stakeholders_value_remove
+                        add_entry_text={t!("worksheets.problem.add_stakeholder").to_string()}
+                        placeholder={t!("worksheets.problem.placeholder_stakeholders").to_string()}
+                        autocomplete=stakeholders_autocomplete
                        />
                 </div>
             </div>
@@ -106,5 +130,13 @@ pub fn ProblemView() -> impl IntoView {
                 value=problem_statement
                 placeholder={t!("worksheets.problem.placeholder_2").to_string()}/>
         </form>
+        <UndoRemove
+            history=problem_delete_history
+            on_restore=problem_restore
+        />
+        <UndoRemove
+            history=stakeholder_delete_history
+            on_restore=stakeholder_restore
+        />
     }
 }

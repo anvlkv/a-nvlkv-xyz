@@ -161,3 +161,9 @@ div:has(#the-done-button:hover) {
     transition-duration: $hover-duration;
     transition-timing-function: ease-in-out;
 }
+
+#toast-container {
+    > div {
+        display: contents;
+    }
+}

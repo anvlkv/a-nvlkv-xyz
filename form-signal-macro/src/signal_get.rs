@@ -9,6 +9,7 @@ pub fn make_signal_get(
     ident: &Ident,
     generics: &Generics,
     struct_name: &Ident,
+    (trait_path, getter, try_getter): (TokenStream, TokenStream, TokenStream),
 ) -> TokenStream {
     let is_tuple = fields.iter().any(|f| f.ident.is_none());
 
@@ -24,14 +25,16 @@ pub fn make_signal_get(
                 (
                     (
                         quote! {
-                            leptos::SignalGet::get(
-                                &self.#ident
-                            ).get(),
+                            #trait_path::#getter(
+                                &#trait_path::#getter(
+                                    &self.#ident
+                                )
+                            ),
                         },
                         quote! {
-                            leptos::SignalGet::try_get(
+                            #trait_path::#try_getter(
                                 &self.#ident
-                            ).map(|v| v.try_get().is_some()).unwrap_or(false),
+                            ).map(|v| #trait_path::#try_getter(&v).is_some()).unwrap_or(false),
                         },
                     ),
                     ident,
@@ -43,14 +46,14 @@ pub fn make_signal_get(
                     (
                         quote! {
                             self.#ident.iter().map(|v| {
-                                leptos::SignalGet::get(v)
+                                #trait_path::#getter(v)
                             }).collect::<#ty>(),
                         },
                         quote! {
                             {
                                 self.#ident
                                     .iter()
-                                    .any(|v| leptos::SignalGet::try_get(v).is_some())
+                                    .any(|v| #trait_path::#try_getter(v).is_some())
                             },
                         },
                     ),
@@ -60,12 +63,12 @@ pub fn make_signal_get(
                 (
                     (
                         quote! {
-                            leptos::SignalGet::get(
+                            #trait_path::#getter(
                                 &self.#ident
                             ),
                         },
                         quote! {
-                            leptos::SignalGet::try_get(
+                            #trait_path::#try_getter(
                                 &self.#ident
                             ).is_some(),
                         },
@@ -131,14 +134,14 @@ pub fn make_signal_get(
     };
 
     quote! {
-        impl #generics leptos::SignalGet for #struct_name #generics {
+        impl #generics #trait_path for #struct_name #generics {
             type Value = #ident;
 
-            fn get(&self) -> Self::Value {
+            fn #getter(&self) -> Self::Value {
                 #collect_get_fields
             }
 
-            fn try_get(&self) -> Option<Self::Value> {
+            fn #try_getter(&self) -> Option<Self::Value> {
                 #collect_try_get_fields
             }
         }

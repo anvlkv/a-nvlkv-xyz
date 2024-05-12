@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(FormState, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WorkSheets {
     #[nested]
     pub problem: ProblemWK,
@@ -14,6 +14,32 @@ pub struct WorkSheets {
     pub iterate: IterateWK,
     #[nested]
     pub inquire: InquireWK,
+}
+
+impl Default for WorkSheets {
+    fn default() -> Self {
+        Self {
+            problem: ProblemWK {
+                problems: vec![Default::default()],
+                stakeholders: vec![Default::default()],
+                ..Default::default()
+            },
+            solutions: SolutionsWK {
+                solutions: vec![Default::default()],
+                ..Default::default()
+            },
+            compromise: CompromiseWK {
+                choices: vec![None],
+                ..Default::default()
+            },
+            implement: ImplementWK {
+                now: vec![Default::default()],
+                best: vec![Default::default()],
+            },
+            iterate: Default::default(),
+            inquire: Default::default(),
+        }
+    }
 }
 
 #[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

@@ -5,7 +5,7 @@ extern crate form_signal_macro;
 fn basic_test() {
     _ = leptos::create_runtime();
 
-    #[derive(FormState, PartialEq, Eq, Debug, Clone)]
+    #[derive(FormState, PartialEq, Eq, Debug, Clone, Default)]
     struct TestStruct {
         value: String,
     }
@@ -25,12 +25,12 @@ fn basic_test() {
 fn nested_test() {
     _ = leptos::create_runtime();
 
-    #[derive(FormState, PartialEq, Eq, Debug, Clone)]
+    #[derive(FormState, PartialEq, Eq, Debug, Clone, Default)]
     struct TestNestedStruct {
         value: String,
     }
 
-    #[derive(FormState, PartialEq, Eq, Debug, Clone)]
+    #[derive(FormState, PartialEq, Eq, Debug, Clone, Default)]
     struct TestStruct {
         #[nested]
         value: TestNestedStruct,
@@ -53,10 +53,10 @@ fn nested_test() {
 fn tuple_nested_test() {
     _ = leptos::create_runtime();
 
-    #[derive(FormState, PartialEq, Eq, Debug, Clone)]
+    #[derive(FormState, PartialEq, Eq, Debug, Clone, Default)]
     struct TestNestedStruct(String);
 
-    #[derive(FormState, PartialEq, Eq, Debug, Clone)]
+    #[derive(FormState, PartialEq, Eq, Debug, Clone, Default)]
     struct TestStruct(#[nested] TestNestedStruct);
 
     let d = TestStruct(TestNestedStruct("test".to_string()));
@@ -72,13 +72,13 @@ fn tuple_nested_test() {
 fn nested_generics() {
     _ = leptos::create_runtime();
 
-    #[derive(FormState, PartialEq, Eq, Debug, Clone)]
+    #[derive(FormState, PartialEq, Eq, Debug, Clone, Default)]
     struct TestNestedStruct {
         #[iterable]
         value: Vec<String>,
     }
 
-    #[derive(FormState, PartialEq, Eq, Debug, Clone)]
+    #[derive(FormState, PartialEq, Eq, Debug, Clone, Default)]
     struct TestStruct {
         #[nested]
         value: TestNestedStruct,

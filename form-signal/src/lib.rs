@@ -10,7 +10,7 @@ pub enum FormStatus {
 }
 
 /// Wrapper around leptos::RwSignal for working with multistep forms
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Copy)]
 pub struct FormState<T>
 where
     T: Default + PartialEq + Clone + 'static,

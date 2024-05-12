@@ -24,6 +24,7 @@ mod rv_animation {
 pub fn LandingView() -> impl IntoView {
     let lang = use_context::<Signal<Language>>().unwrap();
 
+    #[allow(unused_variables)]
     let (button_height, set_button_height) = create_signal::<f64>(0.0);
 
     let button_element: NodeRef<html::Span> = create_node_ref();

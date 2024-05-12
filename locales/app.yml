@@ -11,6 +11,14 @@ util:
     ru: Удалить
     nl: Verwijder
     ja: 削除
+  undo_delete:
+    en: Restore
+    ru: Восстановить
+  time_left:
+    en: "%{seconds}s"
+    nl: "%{seconds}s"
+    ru: "%{seconds}с"
+    ja: "%{seconds}秒"
   info:
     en: Description
     ru: Описание
@@ -189,11 +197,14 @@ about:
   title:
     en: Getting things done with a mindful awarenes.
   description_1:
-    en: Whenever we are doing our work we shape our future and that of others. Whether we have such intention or even a particular outcome in mind the future never comes out exactly the way it was intended; reality takes place, shaping further our perception of it. But as some wise people said “it's not the dots but the arrows that matter” therefore, may we look forward to the journey and not a destination.
+    en: Whenever we are doing our work we shape our future and that of others. Whether we have such intention or even a particular outcome in mind the future never comes out exactly the way it was intended; reality takes place. But as some wise people said “it's not the dots but the arrows that matter” therefore, may we look forward to the journey and not a destination.
   description_2:
     en: The app will guide you through a 5 step process of getting from problems to testable solutions. Each step is an interactive worksheet with examples. Complete the workbook on your own or in collaboration with others.
   cta:
     en: Get started →
+    ru: Начнём →
+    nl: Laten wij begonnen →
+    ja: 始めましょう →
   s_1:
     title:
       en: The problem
@@ -226,7 +237,7 @@ worksheets:
     description:
       en: Finding the right problem means getting out of the comfort zone, accepting that different people may have different stakes in it, looking far out as well as deep within.
     instruction_1:
-      en: List any problems that come to mind, for every problem add a stakeholder. Avoid lengthy descriptions at this step.
+      en: List any problems that come to mind in one column. List stakeholders affected by those problems in the second column.
     label_problems:
       en: Problem
     label_stakeholders:
@@ -254,7 +265,7 @@ worksheets:
     description:
       en: What are possible solutions to the problem? Avoid thinking of limitations, or whether you're going to implement it, whether it's even possible. The only criteria for solutions at this step is it must solve the problem.
     instruction:
-      en: Look at your problem statement. List all solutions that come to mind. Go for quantity. Keep the titles short. Dream.
+      en: Look at your problem statement. List all solutions that come to mind. Go for quantity. Dream.
     label_solutions:
       en: How might we solve the problem?
     add_solution:

@@ -8,6 +8,7 @@ mod localized;
 mod modal;
 mod privacy_notice;
 mod radio_input;
+mod undo_remove;
 mod worksheet;
 
 pub use contact_form::*;
@@ -20,4 +21,5 @@ pub use localized::*;
 pub use modal::*;
 pub use privacy_notice::*;
 pub use radio_input::*;
+pub use undo_remove::*;
 pub use worksheet::*;

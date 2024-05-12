@@ -5,30 +5,42 @@ use uuid::Uuid;
 use form_signal::FormState;
 
 use crate::app::{
-    components::ListInputView,
-    state::{use_store, State},
+    components::{use_wk_state, ListInputView, UndoRemove},
+    state::WorkSheetsFormState,
 };
 
 /// step 3
 #[component]
 pub fn SolutionView() -> impl IntoView {
-    let state = use_store();
+    let state = use_wk_state();
 
     let problem_statement =
-        create_read_slice(state, |s| s.wk.problem.get().problem_statement.get());
+        Signal::derive(move || state.get().problem.get().problem_statement.get());
+    let solution_delete_history = create_rw_signal(vec![]);
 
-    let solutions_getter = |s: &State| s.wk.solutions.get().solutions.clone();
+    let solutions_data = Signal::derive(move || state.get().solutions.get().solutions.clone());
     let solutions_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
-        state.get().wk.solutions.update(move |p| {
+        state.get().solutions.update(move |p| {
             p.solutions.insert(index.unwrap_or(p.solutions.len()), next);
         });
         id
     };
     let solutions_value_remove = move |id: Uuid| {
-        state.get().wk.solutions.update(move |p| {
-            p.solutions.retain(|v| v.id != id);
+        state.get().solutions.update(move |p| {
+            let i = p.solutions.iter().position(|v| v.id == id).unwrap();
+            let removed = p.solutions.remove(i).get_untracked();
+            solution_delete_history.update(|h| h.push((removed, i)));
+        })
+    };
+    let solution_restore = move |(val, at): (String, usize)| {
+        state.get().solutions.update(move |p| {
+            if p.solutions.len() >= at {
+                p.solutions.insert(at, FormState::new(val));
+            } else {
+                p.solutions.push(FormState::new(val));
+            }
         })
     };
 
@@ -50,12 +62,12 @@ pub fn SolutionView() -> impl IntoView {
                 </Show>
             </div>
             <div class="grid">
-                <h4 class="col-span-full text-center text-lg mb-4">
+                <h4 class="text-center text-xl mb-4">
                     {t!("worksheets.solutions.label_solutions")}
                 </h4>
-                <ListInputView input_type="textarea"
-                    signal=state
-                    getter=solutions_getter
+                <ListInputView
+                    input_type="textarea"
+                    data=solutions_data
                     add_value=solutions_value_add
                     remove_value=solutions_value_remove
                     add_entry_text={t!("worksheets.solutions.add_solution").to_string()}
@@ -63,5 +75,9 @@ pub fn SolutionView() -> impl IntoView {
                 />
             </div>
         </form>
+        <UndoRemove
+            history=solution_delete_history
+            on_restore=solution_restore
+        />
     }
 }
