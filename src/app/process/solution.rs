@@ -1,12 +1,12 @@
 use leptos::*;
 use leptos_meta::*;
 use uuid::Uuid;
+use web_time::Instant;
 
 use form_signal::FormState;
 
-use crate::app::{
-    components::{use_wk_state, ListInputView, UndoRemove},
-    state::WorkSheetsFormState,
+use crate::app::components::{
+    use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove, WorksheetHeader,
 };
 
 /// step 3
@@ -14,11 +14,24 @@ use crate::app::{
 pub fn SolutionView() -> impl IntoView {
     let state = use_wk_state();
 
-    let problem_statement =
-        Signal::derive(move || state.get().problem.get().problem_statement.get());
+    let problem_statement = Signal::derive(move || {
+        state
+            .get()
+            .problem
+            .try_get()
+            .map(|v| v.problem_statement.get())
+            .unwrap_or_default()
+    });
     let solution_delete_history = create_rw_signal(vec![]);
 
-    let solutions_data = Signal::derive(move || state.get().solutions.get().solutions.clone());
+    let solutions_data = Signal::derive(move || {
+        state
+            .get()
+            .solutions
+            .try_get()
+            .map(|v| v.solutions.clone())
+            .unwrap_or_default()
+    });
     let solutions_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
@@ -31,10 +44,10 @@ pub fn SolutionView() -> impl IntoView {
         state.get().solutions.update(move |p| {
             let i = p.solutions.iter().position(|v| v.id == id).unwrap();
             let removed = p.solutions.remove(i).get_untracked();
-            solution_delete_history.update(|h| h.push((removed, i)));
+            solution_delete_history.update(|h| h.push((removed, i, Instant::now())));
         })
     };
-    let solution_restore = move |(val, at): (String, usize)| {
+    let solution_restore = move |(val, at, _): HistoryEntry<String>| {
         state.get().solutions.update(move |p| {
             if p.solutions.len() >= at {
                 p.solutions.insert(at, FormState::new(val));
@@ -46,6 +59,18 @@ pub fn SolutionView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.solutions.title"), t!("process.title"), t!("name"))}/>
+        <WorksheetHeader
+            title={t!("worksheets.solutions.title").to_string()}
+            description_id="solutions"
+            let:child
+        >
+            <DescriptionView
+                hidden=child.hidden
+                toggle_hidden=child.toggle_hidden
+            >
+                <p>{t!("worksheets.solutions.description")}</p>
+            </DescriptionView>
+        </WorksheetHeader>
         <form>
             <div class="max-w-prose">
                 <p>{t!("worksheets.solutions.instruction")}</p>

@@ -114,7 +114,7 @@ pub fn StepperView() -> impl IntoView {
         let label = t!(label.as_str()).to_string();
 
         view!{
-            <A on:pointerenter=move |_| activate_cb.call(Some(*artboard)) on:pointerleave=move |_| activate_cb.call(None) href={move || format!("/{}/{}", lang.get().0, i + 1)} active_class="pointer-events-none" class="block flex flex-col items-center px-6 hover:underline hover:text-purple-800 active:text-purple-950 text-center">
+            <A on:pointerenter=move |_| activate_cb.call(Some(*artboard)) on:pointerleave=move |_| activate_cb.call(None) href={move || format!("/{}/process/{}", lang.get().0, i)} active_class="pointer-events-none" class="block flex flex-col items-center px-6 hover:underline hover:text-purple-800 active:text-purple-950 text-center">
                 <canvas id={move || format!("stepper_icon_{}", artboard)} class="mt-1 w-6 h-6 md:w-8 md:h-8 xl:w-12 xl:h-12"/>
                 <span class="my-2 text-sm block w-full">{label}</span>
             </A>

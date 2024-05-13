@@ -90,7 +90,7 @@ pub fn ListInputView(
         <div class="flex flex-col" node_ref=element>
             <ol class="contents">
                 <For
-                    each=move || data.get()
+                    each=move || data.try_get().unwrap_or_default()
                     key=|state| state.id
                     let:child
                 >
@@ -104,7 +104,7 @@ pub fn ListInputView(
                         on_focus={move |_| focused_id.set(Some(child.id))}
                         item=child
                         remove_value
-                        />
+                    />
                 </For>
             </ol>
             <div class="contents">
@@ -136,7 +136,13 @@ fn ListItemView(
         remove_value.call(value.get().id);
     };
 
-    let auto_focus = Signal::derive(move || focused_id.get() == Some(value.get().id));
+    let auto_focus = Signal::derive(move || {
+        value
+            .try_get()
+            .zip(focused_id.get())
+            .map(|(v, f)| v.id == f)
+            .unwrap_or(false)
+    });
 
     let on_blur_item = Callback::new(move |e| {
         on_blur.call(e);

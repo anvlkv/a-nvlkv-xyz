@@ -85,7 +85,9 @@ fn lang_code_or_redirect(req: &IncomingRequest) -> Result<String, String> {
         let route = [suggested_language.as_str()]
             .into_iter()
             .chain(it)
-            .fold(String::default(), |acc, p| format!("{acc}/{p}"));
+            .fold(String::default(), |acc, p| {
+                format!("{acc}{}{p}", if p.is_empty() { "" } else { "/" })
+            });
 
         Err(route)
     }

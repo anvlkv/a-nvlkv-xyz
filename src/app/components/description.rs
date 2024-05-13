@@ -3,11 +3,11 @@ use leptos::*;
 #[component]
 pub fn DescriptionView(
     #[prop(into)] toggle_hidden: Callback<()>,
-    #[prop(into)] hidden: Signal<Option<bool>>,
+    #[prop(into)] hidden: Signal<bool>,
     children: ChildrenFn,
 ) -> impl IntoView {
     view! {
-        <Show when={move || hidden.get().map(|h| !h).unwrap_or(true)}>
+        <Show when={move || !hidden.get()}>
             <div class="flex items-start mb-3 rounded-lg max-w-prose p-4 bg-sky-200 dark:bg-sky-950 border border-sky-400 dark:brder-sky-800 text-sky-800 dark:text-sky-200 text-lg">
                 <div>
                     {children()}

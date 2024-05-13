@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use leptos::*;
 use uuid::Uuid;
 
@@ -13,7 +15,7 @@ pub enum FormStatus {
 #[derive(Debug, Clone, PartialEq, Eq, Copy)]
 pub struct FormState<T>
 where
-    T: Default + PartialEq + Clone + 'static,
+    T: Debug + Default + PartialEq + Clone + 'static,
 {
     pub id: Uuid,
     value: RwSignal<T>,
@@ -22,7 +24,7 @@ where
 
 impl<T> SignalGet for FormState<T>
 where
-    T: Default + PartialEq + Clone + 'static,
+    T: Debug + Default + PartialEq + Clone + 'static,
 {
     type Value = T;
 
@@ -37,7 +39,7 @@ where
 
 impl<T> SignalGetUntracked for FormState<T>
 where
-    T: Default + PartialEq + Clone + 'static,
+    T: Debug + Default + PartialEq + Clone + 'static,
 {
     type Value = T;
 
@@ -52,7 +54,7 @@ where
 
 impl<T> SignalSet for FormState<T>
 where
-    T: Default + PartialEq + Clone + 'static,
+    T: Debug + Default + PartialEq + Clone + 'static,
 {
     type Value = T;
 
@@ -73,7 +75,7 @@ where
 
 impl<T> SignalUpdate for FormState<T>
 where
-    T: Default + PartialEq + Clone + 'static,
+    T: Debug + Default + PartialEq + Clone + 'static,
 {
     type Value = T;
 
@@ -94,7 +96,7 @@ where
 
 impl<T> FormState<T>
 where
-    T: Default + PartialEq + Clone + 'static,
+    T: Debug + Default + PartialEq + Clone + 'static,
 {
     pub fn new(value: T) -> Self {
         Self {
@@ -119,7 +121,7 @@ where
 
 impl<T> Default for FormState<T>
 where
-    T: Default + PartialEq + Clone + 'static,
+    T: Debug + Default + PartialEq + Clone + 'static,
 {
     fn default() -> Self {
         Self::new(T::default())

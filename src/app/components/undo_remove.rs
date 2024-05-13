@@ -6,25 +6,27 @@ use std::{
 
 use leptos::*;
 use leptos_use::{use_timestamp_with_options, UseTimestampOptions};
+use web_time::Instant;
 
 use crate::app::components::TOAST_CONTAINER;
 
+pub type HistoryEntry<T> = (T, usize, Instant);
+
 #[component]
 pub fn UndoRemove<T>(
-    #[prop(into)] history: RwSignal<Vec<(T, usize)>>,
-    #[prop(into)] on_restore: Callback<(T, usize)>,
+    #[prop(into)] history: RwSignal<Vec<HistoryEntry<T>>>,
+    #[prop(into)] on_restore: Callback<HistoryEntry<T>>,
 ) -> impl IntoView
 where
     T: Display + Debug + Clone + PartialEq + Eq + Hash + 'static,
 {
-    let child_view = move |child: &(T, usize)| {
+    let child_view = move |child: &HistoryEntry<T>| {
         let action = {
             let child = child.clone();
             move |_| {
                 on_restore.call(child.clone());
                 history.update(|h| {
                     h.retain(|v| v != &child);
-                    log::debug!("history restore: {h:?}");
                 });
             }
         };
@@ -33,7 +35,6 @@ where
             move |_| {
                 history.update(|h| {
                     h.retain(|v| v != &child);
-                    log::debug!("history ontimeout: {h:?}");
                 })
             }
         };
@@ -52,8 +53,8 @@ where
         <Show when={move || history.get().len() > 0}>
             <Portal mount=document().get_element_by_id(TOAST_CONTAINER).unwrap()>
                 <For
-                    each={move || history.get().into_iter().collect::<Vec<_>>()}
-                    key=|state| state.clone()
+                    each={move || history.get()}
+                    key=|state| state.2
                     let:child
                 >
                     {

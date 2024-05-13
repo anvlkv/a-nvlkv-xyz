@@ -54,7 +54,13 @@ pub fn StringInputView(
         }
     };
 
-    let value_src = Signal::derive(move || value.get().get());
+    let value_src = Signal::derive(move || {
+        value
+            .try_get()
+            .map(|v| v.try_get())
+            .flatten()
+            .unwrap_or_default()
+    });
 
     let may_blure = move |e: ev::FocusEvent| {
         if !focused.get() {
@@ -217,7 +223,7 @@ fn AutoCompleteList(
     view! {
         <Show when={move|| may_autocomplete.get() && options.get().len() > 0}>
             <Portal mount={document().get_element_by_id(APP_MAIN).unwrap()}>
-                <ul role="listbox" class="absolute overflow-x-visible overflow-y-auto max-h-80 border border-slate-400 rounded bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 text-lg shadow mt-2" style=style>
+                <ul role="listbox" class="fixed overflow-x-visible overflow-y-auto max-h-80 border border-slate-400 rounded bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 text-lg shadow mt-2" style=style>
                     {options_view}
                 </ul>
             </Portal>

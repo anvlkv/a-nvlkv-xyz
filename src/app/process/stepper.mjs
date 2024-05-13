@@ -61,28 +61,34 @@ export function mountArtboards() {
 export function setActive(artboard) {
   active = artboard;
   const i = artboards.indexOf(artboard);
-  rvHandles.forEach(({ inactiveInput }, ii) => {
-    if (inactiveInput) {
-      inactiveInput.value = i != ii;
-    }
-  });
+  if (rvHandles) {
+    rvHandles.forEach(({ inactiveInput }, ii) => {
+      if (inactiveInput) {
+        inactiveInput.value = i != ii;
+      }
+    });
+  }
 }
 
 export function setVisible(artboard) {
   visible = artboard;
   const i = artboards.indexOf(artboard);
-  rvHandles.forEach(({ visibleInput }, ii) => {
-    if (visibleInput) {
-      visibleInput.value = i == ii;
-    }
-  });
+  if (rvHandles) {
+    rvHandles.forEach(({ visibleInput }, ii) => {
+      if (visibleInput) {
+        visibleInput.value = i == ii;
+      }
+    });
+  }
 }
 
 export function forgetVisible() {
   visible = null;
-  rvHandles.forEach(({ visibleInput }, ii) => {
-    if (visibleInput) {
-      visibleInput.value = false;
-    }
-  });
+  if (rvHandles) {
+    rvHandles.forEach(({ visibleInput }, ii) => {
+      if (visibleInput) {
+        visibleInput.value = false;
+      }
+    });
+  }
 }

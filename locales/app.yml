@@ -265,7 +265,7 @@ worksheets:
     description:
       en: What are possible solutions to the problem? Avoid thinking of limitations, or whether you're going to implement it, whether it's even possible. The only criteria for solutions at this step is it must solve the problem.
     instruction:
-      en: Look at your problem statement. List all solutions that come to mind. Go for quantity. Dream.
+      en: Looking at your problem statement. List all solutions that come to mind. Go for quantity. Dream.
     label_solutions:
       en: How might we solve the problem?
     add_solution:
@@ -401,4 +401,4 @@ stepper:
   iterate:
     en: Test & Iterate
   inquire:
-    en: Inquiries
+    en: Inquire

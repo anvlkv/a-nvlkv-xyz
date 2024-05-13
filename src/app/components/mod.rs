@@ -1,10 +1,11 @@
 mod contact_form;
 mod description;
+mod error;
 mod footer;
 mod header;
 mod input;
 mod list_input;
-mod localized;
+mod localized_root;
 mod modal;
 mod privacy_notice;
 mod radio_input;
@@ -13,11 +14,12 @@ mod worksheet;
 
 pub use contact_form::*;
 pub use description::*;
+pub use error::*;
 pub use footer::*;
 pub use header::*;
 pub use input::*;
 pub use list_input::*;
-pub use localized::*;
+pub use localized_root::*;
 pub use modal::*;
 pub use privacy_notice::*;
 pub use radio_input::*;

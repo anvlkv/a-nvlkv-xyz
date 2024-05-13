@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 leptos = "0.6.11"
 uuid = { version = "1.8.0", features = ["v5", "v4", "serde"] }
-
+log = "0.4"
 
 [features]
 csr = ["leptos/csr"]

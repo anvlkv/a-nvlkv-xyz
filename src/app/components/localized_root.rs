@@ -16,7 +16,7 @@ struct LocalizeParams {
 pub struct Language(pub String);
 
 #[component]
-pub fn LocalizedView() -> impl IntoView {
+pub fn LocalizedRootView() -> impl IntoView {
     let route = use_params::<LocalizeParams>();
 
     let lang = Signal::derive(move || {
@@ -38,8 +38,10 @@ pub fn LocalizedView() -> impl IntoView {
         view! {
             <HeaderView/>
             <main class="overflow-auto grow flex flex-col" id=APP_MAIN>
-                <Outlet/>
-                <div id={TOAST_CONTAINER} class="fixed right-0 bottom-0 flex flex-col-reverse gap-4 items-stretch h-min max-h-full overflow-auto pr-8 pb-8">
+                <div class="grow mx-auto w-full max-w-screen-2xl px-6 md:px-8 lg:px-16 flex flex-col sm:flex-row-reverse lg:flex-col lg:justify-stretch lg:items-stretch">
+                    <Outlet/>
+                </div>
+                <div id=TOAST_CONTAINER class="fixed right-0 bottom-0 flex flex-col-reverse gap-4 items-stretch h-min max-h-full overflow-auto pr-8 pb-8">
                 </div>
             </main>
             <FooterView/>

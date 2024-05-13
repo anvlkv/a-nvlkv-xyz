@@ -34,6 +34,8 @@ js-sys = { version = "0.3.69", optional = true }
 strum = { version = "0.26", features = ["derive"] }
 leptos-use = { version = "0.10.10", features = ["serde_json", "serde"] }
 form-signal-macro = { path = "./form-signal-macro" }
+web-time = "1.1.0"
+wasm-bindgen-futures = { version = "0.4.42", optional = true }
 
 [dependencies.web-sys]
 version = "0.3"
@@ -52,7 +54,12 @@ features = [
 members = ["form-signal-macro", "form-signal"]
 
 [features]
-client = ["dep:wasm-bindgen", "dep:console_log", "dep:js-sys"]
+client = [
+    "dep:wasm-bindgen",
+    "dep:console_log",
+    "dep:js-sys",
+    "dep:wasm-bindgen-futures",
+]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr", "client"]
 hydrate = [
     "leptos/hydrate",

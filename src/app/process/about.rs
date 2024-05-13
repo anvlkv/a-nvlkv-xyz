@@ -1,4 +1,5 @@
 use crate::app::{
+    components::WorksheetHeader,
     state::{use_store, ProcessStep},
     Language,
 };
@@ -56,7 +57,7 @@ pub fn AboutView() -> impl IntoView {
             view! {
                 <li class="pb-3 flex items-start">
                     <canvas id={move || format!("about_icon_{}", name)} class="w-16 h-16 xl:w-20 xl:h-20"/>
-                        <div class="pt-3 pl-3">
+                    <div class="pl-3">
                         <h5 class="pb-1 font-bold">
                             {t!(format!("about.s_{i}.title").as_str()).to_string()}
                         </h5>
@@ -71,6 +72,14 @@ pub fn AboutView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>
+        <WorksheetHeader
+            title={t!("about.title").to_string()}
+            description_id=""
+            let:_
+        >
+            {().into_view()}
+        </WorksheetHeader>
+
         <div class="grid lg:grid-cols-2 gap-10 content-stretch">
             <p class="max-w-prose pb-4 col-start-1">
                 {t!("about.description_1")}
@@ -89,7 +98,7 @@ pub fn AboutView() -> impl IntoView {
                 >
                     <canvas id="about_icon_Privacy" class="grow-0 shrink-0 h-14 aspect-square mr-4"/>
                 </button>
-                <A attr:type="button" href={move || format!("/{}/2", lang.get().0)} class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center">{t!("about.cta")}</A>
+                <A attr:type="button" href={move || format!("/{}/process/1", lang.get().0)} class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center">{t!("about.cta")}</A>
             </div>
         </div>
     }

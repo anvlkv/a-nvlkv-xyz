@@ -3,23 +3,39 @@ use std::collections::BTreeSet;
 use leptos::*;
 use leptos_meta::*;
 use uuid::Uuid;
+use web_time::Instant;
 
 use form_signal::FormState;
 
-use crate::app::{
-    components::{use_wk_state, ListInputView, StringInputView, UndoRemove},
-    state::WorkSheetsFormState,
+use crate::app::components::{
+    use_wk_state, DescriptionView, HistoryEntry, ListInputView, StringInputView, UndoRemove,
+    WorksheetHeader,
 };
 
 /// step 2
 #[component]
 pub fn ProblemView() -> impl IntoView {
     let state = use_wk_state();
-    let problem_statement = Signal::derive(move || state.get().problem.get().problem_statement);
+
+    let problem_statement = Signal::derive(move || {
+        state
+            .get()
+            .problem
+            .try_get()
+            .map(|v| v.problem_statement)
+            .unwrap_or_default()
+    });
     let problem_delete_history = create_rw_signal(vec![]);
     let stakeholder_delete_history = create_rw_signal(vec![]);
 
-    let problems_data = Signal::derive(move || state.get().problem.get().problems.clone());
+    let problems_data = Signal::derive(move || {
+        state
+            .get()
+            .problem
+            .try_get()
+            .map(|v| v.problems.clone())
+            .unwrap_or_default()
+    });
     let problems_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
@@ -32,10 +48,10 @@ pub fn ProblemView() -> impl IntoView {
         state.get().problem.update(move |p| {
             let i = p.problems.iter().position(|v| v.id == id).unwrap();
             let removed = p.problems.remove(i).get_untracked();
-            problem_delete_history.update(|h| h.push((removed, i)));
+            problem_delete_history.update(|h| h.push((removed, i, Instant::now())));
         })
     };
-    let problem_restore = move |(val, at): (String, usize)| {
+    let problem_restore = move |(val, at, _): HistoryEntry<String>| {
         state.get().problem.update(move |p| {
             if p.problems.len() >= at {
                 p.problems.insert(at, FormState::new(val));
@@ -45,7 +61,14 @@ pub fn ProblemView() -> impl IntoView {
         })
     };
 
-    let stakeholders_data = Signal::derive(move || state.get().problem.get().stakeholders.clone());
+    let stakeholders_data = Signal::derive(move || {
+        state
+            .get()
+            .problem
+            .try_get()
+            .map(|v| v.stakeholders.clone())
+            .unwrap_or_default()
+    });
     let stakeholders_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
@@ -59,10 +82,10 @@ pub fn ProblemView() -> impl IntoView {
         state.get().problem.update(move |p| {
             let i = p.stakeholders.iter().position(|v| v.id == id).unwrap();
             let removed = p.stakeholders.remove(i).get_untracked();
-            stakeholder_delete_history.update(|h| h.push((removed, i)));
+            stakeholder_delete_history.update(|h| h.push((removed, i, Instant::now())));
         })
     };
-    let stakeholder_restore = move |(val, at): (String, usize)| {
+    let stakeholder_restore = move |(val, at, _): HistoryEntry<String>| {
         state.get().problem.update(move |p| {
             if p.stakeholders.len() >= at {
                 p.stakeholders.insert(at, FormState::new(val));
@@ -87,8 +110,19 @@ pub fn ProblemView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.problem.title"), t!("process.title"), t!("name"))}/>
-
-        <form >
+        <WorksheetHeader
+            title={t!("worksheets.problem.title").to_string()}
+            description_id="problem"
+            let:child
+        >
+            <DescriptionView
+                hidden=child.hidden
+                toggle_hidden=child.toggle_hidden
+            >
+                <p>{t!("worksheets.problem.description")}</p>
+            </DescriptionView>
+        </WorksheetHeader>
+        <form>
             <div class="max-w-prose mb-4">
                 <p>{t!("worksheets.problem.instruction_1")}</p>
             </div>
@@ -104,7 +138,7 @@ pub fn ProblemView() -> impl IntoView {
                         remove_value=problems_value_remove
                         add_entry_text={t!("worksheets.problem.add_problem").to_string()}
                         placeholder={t!("worksheets.problem.placeholder_problem").to_string()}
-                   />
+                />
                 </div>
                 <div>
                     <h4 class="text-xl mb-4">
@@ -118,7 +152,7 @@ pub fn ProblemView() -> impl IntoView {
                         add_entry_text={t!("worksheets.problem.add_stakeholder").to_string()}
                         placeholder={t!("worksheets.problem.placeholder_stakeholders").to_string()}
                         autocomplete=stakeholders_autocomplete
-                       />
+                    />
                 </div>
             </div>
             <hr class="border-t border-slate-400 mt-4 mb-8"/>

@@ -36,7 +36,7 @@ pub fn StoreProvider(children: Children) -> impl IntoView {
 
         if let Some(wk) = wk_storage.get_untracked() {
             state.wk = WorkSheetsFormState::from(wk);
-            log::debug!("write state");
+            log::info!("write wk state");
         }
 
         state
