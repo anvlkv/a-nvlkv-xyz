@@ -17,7 +17,9 @@ pub fn IterateView() -> impl IntoView {
                 hidden=child.hidden
                 toggle_hidden=child.toggle_hidden
             >
-                <p>{t!("worksheets.iterate.description")}</p>
+                <p class="whitespace-pre-line">
+                    {t!("worksheets.iterate.description")}
+                </p>
             </DescriptionView>
         </WorksheetHeader>
         <label>

@@ -5,8 +5,11 @@ use web_time::Instant;
 
 use form_signal::FormState;
 
-use crate::app::components::{
-    use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove, WorksheetHeader,
+use crate::app::{
+    components::{
+        use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove, WorksheetHeader,
+    },
+    process::FixedProblemStatement,
 };
 
 /// step 3
@@ -14,14 +17,6 @@ use crate::app::components::{
 pub fn SolutionView() -> impl IntoView {
     let state = use_wk_state();
 
-    let problem_statement = Signal::derive(move || {
-        state
-            .get()
-            .problem
-            .try_get()
-            .map(|v| v.problem_statement.get())
-            .unwrap_or_default()
-    });
     let solution_delete_history = create_rw_signal(vec![]);
 
     let solutions_data = Signal::derive(move || {
@@ -68,24 +63,16 @@ pub fn SolutionView() -> impl IntoView {
                 hidden=child.hidden
                 toggle_hidden=child.toggle_hidden
             >
-                <p>{t!("worksheets.solutions.description")}</p>
+                <p class="whitespace-pre-line">
+                    {t!("worksheets.solutions.description")}
+                </p>
             </DescriptionView>
         </WorksheetHeader>
         <form>
-            <div class="max-w-prose">
+            <div class="max-w-prose mb-4 whitespace-pre-line">
                 <p>{t!("worksheets.solutions.instruction")}</p>
             </div>
-            <div class="max-w-prose my-2 mx-auto p-4 text-lg rounded border border-slate-300 dark:border-slate-700">
-                <Show
-                    when={move || !problem_statement.get().is_empty()}
-                    fallback={|| view!{
-                        <p class="text-sm opacity-80">{t!("util.empty")}</p>
-                        }
-                    }
-                >
-                    <p>{problem_statement}</p>
-                </Show>
-            </div>
+            <FixedProblemStatement/>
             <div class="grid">
                 <h4 class="text-center text-xl mb-4">
                     {t!("worksheets.solutions.label_solutions")}

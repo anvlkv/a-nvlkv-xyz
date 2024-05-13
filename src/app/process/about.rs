@@ -61,7 +61,7 @@ pub fn AboutView() -> impl IntoView {
                         <h5 class="pb-1 font-bold">
                             {t!(format!("about.s_{i}.title").as_str()).to_string()}
                         </h5>
-                        <p>
+                        <p class="whitespace-pre-line">
                             {t!(format!("about.s_{i}.description").as_str()).to_string()}
                         </p>
                     </div>
@@ -81,10 +81,10 @@ pub fn AboutView() -> impl IntoView {
         </WorksheetHeader>
 
         <div class="grid lg:grid-cols-2 gap-10 content-stretch">
-            <p class="max-w-prose pb-4 col-start-1">
+            <p class="max-w-prose pb-4 col-start-1 whitespace-pre-line">
                 {t!("about.description_1")}
             </p>
-            <p class="max-w-prose pb-4 col-start-1">
+            <p class="max-w-prose pb-4 col-start-1 whitespace-pre-line">
                 {t!("about.description_2")}
             </p>
             <ol class="max-w-prose row-span-3 lg:col-start-2 lg:row-start-1">
