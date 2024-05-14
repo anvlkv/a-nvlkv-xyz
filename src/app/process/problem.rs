@@ -13,7 +13,7 @@ use crate::app::{
         use_wk_state, DescriptionView, HistoryEntry, ListInputView, StringInputView, UndoRemove,
         WorksheetHeader,
     },
-    Language,
+    use_lang,
 };
 
 /// step 2
@@ -183,7 +183,7 @@ pub fn ProblemView() -> impl IntoView {
 #[component]
 pub fn FixedProblemStatement() -> impl IntoView {
     let state = use_wk_state();
-    let lang = use_context::<Signal<Language>>().unwrap();
+    let lang = use_lang();
 
     let problem_statement = Signal::derive(move || {
         state
@@ -199,7 +199,7 @@ pub fn FixedProblemStatement() -> impl IntoView {
             <Show
                 when={move || !problem_statement.get().is_empty()}
                 fallback=move || {
-                    let href = format!("/{}/process/1", lang.get().0);
+                    let href = format!("/{}/process/1", lang.get());
                     view!{
                         <p class="text-sm opacity-80">
                             {t!("util.empty")}

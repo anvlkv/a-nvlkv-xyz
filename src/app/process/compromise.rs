@@ -5,7 +5,7 @@ use leptos_router::*;
 use crate::app::{
     components::{use_wk_state, DescriptionView, StringInputView, WorksheetHeader},
     process::FixedProblemStatement,
-    Language,
+    use_lang,
 };
 
 /// step 4
@@ -69,7 +69,7 @@ pub fn CompromiseView() -> impl IntoView {
 #[component]
 pub fn FixedAssumptionStatement() -> impl IntoView {
     let state = use_wk_state();
-    let lang = use_context::<Signal<Language>>().unwrap();
+    let lang = use_lang();
 
     let assumption = Signal::derive(move || {
         state
@@ -85,7 +85,7 @@ pub fn FixedAssumptionStatement() -> impl IntoView {
             <Show
                 when={move || !assumption.get().is_empty()}
                 fallback=move || {
-                    let href = format!("/{}/process/3", lang.get().0);
+                    let href = format!("/{}/process/3", lang.get());
                     view!{
                         <p class="text-sm opacity-80">
                             {t!("util.empty")}

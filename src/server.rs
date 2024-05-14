@@ -1,15 +1,17 @@
 use std::str;
 
 use leptos_spin::{render_best_match_to_stream, server_fn::register_explicit, RouteTable};
-use spin_sdk::http::{Fields, IncomingRequest, OutgoingResponse, ResponseOutparam};
-use spin_sdk::http_component;
+use spin_sdk::{
+    http::{Fields, IncomingRequest, OutgoingResponse, ResponseOutparam},
+    http_component,
+    pg::Connection,
+    variables,
+};
 
 const TEMPORARY_REDIRECT_CODE: u16 = 307;
 
 #[http_component]
 async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
-    env_logger::init();
-
     let url = req.path_with_query().unwrap();
     log::debug!("handling request: {:?} {}", req.method(), req.uri());
 
@@ -17,7 +19,7 @@ async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
     conf.leptos_options.output_name = "a_nvlkv_xyz".to_owned();
 
     // Register server functions
-    // register_explicit::<crate::app::SaveCount>();
+    register_explicit::<crate::app::pages::GetExamples>();
 
     let app = crate::app::App;
 
@@ -91,4 +93,24 @@ fn lang_code_or_redirect(req: &IncomingRequest) -> Result<String, String> {
 
         Err(route)
     }
+}
+
+pub fn get_db_conn() -> anyhow::Result<Connection> {
+    let xata_pg_url = variables::get("xata_pg_url")?;
+    let conn = Connection::open(xata_pg_url.as_str())?;
+    Ok(conn)
+}
+
+pub fn xata_rest_builder(path: &str) -> anyhow::Result<spin_sdk::http::RequestBuilder> {
+    let xata_key = variables::get("xata_key")?;
+    let xata_rest_url = variables::get("xata_rest_url")?;
+    let db_name = variables::get("db_name")?;
+    let db_branch = variables::get("db_branch")?;
+    let mut req = spin_sdk::http::Request::builder();
+
+    req.header("Authorization", format!("Bearer {xata_key}"))
+        .header("Content-Type", "application/json")
+        .uri(format!("{xata_rest_url}/db/{db_name}:{db_branch}/{path}"));
+
+    Ok(req)
 }

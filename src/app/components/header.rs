@@ -1,16 +1,16 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::app::Language;
+use crate::app::use_lang;
 
 #[component]
 pub fn HeaderView() -> impl IntoView {
     let location = use_location();
     let navigate = use_navigate();
-    let lang = use_context::<Signal<Language>>().unwrap();
+    let lang = use_lang();
 
     let title = move || {
-        let lang = format!("/{}", lang.get().0);
+        let lang = format!("/{}", lang.get());
 
         match location.pathname.get() {
             l if l == lang => view! {
@@ -36,7 +36,7 @@ pub fn HeaderView() -> impl IntoView {
                 let label_short = t!(lc_short.as_str(), locale = "en").into_owned();
 
                 view! {
-                    <option value={locale} selected={move || locale == lang.get().0.as_str()}>
+                    <option value={locale} selected={move || locale == lang.get().to_string().as_str()}>
                         {label}{format!(" ({label_short})")}
                     </option>
                 }
@@ -68,8 +68,12 @@ pub fn HeaderView() -> impl IntoView {
             <div class="max-w-screen-2xl px-6 md:px-8 lg:px-16 py-3 flex justify-between grow shrink-0">
                 {title}
                 <div class="flex gap-2">
-                    <A class="underline hover:text-purple-800 active:text-purple-950" exact=true href={move || format!("/{}/contact", lang.get().0)} >{ t!("let_talk") }</A>
-                    <select name="language" on:change={onchange_lang} value={move || lang.get().0} class="bg-transparent max-w-min pr-2 border-r-2 border-solid border-slate-400">
+                    <A class="underline hover:text-purple-800 active:text-purple-950" exact=true href={move || format!("/{}/contact", lang.get())} >{ t!("let_talk") }</A>
+                    <select
+                    name="language"
+                    on:change={onchange_lang}
+                    value={move || lang.get().to_string()}
+                    class="bg-transparent max-w-min pr-2 border-r-2 border-solid border-slate-400">
                         {options}
                     </select>
                 </div>

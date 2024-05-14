@@ -2,7 +2,7 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
-use crate::app::Language;
+use crate::app::use_lang;
 
 #[cfg(any(feature = "csr", feature = "hydrate"))]
 mod rv_animation {
@@ -26,7 +26,7 @@ mod rv_animation {
 /// step 0
 #[component]
 pub fn LandingView() -> impl IntoView {
-    let lang = use_context::<Signal<Language>>().unwrap();
+    let lang = use_lang();
 
     #[allow(unused_variables)]
     let (button_height, set_button_height) = create_signal::<f64>(0.0);
@@ -92,7 +92,7 @@ pub fn LandingView() -> impl IntoView {
                     <A
                         id="the-done-button"
                         attr:type="button"
-                        href={move || format!("/{}/process/0", lang.get().0)}
+                        href={move || format!("/{}/process/0", lang.get())}
                         class={move || if rv_ready.get() {"contents opacity-1"} else {"contents opacity-75"}}
                     >
                         <span
@@ -122,7 +122,7 @@ pub fn LandingView() -> impl IntoView {
                 <div id="process-intro" class="col-span-2 md:col-span-4 py-6 flex flex-col md:flex-row gap-16 text-base sm:text-lg">
                     <p class="basis-full md:basis-1/2">
                         {t!("landing.p1_s1")}{" "}
-                        <A href={move || format!("/{}/process/1", lang.get().0)} attr:class="underline text-purple-800 dark:text-purple-200">
+                        <A href={move || format!("/{}/process/1", lang.get())} attr:class="underline text-purple-800 dark:text-purple-200">
                             {t!("landing.p1_link")}
                         </A>
                         {" "}{t!("landing.p1_s2")}

@@ -5,15 +5,18 @@ use serde::{Deserialize, Serialize};
 use strum::{Display, EnumString, VariantArray};
 use uuid::Uuid;
 
+use crate::app::Language;
+
 use super::worksheets::*;
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct State {
     pub wk: WorkSheetsFormState,
-    pub examples: Examples,
+    pub examples: Vec<Example>,
     pub sequence: Vec<SeqStep>,
     pub storage_preference: FormState<Option<StorageMode>>,
     pub show_privacy_prompt: RwSignal<bool>,
+    pub lang: Language,
 }
 
 #[derive(
@@ -36,13 +39,13 @@ impl Into<StorageType> for &StorageMode {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct Examples {
-    pub examples_problem: Vec<ExampleState<ProblemWK>>,
-    pub examples_solutions: Vec<ExampleState<SolutionsWK>>,
-    pub examples_compromise: Vec<ExampleState<CompromiseWK>>,
-    pub examples_implement: Vec<ExampleState<ImplementWK>>,
-    pub examples_iterate: Vec<ExampleState<IterateWK>>,
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Example {
+    pub id: String,
+    pub wk: Option<WorkSheets>,
+    pub title: String,
+    pub description: String,
+    pub translation_warning: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]

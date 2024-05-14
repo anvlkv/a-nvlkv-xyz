@@ -1,6 +1,11 @@
+use std::str::FromStr;
+
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
+use serde::{Deserialize, Serialize};
+
+use crate::app::state::use_store;
 
 use super::*;
 
@@ -12,28 +17,51 @@ struct LocalizeParams {
     lang: Option<String>,
 }
 
-#[derive(Clone)]
-pub struct Language(pub String);
+pub fn use_lang() -> Signal<Language> {
+    let state = use_store();
+    Signal::derive(move || state.get().lang)
+}
+
+#[derive(
+    Clone, Serialize, Deserialize, Debug, PartialEq, Eq, strum::Display, Default, strum::EnumString,
+)]
+pub enum Language {
+    #[default]
+    #[strum(to_string = "en")]
+    En,
+    #[strum(to_string = "ru")]
+    Ru,
+    #[strum(to_string = "nl")]
+    Nl,
+    #[strum(to_string = "ja")]
+    Ja,
+}
 
 #[component]
 pub fn LocalizedRootView() -> impl IntoView {
     let route = use_params::<LocalizeParams>();
+    let state = use_store();
 
     let lang = Signal::derive(move || {
-        Language(
+        Language::from_str(
             route
                 .get()
                 .map(|p| p.lang)
                 .ok()
                 .flatten()
-                .unwrap_or_else(|| rust_i18n::available_locales!().first().unwrap().to_string()),
+                .unwrap_or_else(|| rust_i18n::available_locales!().first().unwrap().to_string())
+                .as_str(),
         )
+        .unwrap()
     });
 
-    provide_context(lang);
+    create_isomorphic_effect(move |_| {
+        let lang = lang.get();
+        state.update(move |s| s.lang = lang);
+    });
 
     let localized = move || {
-        rust_i18n::set_locale(lang.get().0.as_str());
+        rust_i18n::set_locale(lang.get().to_string().as_str());
 
         view! {
             <HeaderView/>
@@ -49,7 +77,7 @@ pub fn LocalizedRootView() -> impl IntoView {
     };
 
     view! {
-        <Html lang={move || lang.get().0}/>
+        <Html lang={move || lang.get().to_string()}/>
         {localized}
     }
 }

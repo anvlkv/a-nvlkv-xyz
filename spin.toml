@@ -10,15 +10,28 @@ description = ""
 route = "/..."
 component = "a-nvlkv-xyz"
 
+[variables]
+xata_key = { required = true }
+xata_workspace = { required = true }
+xata_region = { required = true }
+db_name = { required = true }
+db_branch = { required = true }
 
+
+[component.a-nvlkv-xyz.variables]
+xata_pg_url = "postgresql://{{ xata_workspace }}:{{ xata_key }}@{{ xata_region }}.sql.xata.sh:5432/{{ db_name }}:{{ db_branch }}?sslmode=require"
+xata_rest_url = "https://{{ xata_workspace }}.{{ xata_region }}.xata.sh"
+xata_key = "{{ xata_key }}"
+db_name = "{{ db_name }}"
+db_branch = "{{ db_branch }}"
 [component.a-nvlkv-xyz]
 # release
 source = "target/wasm32-wasi/release/a_nvlkv_xyz.wasm"
 # debug
 # source = "target/wasm32-wasi/debug/a_nvlkv_xyz.wasm"
-allowed_outbound_hosts = []
+allowed_outbound_hosts = ["*://*.xata.sh:*"]
 key_value_stores = ["default"]
-environment = { RUST_LOG = "a-nvlkv-xyz=trace" }
+environment = { RUST_LOG = "spin=trace,a-nvlkv-xyz=trace" }
 [component.a-nvlkv-xyz.build]
 # release
 command = "cargo leptos build --release && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --release --no-default-features --features ssr"

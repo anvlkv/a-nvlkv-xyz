@@ -6,7 +6,7 @@ extern crate form_signal_macro;
 pub mod app;
 
 #[cfg(feature = "ssr")]
-mod server;
+pub mod server;
 
 use cfg_if::cfg_if;
 

@@ -9,8 +9,8 @@ use leptos_router::*;
 use pages::*;
 use state::StoreProvider;
 
-pub use components::Language;
 use components::LocalizedRootView;
+pub use components::{use_lang, Language};
 
 pub const STYLED_ROOT: &str = "app-styled-root";
 
@@ -61,13 +61,3 @@ pub fn App() -> impl IntoView {
         </StoreProvider>
     }
 }
-
-// #[server(SaveCount, "/api")]
-// pub async fn save_count(count: u32) -> Result<(), ServerFnError<String>> {
-//     println!("Saving value {count}");
-//     let store = spin_sdk::key_value::Store::open_default().map_err(|e| e.to_string())?;
-//     store
-//         .set_json("a_nvlkv_xyz_count", &count)
-//         .map_err(|e| ServerFnError::ServerError(e.to_string()))?;
-//     Ok(())
-// }

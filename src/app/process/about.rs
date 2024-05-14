@@ -1,7 +1,7 @@
 use crate::app::{
     components::WorksheetHeader,
     state::{use_store, ProcessStep},
-    Language,
+    use_lang,
 };
 
 use leptos::*;
@@ -26,7 +26,7 @@ mod rv_animation {
 /// step 1
 #[component]
 pub fn AboutView() -> impl IntoView {
-    let lang = use_context::<Signal<Language>>().unwrap();
+    let lang = use_lang();
     let state = use_store();
 
     let show_privacy_choice =
@@ -98,7 +98,7 @@ pub fn AboutView() -> impl IntoView {
                 >
                     <canvas id="about_icon_Privacy" class="grow-0 shrink-0 h-14 aspect-square mr-4"/>
                 </button>
-                <A attr:type="button" href={move || format!("/{}/process/1", lang.get().0)} class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center">{t!("about.cta")}</A>
+                <A attr:type="button" href={move || format!("/{}/process/1", lang.get())} class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center">{t!("about.cta")}</A>
             </div>
         </div>
     }
