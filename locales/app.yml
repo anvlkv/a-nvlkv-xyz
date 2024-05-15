@@ -44,6 +44,19 @@ util:
     nl: Annuleren
     ja: キャンセル
     ru: Отмена
+  err:
+    en: |
+      Sorry, something went wrong...
+      Try reloading the page now or after a while
+    ru: |
+      К сожалению, что-то пошло не так...
+      Попробуйте перезагрузить страницу сейчас или через некоторое время
+    nl: |
+      Sorry, er is iets misgegaan...
+      Probeer de pagina nu of over een tijdje opnieuw te laden
+    ja: |
+      申し訳ありませんが、問題が発生しました...
+      今すぐ、または後でページをリロードしてください。
 privacy:
   short:
     en: Privacy
@@ -78,10 +91,10 @@ privacy:
     ru: Все данные будут удалены как только вы закроете или презагрузите эту страницу.
     ja: このページを閉じるかリロードすると、すべてのデータがクリアされます。
 name:
-  en: Aleksandr Novolokov
-  nl: Aleksandr Novolokov
-  ru: Александр Новолоков
-  ja: アレクサンダー・ノボロコフ
+  en: Sasha Novolokov
+  nl: Sacha Novolokow
+  ru: Саша Новолоков
+  ja: ササ・ノボロコフ
 specialty:
   en: Full-stack User Experience Engineer
   nl: Full-stack Gebruikerservaring Ingenieur

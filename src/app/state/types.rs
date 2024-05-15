@@ -46,6 +46,8 @@ pub struct Example {
     pub title: String,
     pub description: String,
     pub translation_warning: bool,
+    pub main_image_url: Option<String>,
+    pub images: Vec<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]

@@ -4,7 +4,7 @@ use leptos_router::*;
 use strum::VariantArray;
 
 use crate::app::{
-    components::{PrivacyNoticeView, WorksheetDummy, WorksheetView},
+    components::{ErrorView, PrivacyNoticeView, WorksheetDummy, WorksheetView},
     process::*,
     state::{use_store, Example, ProcessStep, SeqStep, StorageMode},
     use_lang, Language,
@@ -21,11 +21,7 @@ pub fn ProcessView() -> impl IntoView {
 
     let examples = create_resource(
         move || lang.get(),
-        |lang| async move {
-            println!("get with {lang}");
-            log::info!("getting examples");
-            get_examples(lang, 3, 0).await
-        },
+        |lang| async move { get_examples(lang, 3, 0).await },
     );
 
     create_isomorphic_effect(move |old| {
@@ -45,34 +41,26 @@ pub fn ProcessView() -> impl IntoView {
         state.lang
     });
 
+    let (has_err, set_has_err) = create_signal(false);
+
     create_isomorphic_effect(move |_| {
         if let Some(data) = examples.get() {
             match data {
                 Ok(examples) => {
+                    set_has_err.set(false);
+
                     let lang = store.get_untracked().lang;
 
                     store.update(|s| {
-                        s.sequence = ProcessStep::VARIANTS.iter().enumerate().fold(
-                            vec![],
-                            |mut acc, (i, step)| {
-                                acc.push(SeqStep {
-                                    href: format!("/{}/process/{}", lang, i),
-                                    process_step: *step,
-                                });
-
-                                acc.extend(examples.iter().map(|ex| SeqStep {
-                                    href: format!("/{}/process/{}/{}", lang, i, ex.id),
-                                    process_step: *step,
-                                }));
-
-                                acc
-                            },
-                        );
+                        s.examples = examples;
+                        s.sequence = vec![];
+                        make_sequence(&mut s.sequence, &s.examples, lang);
                     });
                 }
                 Err(err) => {
                     log::error!("{err}");
                     println!("{err}");
+                    set_has_err.set(true);
                 }
             }
         }
@@ -89,23 +77,83 @@ pub fn ProcessView() -> impl IntoView {
                 </div>
             </section>
         </noscript>
-        <section class="grow lg:w-full p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
-            {move || {
-                let storage_type = storage_type.get();
-                view! {
-                    <Transition fallback={WorksheetDummy}>
-                        <WorksheetView
-                            storage_type=storage_type
-                        >
-                            <Outlet/>
-                        </WorksheetView>
-                    </Transition>
-                }
-            }}
-        </section>
+        <Show
+            when=move || !has_err.get()
+            fallback=ErrorView
+        >
+            <section class="grow lg:w-full p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
+                {move || {
+                    let storage_type = storage_type.get();
+                    view! {
+                        <Transition fallback={WorksheetDummy}>
+                            <WorksheetView
+                                storage_type=storage_type
+                            >
+                                <Outlet/>
+                            </WorksheetView>
+                        </Transition>
+                    }
+                }}
+            </section>
+        </Show>
         <StepperView/>
         <PrivacyNoticeView/>
     }
+}
+
+fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<Example>, lang: Language) {
+    // about
+    seq.push(SeqStep {
+        href: format!("/{}/process/{}", lang, 0),
+        process_step: ProcessStep::About,
+    });
+
+    // all worksheets first example
+    examples.first().iter().for_each(|ex| {
+        seq.extend(
+            ProcessStep::VARIANTS
+                .iter()
+                .enumerate()
+                .filter_map(|(i, step)| {
+                    if i > 0 && i < ProcessStep::VARIANTS.len() - 1 {
+                        Some(SeqStep {
+                            href: format!("/{}/process/{}/{}", lang, i, ex.id),
+                            process_step: *step,
+                        })
+                    } else {
+                        None
+                    }
+                }),
+        );
+    });
+
+    // each workshet examples
+    seq.extend(
+        ProcessStep::VARIANTS
+            .iter()
+            .enumerate()
+            .fold(vec![], |mut acc, (i, step)| {
+                if i > 0 && i < ProcessStep::VARIANTS.len() - 1 {
+                    // example
+                    acc.extend(examples.iter().skip(1).map(|ex| SeqStep {
+                        href: format!("/{}/process/{}/{}", lang, i, ex.id),
+                        process_step: *step,
+                    }));
+                    // worksheet
+                    acc.push(SeqStep {
+                        href: format!("/{}/process/{}", lang, i),
+                        process_step: *step,
+                    });
+                }
+                acc
+            }),
+    );
+
+    // inquire
+    seq.push(SeqStep {
+        href: format!("/{}/process/{}", lang, 6),
+        process_step: ProcessStep::Inquire,
+    });
 }
 
 #[server(GetExamples, "/api")]
@@ -119,7 +167,7 @@ pub async fn get_examples(
         server::{get_db_conn, xata_rest_builder},
     };
     use spin_sdk::{
-        http::{send, Method, Response},
+        http::{run, send, Method, Response},
         pg::{Decode, ParameterValue},
     };
 
@@ -149,7 +197,7 @@ pub async fn get_examples(
     SELECT projects.xata_id as id,
     {} AS title,
     {} AS description,
-    {} #>> '{{}}' AS wk,
+    {} #>> '{{}}' AS wk
             FROM "projects"
             LEFT JOIN "localized_text" AS lt_title ON lt_title.xata_id = projects.title
             LEFT JOIN "localized_text" AS lt_description ON lt_description.xata_id = projects.description
@@ -168,9 +216,7 @@ pub async fn get_examples(
         .query(sql.as_str(), params.as_slice())
         .map_err(|e| e.to_string())?;
 
-    println!("data: {data:#?}");
-
-    let examples: Vec<_> = data
+    let examples_data: Vec<_> = data
         .rows
         .into_iter()
         .try_fold(vec![], |mut acc, row| {
@@ -183,37 +229,69 @@ pub async fn get_examples(
                 .flatten();
             let translation_warning =
                 bool::decode(&row[1])? || bool::decode(&row[3])? || bool::decode(&row[5])?;
-            acc.push(Example {
-                id,
-                title,
-                description,
-                wk,
-                translation_warning,
-            });
+            acc.push((id, title, description, wk, translation_warning));
             Ok(acc)
         })
         .map_err(|e: anyhow::Error| e.to_string())?;
 
-    // let project_ids = examples.iter().fold(String::default(), |acc, (id, ..)| {
-    //     format!(r#"{acc}{}"{id}""#, if acc.is_empty() { "" } else { "," })
-    // });
+    let project_ids = examples_data
+        .iter()
+        .fold(String::default(), |acc, (id, ..)| {
+            format!(r#"{acc}{}"{id}""#, if acc.is_empty() { "" } else { "," })
+        });
 
-    // let mut images_req =
-    //     xata_rest_builder("tables/projects/query").map_err(|e: anyhow::Error| e.to_string())?;
+    let mut images_req =
+        xata_rest_builder("tables/projects/query").map_err(|e: anyhow::Error| e.to_string())?;
 
-    // images_req.method(Method::Post).body(format!(
-    //     r#"{{
-    //     "columns": ["main_image.signedUrl", "xata_id"],
-    //     "filter": {{ "xata_id" : {{ "$any": [{project_ids}] }} }}
-    //     }}"#
-    // ));
+    images_req.method(Method::Post).body(format!(
+        r#"{{
+        "columns": ["main_image.signedUrl", "xata_id", "images.signedUrl"],
+        "filter": {{ "xata_id" : {{ "$any": [{project_ids}] }} }}
+        }}"#
+    ));
 
-    // async move {
-    // let images: Response = send(images_req).await.unwrap();
+    let res = run(async move {
+        let res: Response = send(images_req).await?;
+        Ok(res.into_body())
+    })
+    .map_err(|e: anyhow::Error| e.to_string())?;
 
-    //     println!("images: {images:#?}");
-    // }
-    // .await;
+    let json_string = String::from_utf8_lossy(&res).to_string();
+    let images_data = jzon::parse(json_string.as_str()).map_err(|e| e.to_string())?;
+
+    let examples = examples_data
+        .into_iter()
+        .map(|(id, title, description, wk, translation_warning)| {
+            let record = images_data["records"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|r| r["xata_id"] == id);
+            let main_image_url = record
+                .map(|r| r["main_image"]["signedUrl"].as_str().map(|s| s.to_string()))
+                .flatten();
+            let images = record
+                .map(|r| {
+                    r["images"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .filter_map(|i| i["signedUrl"].as_str().map(|s| s.to_string()))
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default();
+
+            Example {
+                id,
+                wk,
+                title,
+                description,
+                translation_warning,
+                main_image_url,
+                images,
+            }
+        })
+        .collect::<Vec<_>>();
 
     Ok(examples)
 }

@@ -8,11 +8,11 @@ pub fn DescriptionView(
 ) -> impl IntoView {
     view! {
         <Show when={move || !hidden.get()}>
-            <div class="flex items-start mb-3 rounded-lg max-w-prose p-4 bg-sky-200 dark:bg-sky-950 border border-sky-400 dark:brder-sky-800 text-sky-800 dark:text-sky-200 text-lg">
+            <div class="flex items-start mb-3 rounded-lg max-w-prose lg:w-fit p-4 bg-sky-200 dark:bg-sky-950 border border-sky-400 dark:brder-sky-800 text-sky-800 dark:text-sky-200 text-lg">
                 <div>
                     {children()}
                 </div>
-                <button on:click={move |_| toggle_hidden.call(())} title=t!("util.close") class="ml-1 text-xl -mt-0.5">{"×"}</button>
+                <button on:click={move |_| toggle_hidden.call(())} title=t!("util.close") class="ml-1 mr-0 text-xl -mt-0.5">{"×"}</button>
             </div>
         </Show>
     }
