@@ -250,6 +250,10 @@ about:
     description:
       en: Learn from the process, learn from the outcomes, celebrate the wins, fearlesly start over.
 worksheets:
+  example:
+    en: "Case: %{title}"
+  wk:
+    en: ✎ Worksheet
   problem:
     title:
       en: The problem

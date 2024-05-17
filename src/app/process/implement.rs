@@ -9,6 +9,8 @@ use crate::app::{
         use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove, WorksheetHeader,
     },
     process::{FixedAssumptionStatement, FixedProblemStatement},
+    state::ProcessStep,
+    tabs_signal,
 };
 
 /// step 5
@@ -84,11 +86,14 @@ pub fn ImplementView() -> impl IntoView {
         })
     };
 
+    let tabs = tabs_signal(ProcessStep::Implement);
+
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.implement.title"), t!("process.title"), t!("name"))}/>
         <WorksheetHeader
             title={t!("worksheets.implement.title").to_string()}
             description_id="implement"
+            tabs
             let:child
         >
             <DescriptionView

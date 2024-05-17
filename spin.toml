@@ -26,17 +26,17 @@ db_name = "{{ db_name }}"
 db_branch = "{{ db_branch }}"
 [component.a-nvlkv-xyz]
 # release
-source = "target/wasm32-wasi/release/a_nvlkv_xyz.wasm"
+# source = "target/wasm32-wasi/release/a_nvlkv_xyz.wasm"
 # debug
-# source = "target/wasm32-wasi/debug/a_nvlkv_xyz.wasm"
+source = "target/wasm32-wasi/debug/a_nvlkv_xyz.wasm"
 allowed_outbound_hosts = ["*://*.xata.sh:*"]
 key_value_stores = ["default"]
 environment = { RUST_LOG = "spin=trace,a-nvlkv-xyz=trace" }
 [component.a-nvlkv-xyz.build]
 # release
-command = "cargo leptos build --release && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --release --no-default-features --features ssr"
+# command = "cargo leptos build --release && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --release --no-default-features --features ssr"
 # debug
-# command = "cargo leptos build && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --no-default-features --features ssr"
+command = "cargo leptos build && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --no-default-features --features ssr"
 watch = ["src/**/*.rs", "src/**/*.mjs", "Cargo.toml", "style/*"]
 
 [[trigger.http]]

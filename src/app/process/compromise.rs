@@ -5,7 +5,8 @@ use leptos_router::*;
 use crate::app::{
     components::{use_wk_state, DescriptionView, StringInputView, WorksheetHeader},
     process::FixedProblemStatement,
-    use_lang,
+    state::ProcessStep,
+    tabs_signal, use_lang,
 };
 
 /// step 4
@@ -22,11 +23,14 @@ pub fn CompromiseView() -> impl IntoView {
             .unwrap_or_default()
     });
 
+    let tabs = tabs_signal(ProcessStep::Compromise);
+
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.compromise.title"), t!("process.title"), t!("name"))}/>
         <WorksheetHeader
             title={t!("worksheets.compromise.title").to_string()}
             description_id="compromise"
+            tabs
             let:child
         >
             <DescriptionView

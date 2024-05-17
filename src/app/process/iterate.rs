@@ -1,16 +1,23 @@
 use leptos::*;
 use leptos_meta::*;
 
-use crate::app::components::{DescriptionView, WorksheetHeader};
+use crate::app::{
+    components::{DescriptionView, WorksheetHeader},
+    state::ProcessStep,
+    tabs_signal,
+};
 
 /// step 6
 #[component]
 pub fn IterateView() -> impl IntoView {
+    let tabs = tabs_signal(ProcessStep::Iterate);
+
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.iterate.title"), t!("process.title"), t!("name"))}/>
         <WorksheetHeader
             title={t!("worksheets.iterate.title").to_string()}
             description_id="iterate"
+            tabs
             let:child
         >
             <DescriptionView

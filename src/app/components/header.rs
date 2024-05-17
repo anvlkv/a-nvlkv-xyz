@@ -6,6 +6,7 @@ use crate::app::use_lang;
 #[component]
 pub fn HeaderView() -> impl IntoView {
     let location = use_location();
+    #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let navigate = use_navigate();
     let lang = use_lang();
 
@@ -44,7 +45,7 @@ pub fn HeaderView() -> impl IntoView {
             .collect_view()
     };
 
-    #[allow(unused_variables)]
+    #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let onchange_lang = move |e: ev::Event| {
         #[cfg(feature = "hydrate")]
         {

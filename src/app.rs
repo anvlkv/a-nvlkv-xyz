@@ -16,7 +16,6 @@ pub const STYLED_ROOT: &str = "app-styled-root";
 
 #[component]
 pub fn App() -> impl IntoView {
-    // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
 
     view! {

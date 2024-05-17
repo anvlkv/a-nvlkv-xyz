@@ -4,7 +4,7 @@ use leptos_router::*;
 use strum::VariantArray;
 
 use crate::app::{
-    components::{ErrorView, PrivacyNoticeView, WorksheetDummy, WorksheetView},
+    components::{ErrorView, PrivacyNoticeView, Tab, WorksheetDummy, WorksheetView},
     process::*,
     state::{use_store, Example, ProcessStep, SeqStep, StorageMode},
     use_lang, Language,
@@ -24,46 +24,36 @@ pub fn ProcessView() -> impl IntoView {
         |lang| async move { get_examples(lang, 3, 0).await },
     );
 
-    create_isomorphic_effect(move |old| {
-        let state = store.get();
-        if state.sequence.is_empty() || old.map(|o| o != state.lang).unwrap_or(false) {
+    let process_view_with_data = Signal::derive(move || {
+        let lang = store.get().lang;
+        if let Some(data) = examples.get() {
+            let examples = data.map_err(|e| ServerFnErrorErr::from(e))?;
+            store.update(|s| {
+                s.examples = examples;
+                s.sequence = vec![];
+                make_sequence(&mut s.sequence, &s.examples, lang);
+            });
+        } else {
             store.update(|s| {
                 s.sequence = ProcessStep::VARIANTS
                     .iter()
                     .enumerate()
                     .map(|(i, step)| SeqStep {
-                        href: format!("/{}/process/{}", state.lang, i),
+                        href: format!("/{}/process/{}", lang, i),
                         process_step: *step,
                     })
                     .collect();
             });
         }
-        state.lang
-    });
+        let storage_type = storage_type.get();
 
-    let (has_err, set_has_err) = create_signal(false);
-
-    create_isomorphic_effect(move |_| {
-        if let Some(data) = examples.get() {
-            match data {
-                Ok(examples) => {
-                    set_has_err.set(false);
-
-                    let lang = store.get_untracked().lang;
-
-                    store.update(|s| {
-                        s.examples = examples;
-                        s.sequence = vec![];
-                        make_sequence(&mut s.sequence, &s.examples, lang);
-                    });
-                }
-                Err(err) => {
-                    log::error!("{err}");
-                    println!("{err}");
-                    set_has_err.set(true);
-                }
-            }
-        }
+        leptos::error::Result::<View>::Ok(view! {
+            <WorksheetView
+                storage_type=storage_type
+            >
+                <Outlet/>
+            </WorksheetView>
+        })
     });
 
     view! {
@@ -77,28 +67,46 @@ pub fn ProcessView() -> impl IntoView {
                 </div>
             </section>
         </noscript>
-        <Show
-            when=move || !has_err.get()
-            fallback=ErrorView
-        >
+        <div class="flex flex-col xl:flex-row-reverse">
             <section class="grow lg:w-full p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
-                {move || {
-                    let storage_type = storage_type.get();
-                    view! {
-                        <Transition fallback={WorksheetDummy}>
-                            <WorksheetView
-                                storage_type=storage_type
-                            >
-                                <Outlet/>
-                            </WorksheetView>
-                        </Transition>
-                    }
-                }}
+                <Transition fallback={WorksheetDummy}>
+                    <ErrorBoundary fallback=|_| view! { <ErrorView/>}>
+                        {process_view_with_data}
+                    </ErrorBoundary>
+                </Transition>
             </section>
-        </Show>
-        <StepperView/>
+            <Suspense>
+                <StepperView/>
+            </Suspense>
+        </div>
         <PrivacyNoticeView/>
     }
+}
+
+pub fn tabs_signal(step: ProcessStep) -> Signal<Vec<Tab>> {
+    let state = use_store();
+
+    let step_num: usize = ProcessStep::VARIANTS
+        .iter()
+        .position(|s| *s == step)
+        .unwrap();
+
+    Signal::derive(move || {
+        let s = state.get();
+        if s.examples.len() == 0 {
+            return vec![];
+        }
+
+        let mut tabs = vec![Tab {
+            title: t!("worksheets.wk").to_string(),
+            href: format!("/{}/process/{step_num}", s.lang),
+        }];
+        tabs.extend(s.examples.into_iter().map(|ex| Tab {
+            title: t!("worksheets.example", title = ex.title).to_string(),
+            href: format!("/{}/process/{step_num}/{}", s.lang, ex.id),
+        }));
+        tabs
+    })
 }
 
 fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<Example>, lang: Language) {

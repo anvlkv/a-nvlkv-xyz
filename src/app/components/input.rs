@@ -62,6 +62,7 @@ pub fn StringInputView(
             .unwrap_or_default()
     });
 
+    #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let may_blure = move |e: ev::FocusEvent| {
         if !focused.get() {
             if let Some(cb) = on_blur {
@@ -72,6 +73,7 @@ pub fn StringInputView(
         }
     };
 
+    #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let on_blur_input_el = move |e: ev::FocusEvent| {
         #[cfg(any(feature = "hydrate", feature = "csr"))]
         {
@@ -92,6 +94,7 @@ pub fn StringInputView(
         }
     };
 
+    #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let on_blur_autocomplete_el = move |e: ev::FocusEvent| {
         #[cfg(any(feature = "hydrate", feature = "csr"))]
         {

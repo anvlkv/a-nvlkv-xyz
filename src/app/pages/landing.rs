@@ -76,6 +76,7 @@ pub fn LandingView() -> impl IntoView {
         });
     }
 
+    #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let pointer_cb = Callback::new(move |value: bool| {
         #[cfg(any(feature = "csr", feature = "hydrate"))]
         {

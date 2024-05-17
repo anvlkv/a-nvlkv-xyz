@@ -15,6 +15,8 @@ export function cleanUp() {
   if (rv) {
     rv.cleanup();
     rv = null;
+    activeInput = null;
+    active = false;
     observer.disconnect();
   }
 }

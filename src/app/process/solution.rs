@@ -10,6 +10,8 @@ use crate::app::{
         use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove, WorksheetHeader,
     },
     process::FixedProblemStatement,
+    state::ProcessStep,
+    tabs_signal,
 };
 
 /// step 3
@@ -52,11 +54,14 @@ pub fn SolutionView() -> impl IntoView {
         })
     };
 
+    let tabs = tabs_signal(ProcessStep::Solution);
+
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.solutions.title"), t!("process.title"), t!("name"))}/>
         <WorksheetHeader
             title={t!("worksheets.solutions.title").to_string()}
             description_id="solutions"
+            tabs
             let:child
         >
             <DescriptionView
