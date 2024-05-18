@@ -10,8 +10,8 @@ use form_signal::FormState;
 
 use crate::app::{
     components::{
-        use_wk_state, DescriptionView, HistoryEntry, ListInputView, StringInputView, UndoRemove,
-        WorksheetHeader,
+        use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView, StringInputView,
+        UndoRemove, WorksheetHeader,
     },
     state::ProcessStep,
     tabs_signal, use_lang,
@@ -21,6 +21,8 @@ use crate::app::{
 #[component]
 pub fn ProblemView() -> impl IntoView {
     let wk_state = use_wk_state();
+    let wk_ctx = use_wk_ctx();
+
     let problem_statement = Signal::derive(move || {
         wk_state
             .get()
@@ -120,59 +122,59 @@ pub fn ProblemView() -> impl IntoView {
             title={t!("worksheets.problem.title").to_string()}
             description_id="problem"
             tabs
-            let:child
-        >
+        />
+        <div class="grow w-full">
             <DescriptionView
-                hidden=child.hidden
-                toggle_hidden=child.toggle_hidden
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
             >
                 <p class="whitespace-pre-line">
                     {t!("worksheets.problem.description")}
                 </p>
             </DescriptionView>
-        </WorksheetHeader>
-        <form>
-            <div class="max-w-prose mb-4 whitespace-pre-line">
-                <p>{t!("worksheets.problem.instruction_1")}</p>
-            </div>
-            <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
-                <div>
-                    <h4 class="text-xl mb-4">
-                        {t!("worksheets.problem.label_problems")}
-                    </h4>
-                    <ListInputView
-                        input_type="text"
-                        data=problems_data
-                        add_value=problems_value_add
-                        remove_value=problems_value_remove
-                        add_entry_text={t!("worksheets.problem.add_problem").to_string()}
-                        placeholder={t!("worksheets.problem.placeholder_problem").to_string()}
-                />
+            <form>
+                <div class="max-w-prose mb-4 whitespace-pre-line">
+                    <p>{t!("worksheets.problem.instruction_1")}</p>
                 </div>
-                <div>
-                    <h4 class="text-xl mb-4">
-                        {t!("worksheets.problem.label_stakeholders")}
-                    </h4>
-                    <ListInputView
-                        input_type="text"
-                        data=stakeholders_data
-                        add_value=stakeholders_value_add
-                        remove_value=stakeholders_value_remove
-                        add_entry_text={t!("worksheets.problem.add_stakeholder").to_string()}
-                        placeholder={t!("worksheets.problem.placeholder_stakeholders").to_string()}
-                        autocomplete=stakeholders_autocomplete
+                <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
+                    <div>
+                        <h4 class="text-xl mb-4">
+                            {t!("worksheets.problem.label_problems")}
+                        </h4>
+                        <ListInputView
+                            input_type="text"
+                            data=problems_data
+                            add_value=problems_value_add
+                            remove_value=problems_value_remove
+                            add_entry_text={t!("worksheets.problem.add_problem").to_string()}
+                            placeholder={t!("worksheets.problem.placeholder_problem").to_string()}
                     />
+                    </div>
+                    <div>
+                        <h4 class="text-xl mb-4">
+                            {t!("worksheets.problem.label_stakeholders")}
+                        </h4>
+                        <ListInputView
+                            input_type="text"
+                            data=stakeholders_data
+                            add_value=stakeholders_value_add
+                            remove_value=stakeholders_value_remove
+                            add_entry_text={t!("worksheets.problem.add_stakeholder").to_string()}
+                            placeholder={t!("worksheets.problem.placeholder_stakeholders").to_string()}
+                            autocomplete=stakeholders_autocomplete
+                        />
+                    </div>
                 </div>
-            </div>
-            <hr class="border-t border-slate-400 mt-4 mb-8"/>
-            <div class="max-w-prose mb-4 whitespace-pre-line">
-                <p>{t!("worksheets.problem.instruction_2")}</p>
-            </div>
-            <StringInputView
-                input_type="textarea"
-                value=problem_statement
-                placeholder={t!("worksheets.problem.placeholder_2").to_string()}/>
-        </form>
+                <hr class="border-t border-slate-400 mt-4 mb-8"/>
+                <div class="max-w-prose mb-4 whitespace-pre-line">
+                    <p>{t!("worksheets.problem.instruction_2")}</p>
+                </div>
+                <StringInputView
+                    input_type="textarea"
+                    value=problem_statement
+                    placeholder={t!("worksheets.problem.placeholder_2").to_string()}/>
+            </form>
+        </div>
         <UndoRemove
             history=problem_delete_history
             on_restore=problem_restore

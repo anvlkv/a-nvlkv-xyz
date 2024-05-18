@@ -100,10 +100,12 @@ pub fn tabs_signal(step: ProcessStep) -> Signal<Vec<Tab>> {
         let mut tabs = vec![Tab {
             title: t!("worksheets.wk").to_string(),
             href: format!("/{}/process/{step_num}", s.lang),
+            is_example: false,
         }];
         tabs.extend(s.examples.into_iter().map(|ex| Tab {
             title: t!("worksheets.example", title = ex.title).to_string(),
             href: format!("/{}/process/{step_num}/{}", s.lang, ex.id),
+            is_example: true,
         }));
         tabs
     })

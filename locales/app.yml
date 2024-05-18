@@ -208,7 +208,10 @@ landing:
     ru: Насладитесь опытом или используйте одну из ссылок.
 about:
   title:
-    en: Getting things done with a mindful awarenes.
+    en: Let's get things done.
+    nl: Laten wij de dingen maken. De dingen zijn klaar.
+    ru: Пусть всё будет готово.
+    ja: 目標を完了。
   description_1:
     en: |
       Whenever we are doing our work we shape our future and that of others.
@@ -221,19 +224,19 @@ about:
       Complete the workbook on your own or in collaboration with others.
   cta:
     en: Get started →
-    ru: Начнём →
-    nl: Laten wij begonnen →
+    ru: Начать →
+    nl: Ga aan de slag →
     ja: 始めましょう →
   s_1:
     title:
       en: The problem
     description:
-      en: Falling in love with the right problem for all the right reasons is 80% of the success.
+      en: Falling in love with the right problem for all the right reasons.
   s_2:
     title:
       en: Solutions
     description:
-      en: Dreaming big and quick, one problem has nearly as many solutions as there're perspectives.
+      en: Dreaming big and quick.
   s_3:
     title:
       en: Compromise
@@ -248,10 +251,10 @@ about:
     title:
       en: Test & Iterate
     description:
-      en: Learn from the process, learn from the outcomes, celebrate the wins, fearlesly start over.
+      en: Learn, celebrate, and fearlesly start over.
 worksheets:
   example:
-    en: "Case: %{title}"
+    en: "Example: %{title}"
   wk:
     en: ✎ Worksheet
   problem:

@@ -72,33 +72,31 @@ pub fn AboutView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>
+
         <WorksheetHeader
             title={t!("about.title").to_string()}
-            description_id=""
-            let:_
-        >
-            {().into_view()}
-        </WorksheetHeader>
-
-        <div class="grid lg:grid-cols-2 gap-10 content-stretch">
-            <p class="max-w-prose pb-4 col-start-1 whitespace-pre-line">
-                {t!("about.description_1")}
-            </p>
-            <p class="max-w-prose pb-4 col-start-1 whitespace-pre-line">
-                {t!("about.description_2")}
-            </p>
-            <ol class="max-w-prose row-span-3 lg:col-start-2 lg:row-start-1">
-                {steps}
-            </ol>
-            <div class="max-w-prose col-start-1 lg:row-start-3 flex mb-3 mt-auto items-center">
-                <button
-                    on:click={move |_| state.get().show_privacy_prompt.set(true)}
-                    class={move || if show_privacy_choice.get() { "contents" } else { "hidden" }}
-                    title={t!("privacy.short")}
-                >
-                    <canvas id="about_icon_Privacy" class="grow-0 shrink-0 h-14 aspect-square mr-4"/>
-                </button>
-                <A attr:type="button" href={move || format!("/{}/process/1", lang.get())} class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center">{t!("about.cta")}</A>
+        />
+        <div class="grow w-full">
+            <div class="grid lg:grid-cols-2 gap-10 content-stretch">
+                <p class="max-w-prose pb-4 col-start-1 whitespace-pre-line">
+                    {t!("about.description_1")}
+                </p>
+                <p class="max-w-prose pb-4 col-start-1 whitespace-pre-line">
+                    {t!("about.description_2")}
+                </p>
+                <ol class="max-w-prose row-span-3 lg:col-start-2 lg:row-start-1">
+                    {steps}
+                </ol>
+                <div class="max-w-prose col-start-1 lg:row-start-3 flex mb-3 mt-auto items-center">
+                    <button
+                        on:click={move |_| state.get().show_privacy_prompt.set(true)}
+                        class={move || if show_privacy_choice.get() { "contents" } else { "hidden" }}
+                        title={t!("privacy.short")}
+                    >
+                        <canvas id="about_icon_Privacy" class="grow-0 shrink-0 h-14 aspect-square mr-4"/>
+                    </button>
+                    <A attr:type="button" href={move || format!("/{}/process/1", lang.get())} class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center">{t!("about.cta")}</A>
+                </div>
             </div>
         </div>
     }

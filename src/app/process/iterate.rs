@@ -2,7 +2,7 @@ use leptos::*;
 use leptos_meta::*;
 
 use crate::app::{
-    components::{DescriptionView, WorksheetHeader},
+    components::{use_wk_ctx, DescriptionView, WorksheetHeader},
     state::ProcessStep,
     tabs_signal,
 };
@@ -11,6 +11,7 @@ use crate::app::{
 #[component]
 pub fn IterateView() -> impl IntoView {
     let tabs = tabs_signal(ProcessStep::Iterate);
+    let wk_ctx = use_wk_ctx();
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.iterate.title"), t!("process.title"), t!("name"))}/>
@@ -18,32 +19,32 @@ pub fn IterateView() -> impl IntoView {
             title={t!("worksheets.iterate.title").to_string()}
             description_id="iterate"
             tabs
-            let:child
-        >
+        />
+        <div class="grow w-full">
             <DescriptionView
-                hidden=child.hidden
-                toggle_hidden=child.toggle_hidden
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
             >
                 <p class="whitespace-pre-line">
                     {t!("worksheets.iterate.description")}
                 </p>
             </DescriptionView>
-        </WorksheetHeader>
-        <label>
-            <p>{t!("worksheets.iterate.instruction_1")}</p>
-            <input type="checkbox"/>
-        </label>
-        <label>
-            <p>{t!("worksheets.iterate.instruction_2")}</p>
-            <input type="checkbox"/>
-        </label>
-        <label>
-            <p>{t!("worksheets.iterate.instruction_3")}</p>
-            <input type="checkbox"/>
-        </label>
-        <label>
-            <p>{t!("worksheets.iterate.instruction_4")}</p>
-            <input type="checkbox"/>
-        </label>
+            <label>
+                <p>{t!("worksheets.iterate.instruction_1")}</p>
+                <input type="checkbox"/>
+            </label>
+            <label>
+                <p>{t!("worksheets.iterate.instruction_2")}</p>
+                <input type="checkbox"/>
+            </label>
+            <label>
+                <p>{t!("worksheets.iterate.instruction_3")}</p>
+                <input type="checkbox"/>
+            </label>
+            <label>
+                <p>{t!("worksheets.iterate.instruction_4")}</p>
+                <input type="checkbox"/>
+            </label>
+        </div>
     }
 }

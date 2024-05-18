@@ -57,9 +57,12 @@ pub fn LandingView() -> impl IntoView {
                 .expect("create observer"),
         );
 
-        create_effect(move |_| {
-            if let Some(btn) = button_element.get().as_deref() {
-                observer.observe(&btn);
+        create_effect({
+            let observer = observer.clone();
+            move |_| {
+                if let Some(btn) = button_element.get().as_deref() {
+                    observer.observe(&btn);
+                }
             }
         });
 
@@ -72,6 +75,7 @@ pub fn LandingView() -> impl IntoView {
         });
 
         on_cleanup(move || {
+            observer.disconnect();
             rv_animation::clean_up();
         });
     }
@@ -114,7 +118,7 @@ pub fn LandingView() -> impl IntoView {
                             {t!("letters.done")}
                         </span>
                     </A>
-                    <div class="flex flex-col min-w-32 items-stretch self-center whitespace-nowrap">
+                    <div class="flex flex-col mt-24 min-w-32 items-stretch self-center whitespace-nowrap">
                         <span class="px-16">{t!("letters.row_1")}</span>
                         <span class="px-16 text-right">{t!("letters.row_2")}</span>
                         <span class="px-16">{t!("letters.row_3")} </span>

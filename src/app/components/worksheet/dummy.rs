@@ -8,7 +8,7 @@ pub fn WorksheetDummy() -> impl IntoView {
                 <div class="shrink-0 text-2xl md:text-3xl xl:text-4xl block mr-3">
                     <div class="dummy-line rounded-sm w-64 bg-stone-300 dark:bg-stone-700 h-5 md:h-7 after:content-[' ']"></div>
                 </div>
-                    <div class="flex justify-end grow items-end h-full">
+                    <div class="flex flex-wrap justify-end grow items-end h-full">
                         <div class="border-b-2 px-2 border-slate-400 grow after:content-[' ']">
                         </div>
                         <div class="worksheet-tab block rounded-t px-4 pt-3 pb-1 ml-0 mr-px border border-slate-400 border-b-2 -mb-px border-b-transparent">

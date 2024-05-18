@@ -66,7 +66,7 @@ pub fn HeaderView() -> impl IntoView {
 
     view! {
         <header class="flex justify-center bg-stone-100 dark:bg-stone-900 shadow-sm">
-            <div class="max-w-screen-2xl px-6 md:px-8 lg:px-16 py-3 flex justify-between grow shrink-0">
+            <div class="max-w-screen-2xl w-full px-6 md:px-8 lg:px-16 py-3 flex flex-wrap justify-between grow shrink-0">
                 {title}
                 <div class="flex gap-2">
                     <A class="underline hover:text-purple-800 active:text-purple-950" exact=true href={move || format!("/{}/contact", lang.get())} >{ t!("let_talk") }</A>

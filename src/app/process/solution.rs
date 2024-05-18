@@ -7,7 +7,8 @@ use form_signal::FormState;
 
 use crate::app::{
     components::{
-        use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove, WorksheetHeader,
+        use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove,
+        WorksheetHeader,
     },
     process::FixedProblemStatement,
     state::ProcessStep,
@@ -18,6 +19,7 @@ use crate::app::{
 #[component]
 pub fn SolutionView() -> impl IntoView {
     let state = use_wk_state();
+    let wk_ctx = use_wk_ctx();
 
     let solution_delete_history = create_rw_signal(vec![]);
 
@@ -62,36 +64,36 @@ pub fn SolutionView() -> impl IntoView {
             title={t!("worksheets.solutions.title").to_string()}
             description_id="solutions"
             tabs
-            let:child
-        >
+        />
+        <div class="grow w-full">
             <DescriptionView
-                hidden=child.hidden
-                toggle_hidden=child.toggle_hidden
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
             >
                 <p class="whitespace-pre-line">
                     {t!("worksheets.solutions.description")}
                 </p>
             </DescriptionView>
-        </WorksheetHeader>
-        <form>
-            <div class="max-w-prose mb-4 whitespace-pre-line">
-                <p>{t!("worksheets.solutions.instruction")}</p>
-            </div>
-            <FixedProblemStatement/>
-            <div class="grid">
-                <h4 class="text-center text-xl mb-4">
-                    {t!("worksheets.solutions.label_solutions")}
-                </h4>
-                <ListInputView
-                    input_type="textarea"
-                    data=solutions_data
-                    add_value=solutions_value_add
-                    remove_value=solutions_value_remove
-                    add_entry_text={t!("worksheets.solutions.add_solution").to_string()}
-                    placeholder={t!("worksheets.solutions.placeholder_solution").to_string()}
-                />
-            </div>
-        </form>
+            <form>
+                <div class="max-w-prose mb-4 whitespace-pre-line">
+                    <p>{t!("worksheets.solutions.instruction")}</p>
+                </div>
+                <FixedProblemStatement/>
+                <div class="grid">
+                    <h4 class="text-center text-xl mb-4">
+                        {t!("worksheets.solutions.label_solutions")}
+                    </h4>
+                    <ListInputView
+                        input_type="textarea"
+                        data=solutions_data
+                        add_value=solutions_value_add
+                        remove_value=solutions_value_remove
+                        add_entry_text={t!("worksheets.solutions.add_solution").to_string()}
+                        placeholder={t!("worksheets.solutions.placeholder_solution").to_string()}
+                    />
+                </div>
+            </form>
+        </div>
         <UndoRemove
             history=solution_delete_history
             on_restore=solution_restore

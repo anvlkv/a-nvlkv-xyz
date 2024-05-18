@@ -6,7 +6,8 @@ use web_time::Instant;
 
 use crate::app::{
     components::{
-        use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove, WorksheetHeader,
+        use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove,
+        WorksheetHeader,
     },
     process::{FixedAssumptionStatement, FixedProblemStatement},
     state::ProcessStep,
@@ -17,6 +18,7 @@ use crate::app::{
 #[component]
 pub fn ImplementView() -> impl IntoView {
     let state = use_wk_state();
+    let wk_ctx = use_wk_ctx();
 
     let now_delete_history = create_rw_signal(vec![]);
     let nows_data = Signal::derive(move || {
@@ -94,11 +96,11 @@ pub fn ImplementView() -> impl IntoView {
             title={t!("worksheets.implement.title").to_string()}
             description_id="implement"
             tabs
-            let:child
-        >
+        />
+        <div class="grow w-full">
             <DescriptionView
-                hidden=child.hidden
-                toggle_hidden=child.toggle_hidden
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
             >
                 <p class="pb-4 whitespace-pre-line">
                     {t!("worksheets.implement.description_1")}
@@ -107,44 +109,44 @@ pub fn ImplementView() -> impl IntoView {
                     {t!("worksheets.implement.description_2")}
                 </p>
             </DescriptionView>
-        </WorksheetHeader>
-        <form>
-            <div class="max-w-prose mb-4 whitespace-pre-line">
-                <p>{t!("worksheets.implement.instruction")}</p>
-            </div>
-            <FixedProblemStatement/>
-            <FixedAssumptionStatement/>
-            <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
-                <div>
-                    <h4 class="text-xl mb-2">
-                        {t!("worksheets.implement.label_col_1")}
-                    </h4>
-                    <p class="mb-4">{t!("worksheets.implement.hint_col_1")}</p>
-                    <ListInputView
-                        input_type="text"
-                        data=nows_data
-                        add_value=nows_value_add
-                        remove_value=nows_value_remove
-                        add_entry_text={t!("worksheets.implement.add_now").to_string()}
-                        placeholder={t!("worksheets.implement.placeholder_nows").to_string()}
-                    />
+            <form>
+                <div class="max-w-prose mb-4 whitespace-pre-line">
+                    <p>{t!("worksheets.implement.instruction")}</p>
                 </div>
-                <div>
-                    <h4 class="text-xl mb-2">
-                        {t!("worksheets.implement.label_col_2")}
-                    </h4>
-                    <p class="mb-4">{t!("worksheets.implement.hint_col_2")}</p>
-                    <ListInputView
-                        input_type="text"
-                        data=bests_data
-                        add_value=bests_value_add
-                        remove_value=bests_value_remove
-                        add_entry_text={t!("worksheets.implement.add_best").to_string()}
-                        placeholder={t!("worksheets.implement.placeholder_bests").to_string()}
-                    />
+                <FixedProblemStatement/>
+                <FixedAssumptionStatement/>
+                <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
+                    <div>
+                        <h4 class="text-xl mb-2">
+                            {t!("worksheets.implement.label_col_1")}
+                        </h4>
+                        <p class="mb-4">{t!("worksheets.implement.hint_col_1")}</p>
+                        <ListInputView
+                            input_type="text"
+                            data=nows_data
+                            add_value=nows_value_add
+                            remove_value=nows_value_remove
+                            add_entry_text={t!("worksheets.implement.add_now").to_string()}
+                            placeholder={t!("worksheets.implement.placeholder_nows").to_string()}
+                        />
+                    </div>
+                    <div>
+                        <h4 class="text-xl mb-2">
+                            {t!("worksheets.implement.label_col_2")}
+                        </h4>
+                        <p class="mb-4">{t!("worksheets.implement.hint_col_2")}</p>
+                        <ListInputView
+                            input_type="text"
+                            data=bests_data
+                            add_value=bests_value_add
+                            remove_value=bests_value_remove
+                            add_entry_text={t!("worksheets.implement.add_best").to_string()}
+                            placeholder={t!("worksheets.implement.placeholder_bests").to_string()}
+                        />
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
         <UndoRemove
             history=now_delete_history
             on_restore=now_restore

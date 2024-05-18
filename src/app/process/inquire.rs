@@ -1,25 +1,26 @@
 use leptos::*;
 use leptos_meta::*;
 
-use crate::app::components::{ContactFormView, DescriptionView, WorksheetHeader};
+use crate::app::components::{use_wk_ctx, ContactFormView, DescriptionView, WorksheetHeader};
 
 /// step 7
 #[component]
 pub fn InquireView() -> impl IntoView {
+    let wk_ctx = use_wk_ctx();
     view! {
         <Title text={move || format!("{} | {}", t!("contact.title"), t!("name"))}/>
         <WorksheetHeader
             title={t!("worksheets.inquire.title").to_string()}
             description_id="inquire"
-            let:child
-        >
+        />
+        <div class="grow w-full">
             <DescriptionView
-                hidden=child.hidden
-                toggle_hidden=child.toggle_hidden
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
             >
                 <p>{t!("worksheets.inquire.description")}</p>
             </DescriptionView>
-        </WorksheetHeader>
-        <ContactFormView/>
+            <ContactFormView/>
+        </div>
     }
 }

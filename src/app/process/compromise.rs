@@ -3,7 +3,7 @@ use leptos_meta::*;
 use leptos_router::*;
 
 use crate::app::{
-    components::{use_wk_state, DescriptionView, StringInputView, WorksheetHeader},
+    components::{use_wk_ctx, use_wk_state, DescriptionView, StringInputView, WorksheetHeader},
     process::FixedProblemStatement,
     state::ProcessStep,
     tabs_signal, use_lang,
@@ -13,6 +13,7 @@ use crate::app::{
 #[component]
 pub fn CompromiseView() -> impl IntoView {
     let state = use_wk_state();
+    let wk_ctx = use_wk_ctx();
 
     let assumption_statement = Signal::derive(move || {
         state
@@ -31,42 +32,42 @@ pub fn CompromiseView() -> impl IntoView {
             title={t!("worksheets.compromise.title").to_string()}
             description_id="compromise"
             tabs
-            let:child
-        >
+        />
+        <div class="grow w-full">
             <DescriptionView
-                hidden=child.hidden
-                toggle_hidden=child.toggle_hidden
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
             >
                 <p class="whitespace-pre-line">
                     {t!("worksheets.compromise.description")}
                 </p>
             </DescriptionView>
-        </WorksheetHeader>
-        <form>
-            <div class="max-w-prose mb-4 whitespace-pre-line">
-                <p>{t!("worksheets.compromise.instruction_1")}</p>
-            </div>
-            <FixedProblemStatement/>
-            <div class="grid grid-cols-2 text-center">
-                <h4 class="text-xl mb-4">
-                    {t!("worksheets.compromise.label_solutions")}
-                </h4>
-                <h4 class="text-xl mb-4">
-                    {t!("worksheets.compromise.label_stakeholders")}
-                </h4>
-            </div>
-            <hr class="border-t border-slate-400 mt-4 mb-8"/>
-            <div class="max-w-prose mb-4 whitespace-pre-line">
-                <p>{t!("worksheets.compromise.instruction_2")}</p>
-            </div>
-            <label>
-                <p class="mb-2">{t!("worksheets.compromise.label_question")}</p>
-                <StringInputView
-                    input_type="textarea"
-                    value=assumption_statement
-                    placeholder={t!("worksheets.compromise.placeholder").to_string()}/>
-            </label>
-        </form>
+            <form>
+                <div class="max-w-prose mb-4 whitespace-pre-line">
+                    <p>{t!("worksheets.compromise.instruction_1")}</p>
+                </div>
+                <FixedProblemStatement/>
+                <div class="grid grid-cols-2 text-center">
+                    <h4 class="text-xl mb-4">
+                        {t!("worksheets.compromise.label_solutions")}
+                    </h4>
+                    <h4 class="text-xl mb-4">
+                        {t!("worksheets.compromise.label_stakeholders")}
+                    </h4>
+                </div>
+                <hr class="border-t border-slate-400 mt-4 mb-8"/>
+                <div class="max-w-prose mb-4 whitespace-pre-line">
+                    <p>{t!("worksheets.compromise.instruction_2")}</p>
+                </div>
+                <label>
+                    <p class="mb-2">{t!("worksheets.compromise.label_question")}</p>
+                    <StringInputView
+                        input_type="textarea"
+                        value=assumption_statement
+                        placeholder={t!("worksheets.compromise.placeholder").to_string()}/>
+                </label>
+            </form>
+        </div>
     }
 }
 
