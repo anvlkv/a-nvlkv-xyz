@@ -3,11 +3,10 @@ use leptos::*;
 use leptos_use::storage::StorageType;
 use serde::{Deserialize, Serialize};
 use strum::{Display, EnumString, VariantArray};
-use uuid::Uuid;
 
 use crate::app::Language;
 
-use super::worksheets::*;
+use super::{worksheets::*, Example};
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct State {
@@ -39,39 +38,21 @@ impl Into<StorageType> for &StorageMode {
     }
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct Example {
-    pub id: String,
-    pub wk: Option<WorkSheets>,
-    pub title: String,
-    pub description: String,
-    pub translation_warning: bool,
-    pub main_image_url: Option<String>,
-    pub images: Vec<String>,
-}
-
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct SeqStep {
     pub href: String,
     pub process_step: ProcessStep,
-    pub is_example: bool,
+    pub example: Option<String>,
 }
 
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Display, VariantArray)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Display, VariantArray, Hash)]
 pub enum ProcessStep {
     #[default]
-    About,
-    Problem,
-    Solution,
-    Compromise,
-    Implement,
-    Iterate,
-    Inquire,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct ExampleState<T> {
-    pub id: Uuid,
-    pub visited: bool,
-    pub value: T,
+    About = 0,
+    Problem = 1,
+    Solution = 2,
+    Compromise = 3,
+    Implement = 4,
+    Iterate = 5,
+    Inquire = 6,
 }

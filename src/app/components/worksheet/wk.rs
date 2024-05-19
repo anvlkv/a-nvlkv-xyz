@@ -75,32 +75,32 @@ pub fn WorksheetView(
     let wk_data_throttled = signal_throttled(
         Signal::derive(move || {
             wk_state
-                .try_get()
-                .flatten()
-                .map(|wk| wk.try_get())
-                .flatten()
+                .get()
+                // .flatten()
+                .map(|wk| wk.get())
         }),
         750.0,
     );
 
-    create_effect(move |_| match state.get().storage_preference.get() {
-        Some(StorageMode::Local) => {
-            if let Some(wk) = wk_data_throttled.get() {
-                set_wk_storage.update(|w| *w = Some(wk))
+    create_effect(move |_| {
+        let wk = wk_data_throttled.get();
+        match state.get().storage_preference.get() {
+            Some(StorageMode::Local) => {
+                if let Some(wk) = wk {
+                    set_wk_storage.update(|w| *w = Some(wk))
+                }
             }
-        }
-        None => {
-            if wk_data_throttled.with(|wk| {
-                wk.as_ref()
-                    .map(|wk| wk != &WorkSheets::default())
-                    .unwrap_or(false)
-            }) {
-                state.get().show_privacy_prompt.set(true);
+            None => {
+                log::debug!("wk: {wk:#?}");
+
+                if wk.map(|d| d != WorkSheets::default()).unwrap_or(false) {
+                    state.get().show_privacy_prompt.set(true);
+                }
             }
-        }
-        _ => {
-            del_wk_storage();
-            del_hidden();
+            _ => {
+                del_wk_storage();
+                del_hidden();
+            }
         }
     });
 

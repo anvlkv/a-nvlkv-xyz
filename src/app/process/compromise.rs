@@ -3,7 +3,10 @@ use leptos_meta::*;
 use leptos_router::*;
 
 use crate::app::{
-    components::{use_wk_ctx, use_wk_state, DescriptionView, StringInputView, WorksheetHeader},
+    components::{
+        use_example_ctx, use_wk_ctx, use_wk_state, DescriptionView, ReadOnlyListView, ReadOnlyView,
+        StringInputView, WorksheetHeader,
+    },
     process::FixedProblemStatement,
     state::ProcessStep,
     tabs_signal, use_lang,
@@ -47,13 +50,19 @@ pub fn CompromiseView() -> impl IntoView {
                     <p>{t!("worksheets.compromise.instruction_1")}</p>
                 </div>
                 <FixedProblemStatement/>
-                <div class="grid grid-cols-2 text-center">
-                    <h4 class="text-xl mb-4">
-                        {t!("worksheets.compromise.label_solutions")}
-                    </h4>
-                    <h4 class="text-xl mb-4">
-                        {t!("worksheets.compromise.label_stakeholders")}
-                    </h4>
+                <div class="grid grid-cols-2">
+                    <div>
+                        <h4 class="text-xl mb-4 w-full text-center">
+                            {t!("worksheets.compromise.label_solutions")}
+                        </h4>
+
+                    </div>
+                    <div>
+                        <h4 class="text-xl mb-4 w-full text-center">
+                            {t!("worksheets.compromise.label_stakeholders")}
+                        </h4>
+
+                    </div>
                 </div>
                 <hr class="border-t border-slate-400 mt-4 mb-8"/>
                 <div class="max-w-prose mb-4 whitespace-pre-line">
@@ -85,27 +94,99 @@ pub fn FixedAssumptionStatement() -> impl IntoView {
             .unwrap_or_default()
     });
 
+    let href = Signal::derive(move || Some(format!("/{}/process/3", lang.get())));
+
     view! {
-        <div class="max-w-prose my-2 mx-auto p-4 text-lg rounded border border-slate-300 dark:border-slate-700">
-            <Show
-                when={move || !assumption.get().is_empty()}
-                fallback=move || {
-                    let href = format!("/{}/process/3", lang.get());
-                    view!{
-                        <p class="text-sm opacity-80">
-                            {t!("util.empty")}
-                            {" "}
-                            <A href
-                                class="underline text-purple-800 dark:text-purple-200"
-                            >
-                                {t!("worksheets.compromise.empty")}
-                            </A>
-                        </p>
-                    }
-                }
+        <ReadOnlyView
+            value=assumption
+            fallback_title=t!("worksheets.compromise.empty").to_string()
+            fallback_href=href
+        />
+    }
+}
+
+#[component]
+pub fn ExampleCompromiseView() -> impl IntoView {
+    let lang = use_lang();
+    let (wk, example) = use_example_ctx();
+    let wk_ctx = use_wk_ctx();
+
+    let tabs = tabs_signal(ProcessStep::Compromise);
+
+    let assumption_statement = Signal::derive(move || wk.get().compromise.assumption);
+    let problem_statement = Signal::derive(move || wk.get().problem.problem_statement);
+
+    let solutions_data = Signal::derive(move || wk.get().solutions.solutions);
+    let stakeholders_data = Signal::derive(move || wk.get().problem.stakeholders);
+
+    let title = Signal::derive(move || {
+        t!(
+            "worksheets.compromise.example_title",
+            title = example.get().title
+        )
+        .to_string()
+    });
+    let example_id = Signal::derive(move || example.get().id);
+
+    let case_href = move || {
+        let id = example_id.get();
+        let lang = lang.get();
+        format!("/{lang}/projects/{id}")
+    };
+
+    view! {
+        <Title text={move || format!("{} | {} | {} | {}", example.get().title, t!("worksheets.compromise.title"), t!("process.title"), t!("name"))}/>
+        <WorksheetHeader
+            title
+            description_id=example_id
+            tabs
+        />
+        <div class="grow w-full">
+            <DescriptionView
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
+                alternative=true
             >
-                <p>{assumption}</p>
-            </Show>
+                <p class="whitespace-pre-line">
+                    {move || example.get().description}
+                </p>
+                <A href=case_href attr:class="underline">
+                    {move || t!("worksheets.view_example", title=example.get().title)}
+                </A>
+            </DescriptionView>
+            <div role="form">
+                <div class="max-w-prose mb-4 whitespace-pre-line italic">
+                    <p>{t!("worksheets.compromise.instruction_1")}</p>
+                </div>
+                <ReadOnlyView
+                    value=problem_statement
+                />
+                <div class="grid grid-cols-2">
+                    <div>
+                        <h4 class="text-xl mb-4 w-full text-center">
+                            {t!("worksheets.compromise.label_solutions")}
+                        </h4>
+                        <ReadOnlyListView
+                            value=solutions_data
+                        />
+                    </div>
+                    <div>
+                        <h4 class="text-xl mb-4 w-full text-center">
+                            {t!("worksheets.compromise.label_stakeholders")}
+                        </h4>
+                        <ReadOnlyListView
+                            value=stakeholders_data
+                        />
+                    </div>
+                </div>
+                <hr class="border-t border-slate-400 mt-4 mb-8"/>
+                <div class="max-w-prose mb-4 whitespace-pre-line italic">
+                    <p>{t!("worksheets.compromise.instruction_2")}</p>
+                </div>
+                <ReadOnlyView
+                    value=assumption_statement
+                />
+            </div>
         </div>
     }
 }

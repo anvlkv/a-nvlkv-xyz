@@ -1,7 +1,10 @@
+mod examples;
 mod types;
 mod worksheets;
 
 use form_signal::FormState;
+
+pub use examples::*;
 pub use types::*;
 pub use worksheets::*;
 

@@ -10,6 +10,7 @@ mod localized_root;
 mod modal;
 mod privacy_notice;
 mod radio_input;
+mod read_only;
 mod undo_remove;
 mod worksheet;
 
@@ -25,5 +26,6 @@ pub use localized_root::*;
 pub use modal::*;
 pub use privacy_notice::*;
 pub use radio_input::*;
+pub use read_only::*;
 pub use undo_remove::*;
 pub use worksheet::*;

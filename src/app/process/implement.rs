@@ -1,17 +1,18 @@
 use form_signal::FormState;
 use leptos::*;
 use leptos_meta::*;
+use leptos_router::*;
 use uuid::Uuid;
 use web_time::Instant;
 
 use crate::app::{
     components::{
-        use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove,
-        WorksheetHeader,
+        use_example_ctx, use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView,
+        ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
     },
     process::{FixedAssumptionStatement, FixedProblemStatement},
     state::ProcessStep,
-    tabs_signal,
+    tabs_signal, use_lang,
 };
 
 /// step 5
@@ -155,5 +156,89 @@ pub fn ImplementView() -> impl IntoView {
             history=best_delete_history
             on_restore=best_restore
         />
+    }
+}
+
+#[component]
+pub fn ExampleImplementView() -> impl IntoView {
+    let lang = use_lang();
+    let (wk, example) = use_example_ctx();
+    let wk_ctx = use_wk_ctx();
+
+    let tabs = tabs_signal(ProcessStep::Implement);
+
+    let assumption_statement = Signal::derive(move || wk.get().compromise.assumption);
+    let problem_statement = Signal::derive(move || wk.get().problem.problem_statement);
+
+    let nows_data = Signal::derive(move || wk.get().implement.now);
+    let bests_data = Signal::derive(move || wk.get().implement.best);
+
+    let title = Signal::derive(move || {
+        t!(
+            "worksheets.implement.example_title",
+            title = example.get().title
+        )
+        .to_string()
+    });
+    let example_id = Signal::derive(move || example.get().id);
+
+    let case_href = move || {
+        let id = example_id.get();
+        let lang = lang.get();
+        format!("/{lang}/projects/{id}")
+    };
+
+    view! {
+        <Title text={move || format!("{} | {} | {} | {}", example.get().title, t!("worksheets.implement.title"), t!("process.title"), t!("name"))}/>
+        <WorksheetHeader
+            title
+            description_id=example_id
+            tabs
+        />
+        <div class="grow w-full">
+            <DescriptionView
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
+                alternative=true
+            >
+                <p class="whitespace-pre-line">
+                    {move || example.get().description}
+                </p>
+                <A href=case_href attr:class="underline">
+                    {move || t!("worksheets.view_example", title=example.get().title)}
+                </A>
+            </DescriptionView>
+            <div role="form">
+                <div class="max-w-prose mb-4 whitespace-pre-line italic">
+                    <p>{t!("worksheets.implement.instruction")}</p>
+                </div>
+                <ReadOnlyView
+                    value=problem_statement
+                />
+                <ReadOnlyView
+                    value=assumption_statement
+                />
+                <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
+                    <div>
+                        <h4 class="text-xl mb-2">
+                            {t!("worksheets.implement.label_col_1")}
+                        </h4>
+                        <p class="mb-4 italic">{t!("worksheets.implement.hint_col_1")}</p>
+                        <ReadOnlyListView
+                            value=nows_data
+                        />
+                    </div>
+                    <div>
+                        <h4 class="text-xl mb-2">
+                            {t!("worksheets.implement.label_col_2")}
+                        </h4>
+                        <p class="mb-4 italic">{t!("worksheets.implement.hint_col_2")}</p>
+                        <ReadOnlyListView
+                            value=bests_data
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 }

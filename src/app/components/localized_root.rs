@@ -41,7 +41,7 @@ pub enum Language {
 
 #[component]
 pub fn LocalizedRootView() -> impl IntoView {
-    let route = use_params::<LocalizeParams>();
+    let params = use_params::<LocalizeParams>();
     let state = use_store();
     let (dark_setting, _, _) = use_local_storage::<Option<bool>, JsonCodec>(DARK_MODE_STORAGE);
 
@@ -53,7 +53,7 @@ pub fn LocalizedRootView() -> impl IntoView {
 
     let lang = Signal::derive(move || {
         Language::from_str(
-            route
+            params
                 .get()
                 .map(|p| p.lang)
                 .ok()

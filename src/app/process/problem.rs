@@ -10,8 +10,8 @@ use form_signal::FormState;
 
 use crate::app::{
     components::{
-        use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView, StringInputView,
-        UndoRemove, WorksheetHeader,
+        use_example_ctx, use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView,
+        ReadOnlyListView, ReadOnlyView, StringInputView, UndoRemove, WorksheetHeader,
     },
     state::ProcessStep,
     tabs_signal, use_lang,
@@ -199,28 +199,96 @@ pub fn FixedProblemStatement() -> impl IntoView {
             .map(|v| v.problem_statement.get())
             .unwrap_or_default()
     });
+    let href = Signal::derive(move || Some(format!("/{}/process/1", lang.get())));
 
     view! {
-        <div class="max-w-prose my-2 mx-auto p-4 text-lg rounded border border-slate-300 dark:border-slate-700">
-            <Show
-                when={move || !problem_statement.get().is_empty()}
-                fallback=move || {
-                    let href = format!("/{}/process/1", lang.get());
-                    view!{
-                        <p class="text-sm opacity-80">
-                            {t!("util.empty")}
-                            {" "}
-                            <A href
-                                class="underline text-purple-800 dark:text-purple-200"
-                            >
-                                {t!("worksheets.problem.empty")}
-                            </A>
-                        </p>
-                    }
-                }
+        <ReadOnlyView
+            value=problem_statement
+            fallback_title=t!("worksheets.problem.empty").to_string()
+            fallback_href=href
+        />
+    }
+}
+
+#[component]
+pub fn ExampleProblemView() -> impl IntoView {
+    let lang = use_lang();
+    let (wk, example) = use_example_ctx();
+    let wk_ctx = use_wk_ctx();
+
+    let tabs = tabs_signal(ProcessStep::Problem);
+
+    let problem_statement = Signal::derive(move || wk.get().problem.problem_statement);
+
+    let problems_data = Signal::derive(move || wk.get().problem.problems);
+
+    let stakeholders_data = Signal::derive(move || wk.get().problem.stakeholders);
+
+    let title = Signal::derive(move || {
+        t!(
+            "worksheets.problem.example_title",
+            title = example.get().title
+        )
+        .to_string()
+    });
+    let example_id = Signal::derive(move || example.get().id);
+
+    let case_href = move || {
+        let id = example_id.get();
+        let lang = lang.get();
+        format!("/{lang}/projects/{id}")
+    };
+
+    view! {
+        <Title text={move || format!("{} | {} | {} | {}", example.get().title, t!("worksheets.problem.title"), t!("process.title"), t!("name"))}/>
+        <WorksheetHeader
+            title
+            description_id=example_id
+            tabs
+        />
+        <div class="grow w-full">
+            <DescriptionView
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
+                alternative=true
             >
-                <p>{problem_statement}</p>
-            </Show>
+                <p class="whitespace-pre-line">
+                    {move || example.get().description}
+                </p>
+                <A href=case_href attr:class="underline">
+                    {move || t!("worksheets.view_example", title=example.get().title)}
+                </A>
+            </DescriptionView>
+            <div role="form">
+                <div class="max-w-prose mb-4 whitespace-pre-line italic">
+                    <p>{t!("worksheets.problem.instruction_1")}</p>
+                </div>
+                <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
+                    <div>
+                        <h4 class="text-xl mb-4">
+                            {t!("worksheets.problem.label_problems")}
+                        </h4>
+                        <ReadOnlyListView
+                            value=problems_data
+                        />
+                    </div>
+                    <div>
+                        <h4 class="text-xl mb-4">
+                            {t!("worksheets.problem.label_stakeholders")}
+                        </h4>
+                        <ReadOnlyListView
+                            value=stakeholders_data
+                        />
+                    </div>
+                </div>
+                <hr class="border-t border-slate-400 mt-4 mb-8"/>
+                <div class="max-w-prose mb-4 whitespace-pre-line italic">
+                    <p>{t!("worksheets.problem.instruction_2")}</p>
+                </div>
+                <ReadOnlyView
+                    value=problem_statement
+                />
+            </div>
         </div>
     }
 }

@@ -1,5 +1,6 @@
 use leptos::*;
 use leptos_meta::*;
+use leptos_router::*;
 use uuid::Uuid;
 use web_time::Instant;
 
@@ -7,12 +8,12 @@ use form_signal::FormState;
 
 use crate::app::{
     components::{
-        use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView, UndoRemove,
-        WorksheetHeader,
+        use_example_ctx, use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView,
+        ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
     },
     process::FixedProblemStatement,
     state::ProcessStep,
-    tabs_signal,
+    tabs_signal, use_lang,
 };
 
 /// step 3
@@ -98,5 +99,72 @@ pub fn SolutionView() -> impl IntoView {
             history=solution_delete_history
             on_restore=solution_restore
         />
+    }
+}
+
+#[component]
+pub fn ExampleSolutionView() -> impl IntoView {
+    let lang = use_lang();
+    let (wk, example) = use_example_ctx();
+    let wk_ctx = use_wk_ctx();
+
+    let tabs = tabs_signal(ProcessStep::Solution);
+
+    let problem_statement = Signal::derive(move || wk.get().problem.problem_statement);
+
+    let solutions_data = Signal::derive(move || wk.get().solutions.solutions);
+
+    let title = Signal::derive(move || {
+        t!(
+            "worksheets.solutions.example_title",
+            title = example.get().title
+        )
+        .to_string()
+    });
+    let example_id = Signal::derive(move || example.get().id);
+
+    let case_href = move || {
+        let id = example_id.get();
+        let lang = lang.get();
+        format!("/{lang}/projects/{id}")
+    };
+
+    view! {
+        <Title text={move || format!("{} | {} | {} | {}", example.get().title, t!("worksheets.solutions.title"), t!("process.title"), t!("name"))}/>
+        <WorksheetHeader
+            title
+            description_id=example_id
+            tabs
+        />
+        <div class="grow w-full">
+            <DescriptionView
+                hidden=wk_ctx.description_hidden
+                toggle_hidden=wk_ctx.toggle_description_hidden
+                alternative=true
+            >
+                <p class="whitespace-pre-line">
+                    {move || example.get().description}
+                </p>
+                <A href=case_href attr:class="underline">
+                    {move || t!("worksheets.view_example", title=example.get().title)}
+                </A>
+            </DescriptionView>
+            <div role="form">
+                <div class="max-w-prose mb-4 whitespace-pre-line italic">
+                    <p>{t!("worksheets.solutions.instruction")}</p>
+                </div>
+                <ReadOnlyView
+                    value=problem_statement
+                />
+                <div class="grid">
+                    <h4 class="text-center text-xl mb-4">
+                        {t!("worksheets.solutions.label_solutions")}
+                    </h4>
+                    <ReadOnlyListView
+                        value=solutions_data
+                    />
+                </div>
+            </div>
+        </div>
     }
 }

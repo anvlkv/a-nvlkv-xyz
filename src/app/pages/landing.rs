@@ -127,7 +127,7 @@ pub fn LandingView() -> impl IntoView {
                 <div id="process-intro" class="col-span-2 md:col-span-4 py-6 flex flex-col md:flex-row gap-16 text-base sm:text-lg">
                     <p class="basis-full md:basis-1/2">
                         {t!("landing.p1_s1")}{" "}
-                        <A href={move || format!("/{}/process/1", lang.get())} attr:class="underline text-purple-800 dark:text-purple-200">
+                        <A href={move || format!("/{}/process/0", lang.get())} attr:class="underline text-purple-800 dark:text-purple-200">
                             {t!("landing.p1_link")}
                         </A>
                         {" "}{t!("landing.p1_s2")}

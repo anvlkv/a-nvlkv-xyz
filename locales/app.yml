@@ -270,6 +270,8 @@ about:
 worksheets:
   example:
     en: "Example: %{title}"
+  view_example:
+    en: "Learn more about the %{title}"
   wk:
     en: ✎ Worksheet
   prev_wk:
@@ -281,6 +283,8 @@ worksheets:
   next_ex:
     en: View next example
   problem:
+    example_title:
+      en: The problem of “%{title}”
     title:
       en: The problem
     empty:
@@ -316,6 +320,8 @@ worksheets:
     label_statement:
       en: Problem statement
   solutions:
+    example_title:
+      en: Solutions for “%{title}”
     title:
       en: Solutions
     description:
@@ -337,6 +343,8 @@ worksheets:
       en: |
         For example: Incentivise positive impact over revenue
   compromise:
+    example_title:
+      en: Compromise of “%{title}”
     title:
       en: Compromise
     description:
@@ -364,6 +372,8 @@ worksheets:
     label_question:
       en: Research design note
   implement:
+    example_title:
+      en: Implementation of “%{title}”
     title:
       en: Implement
     description_1:
@@ -386,6 +396,8 @@ worksheets:
     hint_col_2:
       en: What makes it the most efficient?
   iterate:
+    example_title:
+      en: Tests & Iterations of “%{title}”
     title:
       en: Test & Iterate
     description:
