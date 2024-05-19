@@ -41,6 +41,7 @@ pub fn ProcessView() -> impl IntoView {
                     .map(|(i, step)| SeqStep {
                         href: format!("/{}/process/{}", lang, i),
                         process_step: *step,
+                        is_example: false,
                     })
                     .collect();
             });
@@ -116,6 +117,7 @@ fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<Example>, lang: Language
     seq.push(SeqStep {
         href: format!("/{}/process/{}", lang, 0),
         process_step: ProcessStep::About,
+        is_example: false,
     });
 
     // all worksheets first example
@@ -129,6 +131,7 @@ fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<Example>, lang: Language
                         Some(SeqStep {
                             href: format!("/{}/process/{}/{}", lang, i, ex.id),
                             process_step: *step,
+                            is_example: true,
                         })
                     } else {
                         None
@@ -148,11 +151,13 @@ fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<Example>, lang: Language
                     acc.extend(examples.iter().skip(1).map(|ex| SeqStep {
                         href: format!("/{}/process/{}/{}", lang, i, ex.id),
                         process_step: *step,
+                        is_example: true,
                     }));
                     // worksheet
                     acc.push(SeqStep {
                         href: format!("/{}/process/{}", lang, i),
                         process_step: *step,
+                        is_example: false,
                     });
                 }
                 acc
@@ -163,6 +168,7 @@ fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<Example>, lang: Language
     seq.push(SeqStep {
         href: format!("/{}/process/{}", lang, 6),
         process_step: ProcessStep::Inquire,
+        is_example: false,
     });
 }
 

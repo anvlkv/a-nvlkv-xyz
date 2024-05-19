@@ -54,6 +54,7 @@ pub struct Example {
 pub struct SeqStep {
     pub href: String,
     pub process_step: ProcessStep,
+    pub is_example: bool,
 }
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Display, VariantArray)]

@@ -17,7 +17,7 @@ export function cleanUp() {
   }
 }
 
-export function privacyAnimation() {
+export function errAnimation() {
   const layout = new window.rive.Layout({
     fit: "cover",
     alignment: "center",

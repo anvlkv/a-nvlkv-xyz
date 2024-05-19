@@ -1,7 +1,7 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::app::use_lang;
+use crate::app::{components::DarkModeToggleView, use_lang};
 
 #[component]
 pub fn HeaderView() -> impl IntoView {
@@ -15,11 +15,11 @@ pub fn HeaderView() -> impl IntoView {
 
         match location.pathname.get() {
             l if l == lang => view! {
-                <h1>{t!("name")}</h1>
+                <h1 class="md:z-[1]">{t!("name")}</h1>
             }
             .into_view(),
             _ => view! {
-                <A href={lang} attr:class="underline hover:text-purple-800 active:text-purple-950">
+                <A href={lang} attr:class="underline hover:text-purple-800 active:text-purple-950 md:z-[1]">
                     {t!("name")}
                 </A>
             }
@@ -66,15 +66,19 @@ pub fn HeaderView() -> impl IntoView {
 
     view! {
         <header class="flex justify-center bg-stone-100 dark:bg-stone-900 shadow-sm">
-            <div class="max-w-screen-2xl w-full px-6 md:px-8 lg:px-16 py-3 flex flex-wrap justify-between grow shrink-0">
+            <div class="relative max-w-screen-2xl text-xl w-full px-6 md:px-8 lg:px-16 py-3 flex flex-wrap justify-between grow shrink-0">
+                <div class="order-last md:z-[0] md:order-none md:-ml-8 lg:-ml-16 md:w-full md:absolute max-w-screen-2xl flex md:justify-center items-center">
+                    <DarkModeToggleView/>
+                </div>
                 {title}
-                <div class="flex gap-2">
+                <div class="md:z-[1] flex flex-wrap gap-2">
                     <A class="underline hover:text-purple-800 active:text-purple-950" exact=true href={move || format!("/{}/contact", lang.get())} >{ t!("let_talk") }</A>
                     <select
-                    name="language"
-                    on:change={onchange_lang}
-                    value={move || lang.get().to_string()}
-                    class="bg-transparent max-w-min pr-2 border-r-2 border-solid border-slate-400">
+                        name="language"
+                        on:change={onchange_lang}
+                        value={move || lang.get().to_string()}
+                        class="bg-transparent max-w-min pr-2 border-r-2 border-solid border-slate-400"
+                    >
                         {options}
                     </select>
                 </div>

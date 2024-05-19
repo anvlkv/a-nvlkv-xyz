@@ -1,4 +1,5 @@
 mod contact_form;
+mod dark_mode_toggle;
 mod description;
 mod error;
 mod footer;
@@ -13,6 +14,7 @@ mod undo_remove;
 mod worksheet;
 
 pub use contact_form::*;
+pub use dark_mode_toggle::*;
 pub use description::*;
 pub use error::*;
 pub use footer::*;

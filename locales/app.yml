@@ -1,6 +1,21 @@
 _version: 2
 
 util:
+  on:
+    en: On
+    nl: Aan
+    ru: Включить
+    ja: オン
+  off:
+    en: Off
+    nl: Uit
+    ru: Выключить
+    ja: オフ
+  dark:
+    en: "Dark mode: %{state}"
+    nl: "Donkere modus: %{state}"
+    ru: "Тёмный режим: %{state}"
+    ja: "ダークモード: %{state}"
   close:
     en: Close
     ru: Закрыть
@@ -216,7 +231,7 @@ about:
     en: |
       Whenever we are doing our work we shape our future and that of others.
       Whether we have such intention or even a particular outcome in mind the future never comes out exactly the way it was intended; reality takes place.
-      But as some wise people said “it's not the dots but the arrows that matter” therefore, may we look forward to the journey and not a destination.
+      But as some wise people say “it's not the dots but the arrows that matter” therefore, may we look forward to the journey and not a destination.
   description_2:
     en: |
       The app will guide you through a 5 step process of getting from problems to testable solutions.
@@ -257,6 +272,14 @@ worksheets:
     en: "Example: %{title}"
   wk:
     en: ✎ Worksheet
+  prev_wk:
+    en: Back to worksheet
+  prev_ex:
+    en: Back to example
+  next_wk:
+    en: Complete the worksheet
+  next_ex:
+    en: View next example
   problem:
     title:
       en: The problem

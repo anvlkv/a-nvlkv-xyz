@@ -19,8 +19,8 @@ mod rv_animation {
     #[wasm_bindgen(module = "/src/app/components/error.mjs")]
     extern "C" {
 
-        #[wasm_bindgen(js_name=privacyAnimation)]
-        pub fn privacy_animation();
+        #[wasm_bindgen(js_name=errAnimation)]
+        pub fn err_animation();
 
         #[wasm_bindgen(js_name=cleanUp)]
         pub fn clean_up();
@@ -32,7 +32,7 @@ pub fn ErrorView() -> impl IntoView {
     #[cfg(any(feature = "csr", feature = "hydrate"))]
     {
         create_effect(move |_| {
-            rv_animation::privacy_animation();
+            rv_animation::err_animation();
         });
 
         on_cleanup(move || {

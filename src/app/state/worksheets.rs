@@ -29,7 +29,6 @@ impl Default for WorkSheets {
                 ..Default::default()
             },
             compromise: CompromiseWK {
-                choices: vec![None],
                 ..Default::default()
             },
             implement: ImplementWK {
@@ -60,7 +59,8 @@ pub struct SolutionsWK {
 #[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CompromiseWK {
     #[iterable]
-    pub choices: Vec<Option<bool>>,
+    pub solution_choices: Vec<Option<bool>>,
+    pub stakeholder_choices: Vec<Option<bool>>,
     pub assumption: String,
 }
 

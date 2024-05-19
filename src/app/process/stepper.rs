@@ -48,11 +48,47 @@ pub fn StepperView() -> impl IntoView {
     });
 
     let prev_button_disabled = Signal::derive(move || step_idx.get() == 0);
-    let prev_button_text = "Previous";
+    let prev_button_text = Signal::derive(move || {
+        if prev_button_disabled.get() {
+            None
+        } else {
+            state
+                .get()
+                .sequence
+                .iter()
+                .nth(step_idx.get().saturating_sub(1))
+                .map(|s| {
+                    if s.is_example {
+                        t!("worksheets.prev_ex")
+                    } else {
+                        t!("worksheets.prev_wk")
+                    }
+                    .to_string()
+                })
+        }
+    });
 
     let next_button_disabled =
         Signal::derive(move || step_idx.get() == state.get().sequence.len().saturating_sub(1));
-    let next_button_text = "Next";
+    let next_button_text = Signal::derive(move || {
+        if next_button_disabled.get() {
+            Some("✓".to_string())
+        } else {
+            state
+                .get()
+                .sequence
+                .iter()
+                .nth(step_idx.get().saturating_add(1))
+                .map(|s| {
+                    if s.is_example {
+                        t!("worksheets.next_ex")
+                    } else {
+                        t!("worksheets.next_wk")
+                    }
+                    .to_string()
+                })
+        }
+    });
 
     let navigate = use_navigate();
     let on_next = move |_| {
@@ -61,10 +97,6 @@ pub fn StepperView() -> impl IntoView {
         let next = seq.iter().nth(step_idx.get() + 1);
         if let Some(next) = next {
             navigate(next.href.as_str(), Default::default());
-        } else if let Some(first) = seq.first() {
-            navigate(first.href.as_str(), Default::default());
-        } else {
-            log::error!("current step not found");
         }
     };
 

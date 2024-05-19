@@ -1,9 +1,14 @@
 module.exports = {
-  mode: "jit",
   content: {
     files: ["src/**/*.rs"],
   },
-  darkMode: "media", // 'media' or 'class'
+  darkMode: [
+    "variant",
+    [
+      "@media (prefers-color-scheme: dark) { &:not(.theme-light *) }",
+      "&:is(.theme-dark *)",
+    ],
+  ],
   theme: {
     extend: {},
   },

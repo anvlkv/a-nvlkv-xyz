@@ -24,6 +24,7 @@ pub fn App() -> impl IntoView {
         <Link rel="icon" attr:type="image/ico" href="/pkg/favicon.ico" />
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-32x32.png" sizes="32x32" />
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-16x16.png" sizes="16x16" />
+        <Link rel="preload" href="/pkg/anvlkv-done-button.riv" attr:as="fetch" crossorigin="anonymous"/>
         // cdn libs
         <Script src="https://unpkg.com/@rive-app/canvas@2.15.2"/>
         <Link
