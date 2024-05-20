@@ -1,3 +1,5 @@
 target/
 .spin/
 .DS_Store
+node_modules/
+assets/icons/font/

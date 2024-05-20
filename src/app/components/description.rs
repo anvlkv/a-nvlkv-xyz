@@ -1,5 +1,7 @@
 use leptos::*;
 
+use crate::app::components::IconView;
+
 #[component]
 pub fn DescriptionView(
     #[prop(into)] toggle_hidden: Callback<()>,
@@ -25,7 +27,15 @@ pub fn DescriptionView(
                 <div>
                     {children()}
                 </div>
-                <button on:click={move |_| toggle_hidden.call(())} title=t!("util.close") class="ml-1 mr-0 text-xl -mt-0.5">{"×"}</button>
+                <button
+                    on:click={move |_| toggle_hidden.call(())}
+                    title=t!("util.close")
+                    class="ml-1 mr-0 -mt-0.5"
+                >
+                    <IconView
+                        icon="Close"
+                    />
+                </button>
             </div>
         </Show>
     }

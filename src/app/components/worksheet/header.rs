@@ -1,7 +1,7 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::app::components::use_wk_ctx;
+use crate::app::components::{use_wk_ctx, IconView};
 
 use super::Tab;
 
@@ -48,13 +48,29 @@ pub fn WorksheetHeader(
             <div class="flex flex-wrap justify-end grow items-end h-full">
                 <div class="border-b-2 px-2 border-slate-400 grow rounded-t-lg after:content-[' ']">
                     <Show when={move || description_hidden.get()}>
-                        <button on:click={move |_| toggle_description_hidden.call(())} title=t!("util.info") class="text-2xl -mb-0.5 text-sky-800 dark:text-sky-200">{"ⓘ"}</button>
+                        <button
+                            on:click={move |_| toggle_description_hidden.call(())}
+                            title=t!("util.info")
+                            class="-mb-0.5 text-sky-800 dark:text-sky-200"
+                        >
+                            <IconView icon="Info"/>
+                        </button>
                     </Show>
                 </div>
                 <For each=move || tabs.get()
                     key=|state| state.href.clone()
                     let:child>
-                    <A href={child.href} exact={true} class={ format!("worksheet-tab block rounded-t px-4 pt-3 pb-1 ml-0 mr-px border border-slate-400 border-b-2 hover:text-purple-800 hover:border-purple-800 active:text-purple-950 {}", if child.is_example { "italic"} else { "non-italic" })} active_class="pointer-events-none -mb-px border-b-transparent">
+                    <A
+                        href={child.href}
+                        exact={true}
+                        class={ format!("worksheet-tab block rounded-t px-4 pt-3 pb-1 ml-0 mr-px border border-slate-400 border-b-2 hover:text-purple-800 hover:border-purple-800 active:text-purple-950 {}", if child.is_example { "italic"} else { "non-italic" })}
+                        active_class="pointer-events-none -mb-px border-b-transparent"
+                    >
+                        <Show when= move || !child.is_example>
+                            <IconView
+                                icon="Worksheet"
+                            />
+                        </Show>
                         {child.title}
                     </A>
                 </For>

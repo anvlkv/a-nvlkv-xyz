@@ -1,3 +1,4 @@
+mod assets;
 mod contact_form;
 mod dark_mode_toggle;
 mod description;
@@ -14,6 +15,7 @@ mod read_only;
 mod undo_remove;
 mod worksheet;
 
+pub use assets::*;
 pub use contact_form::*;
 pub use dark_mode_toggle::*;
 pub use description::*;

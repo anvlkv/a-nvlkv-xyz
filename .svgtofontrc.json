@@ -1,0 +1,14 @@
+{
+  "fontName": "uiw",
+  "css": {
+    "cssPath": "/pkg/icons/font/",
+    "fontSize": "1.75em"
+  },
+  "outSVGReact": false,
+  "emptyDist": true,
+  "svgicons2svgfont": {
+    "fontHeight": 1000,
+    "fixedWidth": true,
+    "descent": 227
+  }
+}

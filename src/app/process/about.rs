@@ -1,5 +1,5 @@
 use crate::app::{
-    components::WorksheetHeader,
+    components::{IconView, WorksheetHeader},
     state::{use_store, ProcessStep},
     use_lang,
 };
@@ -95,7 +95,14 @@ pub fn AboutView() -> impl IntoView {
                     >
                         <canvas id="about_icon_Privacy" class="grow-0 shrink-0 h-14 aspect-square mr-4"/>
                     </button>
-                    <A attr:type="button" href={move || format!("/{}/process/1", lang.get())} class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center">{t!("about.cta")}</A>
+                    <A
+                        attr:type="button"
+                        href={move || format!("/{}/process/1", lang.get())}
+                        class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center"
+                    >
+                        {t!("about.cta")}
+                        <IconView icon="Next"/>
+                    </A>
                 </div>
             </div>
         </div>

@@ -238,10 +238,10 @@ about:
       Each step is an interactive worksheet with examples.
       Complete the workbook on your own or in collaboration with others.
   cta:
-    en: Get started →
-    ru: Начать →
-    nl: Ga aan de slag →
-    ja: 始めましょう →
+    en: Get started
+    ru: Начать
+    nl: Ga aan de slag
+    ja: 始めましょう
   s_1:
     title:
       en: The problem
@@ -273,7 +273,7 @@ worksheets:
   view_example:
     en: "Learn more about the %{title}"
   wk:
-    en: ✎ Worksheet
+    en: Worksheet
   prev_wk:
     en: Back to worksheet
   prev_ex:

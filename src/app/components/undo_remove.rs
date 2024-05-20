@@ -8,7 +8,7 @@ use leptos::*;
 use leptos_use::{use_timestamp_with_options, UseTimestampOptions};
 use web_time::Instant;
 
-use crate::app::components::TOAST_CONTAINER;
+use crate::app::components::{IconView, TOAST_CONTAINER};
 
 pub type HistoryEntry<T> = (T, usize, Instant);
 
@@ -107,13 +107,13 @@ fn TimedEntry(
     view! {
         <div class="p-2 bg-stone-100 dark:bg-stone-900 border border-slate-400 rounded md:min-w-64 shadow-lg max-w-prose animate__animated animate__fadeInUp flex items-center">
             <button
-                class="text-2xl pr-4 text-purple-800 font-bold"
+                class="pr-4 text-purple-800 font-bold"
                 on:click={move |_| {
                     cancel_timeout.clear();
                     action.call(());
                 }}
-                >
-                {"⤺"}
+            >
+                <IconView icon="Restore"/>
             </button>
             <p class="mr-2 ml-auto">
                 {t!("util.undo_delete")}

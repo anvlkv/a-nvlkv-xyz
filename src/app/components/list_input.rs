@@ -3,7 +3,7 @@ use leptos::*;
 use leptos_use::use_event_listener;
 use uuid::Uuid;
 
-use crate::app::components::StringInputView;
+use crate::app::components::{IconView, StringInputView};
 
 #[component]
 pub fn ListInputView(
@@ -172,7 +172,14 @@ fn ListItemView(
                 input_type
                 value
                 placeholder />
-            <button tabindex="2" on:click={on_remove} title=t!("util.delete") class="grow-0 shrink-0 px-4 pb-0.5 text-xl border border-l-0 border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 text-lg focus:outline-purple-400 focus:outline rounded-r-full">{"×"}</button>
+            <button
+                tabindex="2"
+                on:click={on_remove}
+                title=t!("util.delete")
+                class="grow-0 shrink-0 px-4 pb-0.5 border border-l-0 border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 text-lg focus:outline-purple-400 focus:outline rounded-r-full"
+            >
+                <IconView icon="Delete"/>
+            </button>
         </li>
     }
 }
