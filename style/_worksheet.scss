@@ -1,0 +1,73 @@
+.worksheet-tab {
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.dummy-line {
+    $color: #e9d5ff;
+    $color-dark: #3b0764;
+    $alpha: 0.7;
+
+    position: relative;
+    overflow: hidden;
+    &::before {
+        content: " ";
+        position: absolute;
+        width: 200%;
+        height: 100%;
+        background: linear-gradient(
+            45deg,
+            rgba($color, 0) 0%,
+            rgba($color, 0) 15%,
+            rgba($color, $alpha) 20%,
+            rgba($color, 0) 25%,
+            rgba($color, 0) 40%,
+            rgba($color, $alpha) 45%,
+            rgba($color, 0) 50%,
+            rgba($color, 0) 65%,
+            rgba($color, $alpha) 70%,
+            rgba($color, 0) 75%
+        );
+    }
+
+    @include safe-animation {
+        &::before {
+            animation-name: dummy-line-animation;
+            animation-duration: $dummy-duration;
+            animation-play-state: running;
+            animation-iteration-count: infinite;
+        }
+    }
+    @include dark-mode {
+        &::before {
+            background: linear-gradient(
+                85deg,
+                rgba($color-dark, 0) 0%,
+                rgba($color-dark, 0) 15%,
+                rgba($color-dark, $alpha) 20%,
+                rgba($color-dark, 0) 27%,
+                rgba($color-dark, 0) 47%,
+                rgba($color-dark, $alpha) 67%,
+                rgba($color-dark, 0) 83%
+            );
+        }
+    }
+}
+
+@keyframes dummy-line-animation {
+    from {
+        left: -100%;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 0;
+    }
+    to {
+        left: 100%;
+        opacity: 0;
+    }
+}

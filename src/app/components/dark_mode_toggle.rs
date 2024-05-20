@@ -1,25 +1,7 @@
 use leptos::*;
 use leptos_use::{storage::use_local_storage, use_preferred_dark, utils::JsonCodec};
 
-use crate::app::components::DARK_MODE_STORAGE;
-
-#[cfg(any(feature = "csr", feature = "hydrate"))]
-mod rv_animation {
-    use wasm_bindgen::prelude::*;
-
-    #[wasm_bindgen(module = "/src/app/components/dark_mode_toggle.mjs")]
-    extern "C" {
-
-        #[wasm_bindgen(js_name=darkModeAnimation)]
-        pub fn dark_mode_animation(is_dark_mode_enabled: bool);
-
-        #[wasm_bindgen(js_name=cleanUp)]
-        pub fn clean_up();
-
-        #[wasm_bindgen(js_name=setDark)]
-        pub fn set_dark_mode(is_dark_mode_enabled: bool);
-    }
-}
+use crate::app::components::{RvArtboardView, DARK_MODE_STORAGE};
 
 #[component]
 pub fn DarkModeToggleView() -> impl IntoView {
@@ -58,54 +40,22 @@ pub fn DarkModeToggleView() -> impl IntoView {
         t!("util.dark", state = state).to_string()
     });
 
-    #[cfg(any(feature = "csr", feature = "hydrate"))]
-    {
-        create_effect(move |mount| {
-            let is_dark = dark_mode.get();
-            if mount.is_some() {
-                rv_animation::set_dark_mode(is_dark);
-            } else {
-                rv_animation::dark_mode_animation(is_dark);
-            }
-        });
-
-        on_cleanup(move || {
-            rv_animation::clean_up();
-        });
-    }
+    let dark_mode_input = Signal::derive(move || Some(("IsDark".to_string(), dark_mode.get())));
 
     view! {
         <label class="relative cursor-pointer" attr:title=title>
-            <canvas id="dark-mode_animation" class="w-8 h-8"/>
+            <RvArtboardView
+                attr:class="w-8 h-8"
+                state_machine="Sun-Moon State Machine"
+                name="Sun-Moon"
+                input_bool=dark_mode_input
+            />
             <input
             class="hidden"
             attr:name="dark-mode"
             attr:type="checkbox"
             attr:checked=dark_mode
             on:change=on_change/>
-            // <span>
-            //     {on.children}
-            // </span>
-            // <span
-            //     attr:title=title
-            //     class="absolute"
-            // />
-            // <span>
-            //     {off.children}
-            // </span>
         </label>
     }
 }
-
-// name="dark-theme"
-// title={t!("util.dark").to_string()}
-// checked=dark_mode
-// on_change=set_dark_mode
-// >
-// <ToggleOnLabel slot:on>
-//     {"☽"}
-// </ToggleOnLabel>
-// <ToggleOffLabel slot:off>
-//     {"☀︎"}
-// </ToggleOffLabel>
-// </ToggleView>

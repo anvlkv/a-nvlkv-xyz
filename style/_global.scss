@@ -1,0 +1,36 @@
+body {
+    position: relative;
+    * {
+        @include safe-animation {
+            transition-property: color, background, border-color;
+            transition-duration: $light-dark-duration;
+            transition-timing-function: ease-in-out;
+        }
+    }
+}
+
+a {
+    @include safe-animation {
+        transition-property: color, border-color, background;
+        transition-duration: $hover-duration;
+        transition-timing-function: ease-in;
+    }
+}
+
+button:disabled {
+    pointer-events: none;
+}
+
+#app-styled-root {
+    @include safe-animation {
+        transition-property: filter;
+        transition-duration: $hover-duration;
+        transition-timing-function: ease-in-out;
+    }
+}
+
+#toast-container {
+    > div {
+        display: contents;
+    }
+}

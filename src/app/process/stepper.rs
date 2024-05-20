@@ -3,34 +3,10 @@ use leptos_router::*;
 use strum::VariantArray;
 
 use crate::app::{
-    components::IconView,
+    components::{IconView, RvArtboardView},
     state::{use_store, ProcessStep, SeqStep},
     use_lang,
 };
-
-#[cfg(any(feature = "csr", feature = "hydrate"))]
-mod rv_animation {
-    use wasm_bindgen::prelude::*;
-
-    #[wasm_bindgen(module = "/src/app/process/stepper.mjs")]
-    extern "C" {
-
-        #[wasm_bindgen(js_name=mountArtboard)]
-        pub fn mount_artboard(artboard: String);
-
-        #[wasm_bindgen(js_name=setActive)]
-        pub fn set_active(artboard: String);
-
-        #[wasm_bindgen(js_name=setVisible)]
-        pub fn set_visible(artboard: String);
-
-        #[wasm_bindgen(js_name=forgetVisible)]
-        pub fn forget_visible();
-
-        #[wasm_bindgen(js_name=cleanUp)]
-        pub fn clean_up(artboard: String);
-    }
-}
 
 #[component]
 pub fn StepperView() -> impl IntoView {
@@ -170,35 +146,17 @@ pub fn StepperView() -> impl IntoView {
 #[component]
 fn StepView(step: ProcessStep, current_step_data: Signal<SeqStep>) -> impl IntoView {
     let lang = use_lang();
+    let (input, set_input) = create_signal(None);
 
-    #[cfg(any(feature = "csr", feature = "hydrate"))]
-    {
-        create_effect(move |_| {
-            rv_animation::mount_artboard(step.to_string());
-        });
+    let is_inactive = Signal::derive(move || current_step_data.get().process_step != step);
 
-        on_cleanup(move || {
-            rv_animation::clean_up(step.to_string());
-        });
-
-        create_effect(move |_| {
-            let artboard = current_step_data.get().process_step.to_string();
-            rv_animation::set_active(artboard);
-            rv_animation::forget_visible();
-        });
-    }
-
-    #[allow(unused_variables)]
-    let activate_cb = Callback::new(move |step: Option<ProcessStep>| {
-        log::debug!("activate step: {step:?}");
-        #[cfg(any(feature = "csr", feature = "hydrate"))]
-        {
-            if let Some(step) = step {
-                rv_animation::set_visible(step.to_string());
-            } else {
-                rv_animation::forget_visible();
-            }
-        }
+    let activate_cb = Callback::new(move |hover| {
+        let is_inactive = is_inactive.get();
+        set_input.set(Some(("Visible".to_string(), hover)));
+        set_input.set(Some((
+            "Inactive".to_string(),
+            if hover { false } else { is_inactive },
+        )));
     });
 
     let label = Signal::derive(move || {
@@ -216,16 +174,25 @@ fn StepView(step: ProcessStep, current_step_data: Signal<SeqStep>) -> impl IntoV
         }
     });
 
+    create_render_effect(move |_| {
+        set_input.set(Some(("Inactive".to_string(), is_inactive.get())));
+    });
+
     view! {
         <A
             href=move || href.get()
             exact=true
-            on:pointerenter=move |_| activate_cb.call(Some(step))
-            on:pointerleave=move |_| activate_cb.call(None)
+            on:pointerenter=move |_| activate_cb.call(true)
+            on:pointerleave=move |_| activate_cb.call(false)
             active_class="pointer-events-none"
             class="block flex flex-col xl:flex-row items-center px-6 xl:pl-0 hover:underline hover:text-purple-800 active:text-purple-950 text-center xl:text-left"
         >
-            <canvas id={move || format!("stepper_icon_{}", step)} class="mt-1 w-16 h-16 sm:w-8 sm:h-8 xl:w-12 xl:h-12"/>
+            <RvArtboardView
+                attr:class="mt-1 w-16 h-16 sm:w-8 sm:h-8 xl:w-12 xl:h-12"
+                state_machine={format!("{step} State Machine")}
+                name={format!("{step}")}
+                input_bool=input
+            />
             <span class="my-2 xl:ml-4 text-sm block w-full">{label}</span>
         </A>
     }

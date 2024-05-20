@@ -5,22 +5,10 @@ use leptos::*;
 
 use super::{CheckedOption, ModalView, RadioInputView};
 
-use crate::app::state::{use_store, StorageMode};
-
-#[cfg(any(feature = "csr", feature = "hydrate"))]
-mod rv_animation {
-    use wasm_bindgen::prelude::*;
-
-    #[wasm_bindgen(module = "/src/app/components/privacy_notice.mjs")]
-    extern "C" {
-
-        #[wasm_bindgen(js_name=privacyAnimation)]
-        pub fn privacy_animation();
-
-        #[wasm_bindgen(js_name=cleanUp)]
-        pub fn clean_up();
-    }
-}
+use crate::app::{
+    components::RvArtboardView,
+    state::{use_store, StorageMode},
+};
 
 #[component]
 pub fn PrivacyNoticeView() -> impl IntoView {
@@ -66,17 +54,6 @@ pub fn PrivacyNoticeView() -> impl IntoView {
 
 #[component]
 fn PrivacyContent(#[prop(into)] storage_option: Signal<FormState<String>>) -> impl IntoView {
-    #[cfg(any(feature = "csr", feature = "hydrate"))]
-    {
-        create_effect(move |_| {
-            rv_animation::privacy_animation();
-        });
-
-        on_cleanup(move || {
-            rv_animation::clean_up();
-        });
-    }
-
     let options = Signal::derive(|| {
         vec![
             CheckedOption {
@@ -100,7 +77,11 @@ fn PrivacyContent(#[prop(into)] storage_option: Signal<FormState<String>>) -> im
 
     view! {
         <div class="flex">
-            <canvas id="privacy_animation" class="w-32 h-32 mr-4"/>
+            <RvArtboardView
+                attr:class="w-32 h-32 mr-4"
+                state_machine="Privacy State Machine"
+                name="Privacy"
+            />
             <form>
                 <p class="mb-4">{t!("privacy.notice")}</p>
                 <p class="mb-4">{t!("privacy.prompt")}</p>

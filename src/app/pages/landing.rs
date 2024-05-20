@@ -2,26 +2,7 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
-use crate::app::use_lang;
-
-#[cfg(any(feature = "csr", feature = "hydrate"))]
-mod rv_animation {
-    use js_sys::Promise;
-    use wasm_bindgen::prelude::*;
-
-    #[wasm_bindgen(module = "/src/app/pages/landing.mjs")]
-    extern "C" {
-
-        #[wasm_bindgen(js_name=landingAnimation)]
-        pub fn landing_animation() -> Promise;
-
-        #[wasm_bindgen(js_name=setActive)]
-        pub fn set_active(value: bool);
-
-        #[wasm_bindgen(js_name=cleanUp)]
-        pub fn clean_up();
-    }
-}
+use crate::app::{components::RvArtboardView, use_lang};
 
 /// step 0
 #[component]
@@ -30,8 +11,6 @@ pub fn LandingView() -> impl IntoView {
 
     #[allow(unused_variables)]
     let (button_height, set_button_height) = create_signal::<f64>(0.0);
-    #[allow(unused_variables)]
-    let (rv_ready, set_rv_ready) = create_signal(false);
 
     let button_element: NodeRef<html::Span> = create_node_ref();
 
@@ -41,7 +20,6 @@ pub fn LandingView() -> impl IntoView {
 
         use js_sys::Array;
         use wasm_bindgen::{closure::Closure, JsCast, JsValue};
-        use wasm_bindgen_futures::JsFuture;
         use web_sys::{ResizeObserver, ResizeObserverEntry};
 
         let on_resize_button = Closure::wrap(Box::new(move |entries: Array, _| {
@@ -66,26 +44,15 @@ pub fn LandingView() -> impl IntoView {
             }
         });
 
-        create_effect(move |_| {
-            let promise = rv_animation::landing_animation();
-            spawn_local(async move {
-                _ = JsFuture::from(promise).await;
-                set_rv_ready.set(true);
-            })
-        });
-
         on_cleanup(move || {
             observer.disconnect();
-            rv_animation::clean_up();
         });
     }
 
-    #[cfg_attr(feature = "ssr", allow(unused_variables))]
+    let (hover_button, set_hover_button) = create_signal(None);
     let pointer_cb = Callback::new(move |value: bool| {
-        #[cfg(any(feature = "csr", feature = "hydrate"))]
-        {
-            rv_animation::set_active(value)
-        }
+        log::debug!("set show: {value}");
+        set_hover_button.set(Some(("Show".to_string(), value)))
     });
 
     view! {
@@ -93,12 +60,21 @@ pub fn LandingView() -> impl IntoView {
         <section class="contents">
             <div class="grow grid grid-cols-2 md:grid-cols-4 content-center">
                 <div class="relative col-span-2 row-span-4 md:col-start-2 py-3 margin-0 flex flex-col-reverse justify-stretch items-stretch text-4xl sm:text-5xl md:text-6xl lg:text-8xl 2xl:text-9xl ">
-                    <canvas id="process_animation" style={move || format!("height: {}px;", button_height.get() * 2.75)} class="absolute box-border self-center bottom-0 mb-3 md:mb-7 min-w-full"/>
+                    <RvArtboardView
+                        attr:id="process_animation"
+                        attr:class="absolute box-border self-center bottom-0 mb-3 md:mb-7 min-w-full"
+                        attr:style={move || format!("height: {}px;", button_height.get() * 2.75)}
+                        name="Done"
+                        state_machine="Done State Machine"
+                        input_bool=hover_button
+                        fit="fitHeight"
+                        alignment="bottomCenter"
+                    />
                     <A
                         id="the-done-button"
                         attr:type="button"
+                        attr:class="contents"
                         href={move || format!("/{}/process/0", lang.get())}
-                        class={move || if rv_ready.get() {"contents opacity-1"} else {"contents opacity-75"}}
                     >
                         <span
                             node_ref=button_element

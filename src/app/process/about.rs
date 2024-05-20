@@ -1,5 +1,5 @@
 use crate::app::{
-    components::{IconView, WorksheetHeader},
+    components::{IconView, RvArtboardView, WorksheetHeader},
     state::{use_store, ProcessStep},
     use_lang,
 };
@@ -7,21 +7,6 @@ use crate::app::{
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
-
-#[cfg(any(feature = "csr", feature = "hydrate"))]
-mod rv_animation {
-    use wasm_bindgen::prelude::*;
-
-    #[wasm_bindgen(module = "/src/app/process/about.mjs")]
-    extern "C" {
-
-        #[wasm_bindgen(js_name=mountArtboards)]
-        pub fn mount_artboards();
-
-        #[wasm_bindgen(js_name=cleanUp)]
-        pub fn clean_up();
-    }
-}
 
 /// step 1
 #[component]
@@ -31,17 +16,6 @@ pub fn AboutView() -> impl IntoView {
 
     let show_privacy_choice =
         create_read_slice(state, move |s| s.storage_preference.get().is_some());
-
-    #[cfg(any(feature = "csr", feature = "hydrate"))]
-    {
-        create_effect(move |_| {
-            rv_animation::mount_artboards();
-        });
-
-        on_cleanup(move || {
-            rv_animation::clean_up();
-        });
-    }
 
     let steps = vec![
         ProcessStep::Problem,
@@ -56,7 +30,11 @@ pub fn AboutView() -> impl IntoView {
             let i = i + 1;
             view! {
                 <li class="pb-3 flex items-start">
-                    <canvas id={move || format!("about_icon_{}", name)} class="w-16 h-16 xl:w-20 xl:h-20"/>
+                    <RvArtboardView
+                        attr:class="w-16 h-16 xl:w-20 xl:h-20"
+                        state_machine={format!("{name} State Machine")}
+                        name={format!("{name}")}
+                    />
                     <div class="pl-3">
                         <h5 class="pb-1 font-bold">
                             {t!(format!("about.s_{i}.title").as_str()).to_string()}
@@ -93,7 +71,11 @@ pub fn AboutView() -> impl IntoView {
                         class={move || if show_privacy_choice.get() { "contents" } else { "hidden" }}
                         title={t!("privacy.short")}
                     >
-                        <canvas id="about_icon_Privacy" class="grow-0 shrink-0 h-14 aspect-square mr-4"/>
+                        <RvArtboardView
+                            attr:class="grow-0 shrink-0 h-14 aspect-square mr-4"
+                            state_machine="Privacy State Machine"
+                            name="Privacy"
+                        />
                     </button>
                     <A
                         attr:type="button"
