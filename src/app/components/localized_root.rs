@@ -75,9 +75,7 @@ pub fn LocalizedRootView() -> impl IntoView {
         view! {
             <HeaderView/>
             <main class="overflow-auto grow flex flex-col" id=APP_MAIN>
-                <div class="grow mx-auto w-full max-w-screen-2xl px-6 md:px-8 lg:px-16">
-                    <Outlet/>
-                </div>
+                <Outlet/>
                 <div id=TOAST_CONTAINER class="fixed right-0 bottom-0 flex flex-col-reverse gap-4 items-stretch h-min max-h-96 overflow-auto pr-8 pb-8">
                 </div>
             </main>

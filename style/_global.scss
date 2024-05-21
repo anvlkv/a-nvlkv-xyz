@@ -9,9 +9,11 @@ body {
     }
 }
 
-a {
+a,
+button {
     @include safe-animation {
-        transition-property: color, border-color, background;
+        transition-property: color, border-color, background, transform,
+            box-shadow;
         transition-duration: $hover-duration;
         transition-timing-function: ease-in;
     }

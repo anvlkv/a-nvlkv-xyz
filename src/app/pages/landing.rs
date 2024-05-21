@@ -57,8 +57,8 @@ pub fn LandingView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {}", t!("name"), t!("specialty"))}/>
-        <section class="contents">
-            <div class="grow grid grid-cols-2 md:grid-cols-4 content-center">
+        <section class="grow mx-auto w-full max-w-screen-2xl px-6 md:px-8 lg:px-16 mb-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 content-center">
                 <div class="relative col-span-2 row-span-4 md:col-start-2 py-3 margin-0 flex flex-col-reverse justify-stretch items-stretch text-4xl sm:text-5xl md:text-6xl lg:text-8xl 2xl:text-9xl ">
                     <RvArtboardView
                         attr:id="process_animation"

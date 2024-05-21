@@ -1,4 +1,3 @@
-mod case;
 mod contact;
 mod landing;
 mod links;
@@ -7,7 +6,6 @@ mod process;
 mod projects;
 mod resume;
 
-pub use case::*;
 pub use contact::*;
 pub use landing::*;
 pub use links::*;

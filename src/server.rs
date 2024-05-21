@@ -19,18 +19,22 @@ async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
     conf.leptos_options.output_name = "a_nvlkv_xyz".to_owned();
 
     // Register server functions
-    register_explicit::<crate::app::pages::GetExamples>();
+    register_explicit::<crate::app::projects::GetProjects>();
+    register_explicit::<crate::app::projects::GetProjectDetails>();
 
     let app = crate::app::App;
 
     let mut routes = RouteTable::build(app);
     routes.add_server_fn_prefix("/api").unwrap();
 
+    // handle localization
     match (lang_code_or_redirect(&req), url.starts_with("/api")) {
         (Ok(_), _) | (_, true) => {
+            // render localized
             render_best_match_to_stream(req, resp_out, &routes, app, &conf.leptos_options).await;
         }
         (Err(redirect), _) => {
+            // redirect to language
             log::warn!("redirecting: {url} to {redirect}");
 
             let res = OutgoingResponse::new(

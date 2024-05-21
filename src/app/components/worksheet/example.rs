@@ -1,15 +1,15 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::app::state::{use_store, Example, ExampleParams, WorkSheets};
+use crate::app::state::{use_store, ExampleParams, ProjectData, WorkSheets};
 
 #[derive(Clone, PartialEq)]
 struct ExampleCtx {
     wk: Signal<WorkSheets>,
-    example: Signal<Example>,
+    example: Signal<ProjectData>,
 }
 
-pub fn use_example_ctx() -> (Signal<WorkSheets>, Signal<Example>) {
+pub fn use_example_ctx() -> (Signal<WorkSheets>, Signal<ProjectData>) {
     let ctx = use_context::<ExampleCtx>().unwrap();
 
     (

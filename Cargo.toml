@@ -96,3 +96,10 @@ bin-default-features = false
 lib-features = ["hydrate"]
 lib-default-features = false
 assets-dir = "assets"
+lib-profile-release = "wasm-release"
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = 'z'
+lto = true
+codegen-units = 1

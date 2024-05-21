@@ -1,0 +1,10 @@
+{
+  "name": "a.nvlkv.xyz",
+  "short_name": "a.nvlkv.xyz",
+  "theme_color": "#581c87",
+  "background_color": "#fff",
+  "display": "minimal-ui",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/"
+}

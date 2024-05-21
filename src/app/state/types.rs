@@ -6,12 +6,12 @@ use strum::{Display, EnumString, VariantArray};
 
 use crate::app::Language;
 
-use super::{worksheets::*, Example};
+use super::{worksheets::*, ProjectData};
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct State {
     pub wk: WorkSheetsFormState,
-    pub examples: Vec<Example>,
+    pub examples: Vec<ProjectData>,
     pub sequence: Vec<SeqStep>,
     pub storage_preference: FormState<Option<StorageMode>>,
     pub show_privacy_prompt: RwSignal<bool>,

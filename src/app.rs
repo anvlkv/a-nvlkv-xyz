@@ -1,7 +1,9 @@
 pub mod components;
 pub mod pages;
 pub mod process;
+pub mod projects;
 pub mod state;
+pub mod util;
 
 use leptos::*;
 use leptos_meta::*;
@@ -21,6 +23,7 @@ pub fn App() -> impl IntoView {
     view! {
         // site head
         <Stylesheet id="leptos" href="/pkg/a_nvlkv_xyz.css"/>
+        <Link rel="manifest" href="/pkg/manifest.json" />
         <Link rel="icon" attr:type="image/ico" href="/pkg/favicon.ico" />
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-32x32.png" sizes="32x32" />
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-16x16.png" sizes="16x16" />
@@ -42,8 +45,10 @@ pub fn App() -> impl IntoView {
                             <Route path="process" view=ProcessView ssr=SsrMode::PartiallyBlocked>
                                 <Route path=":step/:example?" view=process::ProcessSwitchView/>
                             </Route>
-                            <Route path="projects" view=ProjectsView />
-                            <Route path="projects/:id" view=CaseView />
+                            <Route path="projects" view=ProjectsView>
+                                <Route path="" view=projects::ProjectsGridView />
+                                <Route path=":id" view=projects::CaseView />
+                            </Route>
                             <Route path="contact" view=ContactView />
                             <Route path="resume" view=ResumeView />
                             <Route path="links" view=LinksView />
