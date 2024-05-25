@@ -52,6 +52,7 @@ pub fn PictureModalView(
     #[prop(into)] src: MaybeSignal<String>,
     #[prop(into)] alt: MaybeSignal<String>,
     #[prop(into)] thumbnail_size: i32,
+    #[prop(into, optional)] thumbnail_class: MaybeSignal<String>,
 ) -> impl IntoView {
     let (show, set_show) = create_signal(false);
     let src = Signal::derive(move || src.get());
@@ -106,6 +107,7 @@ pub fn PictureModalView(
         <A
             href=move || src.get()
             on:click=on_click_thumbnail
+            class={thumbnail_class}
         >
             <img src=thumbnail_src alt=alt/>
         </A>
@@ -131,7 +133,7 @@ pub fn PictureModalView(
                     <PictureView
                         src=src
                         alt=alt
-                        attr:class="max-h-screen w-auto max-w-full"
+                        attr:class="max-h-screen w-auto max-w-full animate__animated animate__fadeInDown"
                         node_ref=target
                     />
                 </div>

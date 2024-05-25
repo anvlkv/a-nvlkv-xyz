@@ -1,6 +1,6 @@
 use leptos::*;
 
-use crate::app::{state::ExtendedProjectData, util::coalesce_translations, Language};
+use crate::app::{state::ExtendedProjectData, Language};
 
 /// returns project with id, in selected langugae
 #[server(GetProjectDetails, "/api")]
@@ -9,7 +9,7 @@ pub async fn get_project_details(
     id: String,
 ) -> Result<ExtendedProjectData, ServerFnError<String>> {
     use crate::{
-        app::state::WorkSheets,
+        app::{state::WorkSheets, util::coalesce_translations},
         server::{get_db_conn, xata_rest_builder},
     };
     use spin_sdk::{

@@ -139,7 +139,7 @@ pub fn ProjectItem(#[prop(into)] data: MaybeSignal<ProjectData>) -> impl IntoVie
             class="flex flex-col rounded-md shadow-sm bg-stone-200 dark:bg-stone-800 overflow-hidden hover:shadow-lg hover:scale-105"
         >
             <Show when=move || img.get().is_some()>
-                <img class="w-full aspect-square" alt={title} src={move || img.get().unwrap()}/>
+                <img class="w-40 aspect-square" alt={title} src={move || img.get().unwrap()}/>
             </Show>
             <h5 class="mx-4 mt-4 mb-2 font-bold text-lg">
                 {title}

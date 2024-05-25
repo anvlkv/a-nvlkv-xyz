@@ -40,7 +40,7 @@ pub fn CaseView() -> impl IntoView {
                     let alt = data.main_image_alt.unwrap_or(alt.clone());
 
                     view! {
-                        <div class="row-start-1 row-span-5 col-span-full">
+                        <div class="row-start-1 row-span-4 lg:row-span-5 lg:row-start-1 col-span-full">
                             <PictureView
                                 src
                                 alt
@@ -58,13 +58,12 @@ pub fn CaseView() -> impl IntoView {
                 .iter()
                 .map(|src| {
                     view! {
-                        <div class="row-auto overflow-hidden">
-                            <PictureModalView
-                                src=src.as_str()
-                                alt=alt.as_str()
-                                thumbnail_size=400
-                            />
-                        </div>
+                        <PictureModalView
+                            src=src.as_str()
+                            alt=alt.as_str()
+                            thumbnail_size=400
+                            thumbnail_class="row-auto m-4 overflow-hidden rounded shadow"
+                        />
                     }
                 })
                 .collect_view();
@@ -72,31 +71,60 @@ pub fn CaseView() -> impl IntoView {
             let gallery_span_rows = (data.images.len() as f32 / 2.0).ceil() as usize;
             let article_span_rows = data.article.len();
 
-            let (template_rows, gallery_span, article_span) = {
-                let max_span_rows = usize::max(article_span_rows, gallery_span_rows);
-                let rows = 5 + max_span_rows;
-
-                (
-                    format!("grid-template-rows: repeat({rows}, minmax(0, 20vh));"),
-                    format!("grid-row-start: 6; grid-row-end: {};", 6 + max_span_rows),
-                    format!(
-                        "grid-row-start: 5; grid-row-end: {};",
-                        5 + max_span_rows + 1
-                    ),
-                )
-            };
+            let max_span_rows = usize::max(article_span_rows, gallery_span_rows);
 
             leptos::error::Result::<View>::Ok(
                 view! {
                     <Title text={page_title}/>
-                    <div class="grid lg:grid-cols-2" style={template_rows}>
+                    <Style>
+                        {
+                            format!(r#"
+                            .case-grid {{
+                                grid-template-rows: repeat(5, minmax(0, 15vh)) repeat({}, 1fr);
+                            }}
+
+                            .article-grid {{
+                                grid-row-start: 5;
+                                grid-row-end: {};
+                            }}
+
+                            .aside-grid {{
+                                grid-row-start: {};
+                                grid-row-end: {};
+                            }}
+
+                            @media (min-width: 1024px) {{
+                                .case-grid {{
+                                    grid-template-rows: repeat(5, 19.5vh) repeat({max_span_rows}, 1fr);
+                                }}
+
+                                .article-grid {{
+                                    grid-row-start: 5;
+                                    grid-row-end: {};
+                                }}
+
+                                .aside-grid {{
+                                    grid-row-start: 6;
+                                    grid-row-end: {};
+                                }}
+                            }}
+                                "#,
+                                gallery_span_rows + article_span_rows,
+                                article_span_rows + 1 + 5,
+                                article_span_rows + 1 + 5,
+                                gallery_span_rows + article_span_rows + 1 + 5,
+                                5 + max_span_rows + 1,
+                                6 + max_span_rows
+                            )
+                        }
+                    </Style>
+                    <div class="case-grid grid grid-cols-1 lg:grid-cols-2">
                         {main_img}
                         <article
-                            class="grid grid-rows-subgrid lg:col-start-2 col-span-1 p-8 bg-stone-200 dark:bg-stone-800 shadow rounded-tl-xl"
-                            style={article_span}
+                            class="article-grid grid grid-rows-subgrid lg:col-start-2 col-span-1 p-8 bg-stone-200 dark:bg-stone-800 shadow lg:rounded-tl-xl"
                         >
-                            <div class="rows-span-1">
-                                <h3 class="text-lg">{data.title}</h3>
+                            <div class="row-span-1">
+                                <h3 class="text-xl">{data.title}</h3>
                                 <h3 class="text-md">{data.description}</h3>
                             </div>
                             {
@@ -106,8 +134,7 @@ pub fn CaseView() -> impl IntoView {
                             }
                         </article>
                         <aside
-                            class="grid grid-rows-subgrid grid-cols-2"
-                            style={gallery_span}
+                            class="aside-grid grid grid-rows-subgrid grid-cols-2 bg-stone-800 dark:bg-stone-200 shadow"
                         >
                             {extra_img}
                         </aside>
@@ -116,16 +143,52 @@ pub fn CaseView() -> impl IntoView {
                 .into_view(),
             )
         }
-        None => leptos::error::Result::<View>::Ok(().into_view()),
+        None => leptos::error::Result::<View>::Ok(CaseDummy.into_view()),
     };
 
     view! {
         <section class="w-screen">
-            <Transition>
+            <Transition fallback={CaseDummy}>
                 <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
                     {project_view}
                 </ErrorBoundary>
             </Transition>
         </section>
+    }
+}
+
+#[component]
+fn CaseDummy() -> impl IntoView {
+    view! {
+        <div class="case-grid grid grid-cols-1 grid-rows-[repeat(5,_19.5vh)_repeat(3,_1fr)] lg:grid-cols-2">
+            <div class="row-start-1 row-end-6 col-start-1 lg:col-end-3">
+                <div class="dummy-line w-full h-full bg-stone-400 dark:bg-stone-600 after:content-[' ']"></div>
+            </div>
+            <article
+                class="article-grid z-[1] row-span-4 row-start-5 grid grid-rows-subgrid lg:col-start-2 col-span-1 p-8 bg-stone-200 dark:bg-stone-800 shadow lg:rounded-tl-xl"
+            >
+                <div class="row-span-1">
+                    <div class="dummy-line w-40 rounded-sm mx-4 mb-4 bg-stone-300 dark:bg-stone-700 h-3 after:content-[' ']"></div>
+                    <div class="dummy-line w-40 rounded-sm mx-4 mb-4 bg-stone-300 dark:bg-stone-700 h-3 after:content-[' ']"></div>
+                </div>
+                <div class="row-span-1">
+                    <div class="dummy-line w-40 rounded-sm mx-4 mb-4 bg-stone-300 dark:bg-stone-700 h-3 after:content-[' ']"></div>
+                    <div class="dummy-line w-40 rounded-sm mx-4 mb-4 bg-stone-300 dark:bg-stone-700 h-3 after:content-[' ']"></div>
+                </div>
+                <div class="row-span-1">
+                    <div class="dummy-line w-40 rounded-sm mx-4 mb-4 bg-stone-300 dark:bg-stone-700 h-3 after:content-[' ']"></div>
+                    <div class="dummy-line w-40 rounded-sm mx-4 mb-4 bg-stone-300 dark:bg-stone-700 h-3 after:content-[' ']"></div>
+                </div>
+            </article>
+            <aside
+                class="aside-grid row-span-3 row-start-6 grid grid-rows-subgrid grid-cols-2 bg-stone-800 dark:bg-stone-200 shadow"
+            >
+                <div class="dummy-line row-auto m-4 overflow-hidden rounded shadow aspect-square bg-stone-400 dark:bg-stone-600 after:content-[' ']"></div>
+                <div class="dummy-line row-auto m-4 overflow-hidden rounded shadow aspect-square bg-stone-400 dark:bg-stone-600 after:content-[' ']"></div>
+                <div class="dummy-line row-auto m-4 overflow-hidden rounded shadow aspect-square bg-stone-400 dark:bg-stone-600 after:content-[' ']"></div>
+                <div class="dummy-line row-auto m-4 overflow-hidden rounded shadow aspect-square bg-stone-400 dark:bg-stone-600 after:content-[' ']"></div>
+                <div class="dummy-line row-auto m-4 overflow-hidden rounded shadow aspect-square bg-stone-400 dark:bg-stone-600 after:content-[' ']"></div>
+            </aside>
+        </div>
     }
 }
