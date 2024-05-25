@@ -1,6 +1,15 @@
 _version: 2
 
 util:
+  alt_fallback:
+    en: |
+      Image of %{title}
+    nl: |
+      Afbeelding van %{title}
+    ru: |
+      Изображение %{title}
+    ja: |
+      %{title}のイメージ
   on:
     en: On
     nl: Aan
@@ -216,8 +225,8 @@ landing:
     en: ""
     ru: ""
   p2_s1:
-    en: Problem solver, developer, designer, artist. Through this web app (a.nvlkv.xyz), I'm seeking to join projects that would benefit from my skills and experience.
-    ru: Находчивый, разработчик, дизайнер, художник. Через эту веб-приложение (a.nvlkv.xyz) я стремлюсь присоеднится к проектам, в которых будут полезны мои навыки и опыт.
+    en: Problem solver, developer, designer, artist. Through this web app (a.nvlkv.xyz), I'm seeking to meet projects that would benefit from my skills and experience.
+    ru: Находчивый, разработчик, дизайнер, художник. Через это веб-приложение (a.nvlkv.xyz) я хочу встретить проекты, которым будут полезны мои навыки и опыт.
   p2_s2:
     en: Enjoy the journey or take one of the shortcuts.
     ru: Насладитесь опытом или используйте одну из ссылок.

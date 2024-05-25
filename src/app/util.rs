@@ -19,7 +19,7 @@ pub fn coalesce_translations(table: &str, lang: &Language) -> String {
     )
 }
 
-pub fn transform_xata_image(url: &str, transform: HashMap<&'static str, &'static str>) -> String {
+pub fn transform_xata_image(url: &str, transform: HashMap<&str, &str>) -> String {
     let mut split = url.split(".xata.sh/");
     let base = split.next().unwrap();
     let id = split.next().unwrap();

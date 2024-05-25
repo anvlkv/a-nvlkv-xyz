@@ -28,5 +28,6 @@ pub struct ExtendedProjectData {
     pub article: Vec<String>,
     pub translation_warning: bool,
     pub main_image_url: Option<String>,
+    pub main_image_alt: Option<String>,
     pub images: Vec<String>,
 }

@@ -62,8 +62,6 @@ pub async fn get_projects(
         }
     );
 
-    println!("sql: {sql}");
-
     let params = vec![
         ParameterValue::Int64(count as i64),
         ParameterValue::Int64(offset as i64),
