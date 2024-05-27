@@ -1,13 +1,17 @@
 use leptos::*;
-use leptos_use::{storage::use_local_storage, use_preferred_dark, utils::JsonCodec};
+use leptos_use::{storage::use_storage, use_preferred_dark, utils::JsonCodec};
 
-use crate::app::components::{RvArtboardView, DARK_MODE_STORAGE};
+use crate::app::{
+    components::{RvArtboardView, DARK_MODE_STORAGE},
+    state::{use_store, StorageMode},
+};
 
 #[component]
-pub fn DarkModeToggleView() -> impl IntoView {
+pub fn DarkModeToggleView(#[prop(into)] storage_type: StorageMode) -> impl IntoView {
     let dark_preference = use_preferred_dark();
     let (dark_setting, set_dark_setting, del_dark_setting) =
-        use_local_storage::<Option<bool>, JsonCodec>(DARK_MODE_STORAGE);
+        use_storage::<Option<bool>, JsonCodec>((&storage_type).into(), DARK_MODE_STORAGE);
+    let store = use_store();
 
     let dark_mode = Signal::derive(move || {
         if let Some(setting) = dark_setting.get() {
@@ -18,8 +22,11 @@ pub fn DarkModeToggleView() -> impl IntoView {
     });
 
     let set_dark_mode = Callback::new(move |dark| {
+        let store = store.get();
         if dark == dark_preference.get() {
             del_dark_setting();
+        } else if store.storage_preference.get().is_none() {
+            store.show_privacy_prompt.set(true);
         } else {
             set_dark_setting.set(Some(dark));
         }

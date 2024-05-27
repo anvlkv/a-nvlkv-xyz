@@ -1,0 +1,50 @@
+_version: 2
+
+let_talk:
+  en: Let's speak
+  nl: Praten wij even
+  ru: Поговорим по
+  ja: 話しましょう。
+letters:
+  row_1:
+    en: Let's
+    nl: Laten wij
+    ru: Пусть
+    ja: "\n"
+  row_2:
+    en: get
+    nl: de dingen maken.
+    ru: всё
+    ja: ""
+  row_3:
+    en: things
+    nl: De dingen zijn
+    ru: будет
+    ja: 目標を
+  done:
+    en: Done
+    nl: Klaar
+    ru: Готово
+    ja: 完了
+landing:
+  p1_s1:
+    en: In the name of harmony and peace on planet Earth, may we communicate with each other in sincere, concise, and helpful ways. May we all live meaningful and fulfilling lives. May we get the most important work
+    ru: Ради гармонии и мира на Земле, пусть наша коммуникация будет искрення, лаконична и полезна. Пусть все мы живем значимой и полноценной жизнью. Пусть самую важную работу мы
+    nl:
+  p1_link:
+    en: done
+    nl: klaar
+    ru: выполним
+    ja: 完了
+  p1_s2:
+    en: with care and compassion.
+    ru: с заботой и пониманием.
+  p1_s3:
+    en: ""
+    ru: ""
+  p2_s1:
+    en: Problem solver, developer, designer, artist. Through this web app (a.nvlkv.xyz), I'm seeking to meet projects that would benefit from my skills and experience.
+    ru: Находчивый, разработчик, дизайнер, художник. Через это веб-приложение (a.nvlkv.xyz) я хочу встретить проекты, которым будут полезны мои навыки и опыт.
+  p2_s2:
+    en: Enjoy the journey or take one of the shortcuts.
+    ru: Насладитесь опытом или используйте одну из ссылок.

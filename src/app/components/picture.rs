@@ -125,7 +125,7 @@ pub fn PictureModalView(
                             e.prevent_default();
                             set_show.set(false);
                         }
-                        class="text-lg absolute top-10 right-10"
+                        class="text-lg absolute top-10 right-10 text-gray-50"
                         title=t!("util.close")
                     >
                         <IconView icon="Close"/>

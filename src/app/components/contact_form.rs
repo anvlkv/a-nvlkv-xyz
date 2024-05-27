@@ -1,6 +1,5 @@
 use leptos::*;
 
-
 #[component]
 pub fn ContactFormView() -> impl IntoView {
     view! {
@@ -10,13 +9,6 @@ pub fn ContactFormView() -> impl IntoView {
                 <p class="pb-4">{t!("contact.description")}</p>
             </div>
             <form class="flex flex-col">
-                <fieldset>
-                    <label>
-                        <p>{t!("contact.label_worksheets")}</p>
-                        <input type="checkbox"/>
-                    </label>
-                    <p>{t!("contact.disabled_worksheets")}</p>
-                </fieldset>
                 <label>
                     <p>{t!("contact.name.label")}</p>
                     <input placeholder={t!("contact.name.placeholder")}/>

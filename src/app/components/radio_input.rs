@@ -30,7 +30,7 @@ pub fn RadioInputView(
                         value.get().set(val);
                     }}
                     checked={move || value.get().get() == child.value}
-                    class="mt-2 scale-150"
+                    class="mt-2 ml-2 scale-150"
                 />
                 <div class="ml-4">
                     {child.label.into_view()}

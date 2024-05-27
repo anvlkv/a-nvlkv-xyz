@@ -3,10 +3,10 @@ use std::str::FromStr;
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
-use leptos_use::{storage::use_local_storage, utils::JsonCodec};
+use leptos_use::{storage::use_storage, utils::JsonCodec};
 use serde::{Deserialize, Serialize};
 
-use crate::app::state::use_store;
+use crate::app::state::{use_store, StorageMode};
 
 use super::*;
 
@@ -42,14 +42,7 @@ pub enum Language {
 #[component]
 pub fn LocalizedRootView() -> impl IntoView {
     let params = use_params::<LocalizeParams>();
-    let state = use_store();
-    let (dark_setting, _, _) = use_local_storage::<Option<bool>, JsonCodec>(DARK_MODE_STORAGE);
-
-    let dark_mode_class = Signal::derive(move || {
-        dark_setting
-            .get()
-            .map(|setting| if setting { "theme-dark" } else { "theme-light" }.to_string())
-    });
+    let store = use_store();
 
     let lang = Signal::derive(move || {
         Language::from_str(
@@ -66,7 +59,7 @@ pub fn LocalizedRootView() -> impl IntoView {
 
     create_isomorphic_effect(move |_| {
         let lang = lang.get();
-        state.update(move |s| s.lang = lang);
+        store.update(move |s| s.lang = lang);
     });
 
     let localized = move || {
@@ -80,14 +73,41 @@ pub fn LocalizedRootView() -> impl IntoView {
                 </div>
             </main>
             <FooterView/>
+            <PrivacyNoticeView/>
         }
     };
+
+    let storage_type = create_read_slice(store, |s| {
+        s.storage_preference.get().unwrap_or(StorageMode::None)
+    });
+
+    view! {
+        {move || {
+            let storage_type = storage_type.get();
+            view!{<ThemedHtml storage_type=storage_type lang=lang/>}
+        }}
+        {localized}
+    }
+}
+
+#[component]
+fn ThemedHtml(
+    #[prop(into)] lang: Signal<Language>,
+    #[prop(into)] storage_type: StorageMode,
+) -> impl IntoView {
+    let (dark_setting, _, _) =
+        use_storage::<Option<bool>, JsonCodec>((&storage_type).into(), DARK_MODE_STORAGE);
+
+    let dark_mode_class = Signal::derive(move || {
+        dark_setting
+            .get()
+            .map(|setting| if setting { "theme-dark" } else { "theme-light" }.to_string())
+    });
 
     view! {
         <Html
             lang={move || lang.get().to_string()}
             attr:class=dark_mode_class
         />
-        {localized}
     }
 }

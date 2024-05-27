@@ -19,6 +19,7 @@ pub fn StringInputView(
     #[prop(into, optional)] on_focus: Option<Callback<ev::FocusEvent>>,
     #[prop(into)] value: Signal<FormState<String>>,
     #[prop(into, optional)] autocomplete: MaybeSignal<Vec<String>>,
+    #[prop(attrs, optional)] attrs: Vec<(&'static str, Attribute)>,
 ) -> impl IntoView {
     let (autocomplete_options, set_autocomplete_options) = create_signal::<Vec<String>>(Vec::new());
     let (focused, set_focused) = create_signal(false);
@@ -161,6 +162,7 @@ pub fn StringInputView(
                 }
             }
             .node_ref(element)
+            .attrs(attrs)
             .attr("id", move || value.get().id.to_string())
             .attr("class", class)
             .attr("placeholder", placeholder)

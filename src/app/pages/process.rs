@@ -4,7 +4,7 @@ use leptos_router::*;
 use strum::VariantArray;
 
 use crate::app::{
-    components::{ErrorView, PrivacyNoticeView, Tab, WorksheetDummy, WorksheetView},
+    components::{ErrorView, Tab, WorksheetDummy, WorksheetView},
     process::*,
     projects::get_projects,
     state::{use_store, ProcessStep, ProjectData, SeqStep, StorageMode},
@@ -83,7 +83,6 @@ pub fn ProcessView() -> impl IntoView {
                 </Suspense>
             </div>
         </div>
-        <PrivacyNoticeView/>
     }
 }
 

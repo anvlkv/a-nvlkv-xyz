@@ -1,0 +1,237 @@
+_version: 2
+
+about:
+  title:
+    en: Let's get things done.
+    nl: Laten wij de dingen maken. De dingen zijn klaar.
+    ru: Пусть всё будет готово.
+    ja: 目標を完了。
+  description_1:
+    en: |
+      Whenever we are doing our work we shape our future and that of others.
+      Whether we have such intention or even a particular outcome in mind the future never comes out exactly the way it was intended; reality takes place.
+      But as some wise people say “it's not the dots but the arrows that matter” therefore, may we look forward to the journey and not a destination.
+  description_2:
+    en: |
+      The app will guide you through a 5 step process of getting from problems to testable solutions.
+      Each step is an interactive worksheet with examples.
+      Complete the workbook on your own or in collaboration with others.
+  cta:
+    en: Get started
+    ru: Начать
+    nl: Ga aan de slag
+    ja: 始めましょう
+  s_1:
+    title:
+      en: The problem
+    description:
+      en: Falling in love with the right problem for all the right reasons.
+  s_2:
+    title:
+      en: Solutions
+    description:
+      en: Dreaming big and quick.
+  s_3:
+    title:
+      en: Compromise
+    description:
+      en: The reality check. What We Must Do Now?
+  s_4:
+    title:
+      en: Implement
+    description:
+      en: Lovingly crafting artifacts.
+  s_5:
+    title:
+      en: Test & Iterate
+    description:
+      en: Learn, celebrate, and fearlesly start over.
+worksheets:
+  example:
+    en: "Example: %{title}"
+  view_example:
+    en: "Learn more about the %{title}"
+  wk:
+    en: Worksheet
+  prev_wk:
+    en: Back to worksheet
+  prev_ex:
+    en: Back to example
+  next_wk:
+    en: Complete the worksheet
+  next_ex:
+    en: View next example
+  problem:
+    example_title:
+      en: The problem of “%{title}”
+    title:
+      en: The problem
+    empty:
+      en: Define the problem statement first
+    description:
+      en: |
+        Finding the right problem means getting out of the comfort zone, accepting that different people may have different stakes in it, looking far out as well as deep within.
+    instruction_1:
+      en: |
+        List any problems that come to mind in one column.
+        List stakeholders affected by those problems in the second column.
+    label_problems:
+      en: Problem
+    label_stakeholders:
+      en: Stakeholder
+    placeholder_problem:
+      en: |
+        For example: Environmental pollution
+    placeholder_stakeholders:
+      en: |
+        For example: Ecosystems
+    add_problem:
+      en: Add a problem
+    add_stakeholder:
+      en: Add a stakeholder
+    instruction_2:
+      en: |
+        Make one problem statement.
+        It should describe the most important problem or a combination of problems from your list, which stakeholders it affects and how.
+    placeholder_2:
+      en: |
+        For example: Because of the "Problem A" the "Stakeholder B" experiences "Undesirable effects C"
+    label_statement:
+      en: Problem statement
+  solutions:
+    example_title:
+      en: Solutions for “%{title}”
+    title:
+      en: Solutions
+    description:
+      en: |
+        What are possible solutions to the problem?
+        Avoid thinking of limitations, or whether you're going to implement it, whether it's even possible.
+        The only criteria for solutions at this step is it must solve the problem.
+    instruction:
+      en: |
+        Looking at your problem statement.
+        List all solutions that come to mind.
+        Go for quantity.
+        Dream.
+    label_solutions:
+      en: How might we solve the problem?
+    add_solution:
+      en: Add a solution
+    placeholder_solution:
+      en: |
+        For example: Incentivise positive impact over revenue
+  compromise:
+    example_title:
+      en: Compromise of “%{title}”
+    title:
+      en: Compromise
+    description:
+      en: |
+        Every solution comes to oneself and those around with costs and uncertainty.
+        Costs beyond monetary or time and effort.
+        Every path brings its learnings.
+    instruction_1:
+      en: |
+        Looking at each solution, ask yourself:
+        What can you learn from bringing this solution to life?
+        Does it benefit the stakeholders?
+        Does it place any burden on other stakeholders?
+        Select one or two that will get you the best insight at the smallest cost and uncertainty.
+    label_solutions:
+      en: Solutions
+    label_stakeholders:
+      en: Stakeholders
+    instruction_2:
+      en: |
+        Describe the research to be done on an implemented solution. Answer the questions:
+        How will you find out if the solution is not working?
+        How can you get insight from the stakeholders?
+        How can you keep your heart open to new stakeholders?
+    label_question:
+      en: Research design note
+  implement:
+    example_title:
+      en: Implementation of “%{title}”
+    title:
+      en: Implement
+    description_1:
+      en: |
+        Depending on the scale and your research question it is important to choose the right means and scope for delivering the solution.
+        The fidelity can be anything: paper prototype, service prototype, mockup, interactive prototype, a coded prototype, phone call or presentation, limited release of software, etc.
+    description_2:
+      en: |
+        May the outcome of this step guide your choice of tools, features, and approaches when crafting the solution.
+    instruction:
+      en: |
+        List the most important distinct features of your solution.
+        Place the features in two sections: “Now” and “Best”.
+    label_col_1:
+      en: Now
+    label_col_2:
+      en: Best
+    hint_col_1:
+      en: How does the solution solve the problem?
+    hint_col_2:
+      en: What makes it the most efficient?
+  iterate:
+    example_title:
+      en: Tests & Iterations of “%{title}”
+    title:
+      en: Test & Iterate
+    description:
+      en: |
+        Keep your artifacts everevolving.
+        Have invested in crafting an artifact we can now collect our tangible returns:
+        all the positive impact we've had, all the research findings.
+    instruction_1:
+      en: Run your artifact, gather data, answer the research question.
+    instruction_2:
+      en: Celebrate all the positive impact your artifact have brought!
+    instruction_3:
+      en: In a constructive way digest what you've learned.
+    instruction_4:
+      en: With all the new insight, fearlesly start over.
+  inquire:
+    title:
+      en: Inquire
+    description:
+      en: |
+        Completed these worksheets I invite you to:
+        - Get preliminary evaluation with AI, which may inspire a new iteration on its own.
+        - Get me involved. Ask questions, share your thoughts, and workshets.
+    instruction_1:
+      en: Select one of the options to get an answer from AI
+    inquery_1:
+      en: |
+        Following the process for the first time or using it on a new topic.
+        Find common mistakes, get feedback.
+    inquery_2:
+      en: |
+        Concerned about the scope and timeframe of an iteration.
+        Find the right balance. Create contained but measurable impact.
+    inquery_3:
+      en: |
+        Intricate topic. Learn how to mitigate risks while still answering your research question.
+        Deliver ethical design.
+    inquery_4:
+      en: Create your own prompt. Ask different.
+    instruction_2:
+      en: |
+        Receive personalized feedback. Ask any questions.
+        Share the worksheets along with any other background information you'd like me to know.
+stepper:
+  about:
+    en: About
+  problem:
+    en: Problem
+  solution:
+    en: Solutions
+  compromise:
+    en: Compromise
+  implement:
+    en: Implement
+  iterate:
+    en: Test & Iterate
+  inquire:
+    en: Inquire

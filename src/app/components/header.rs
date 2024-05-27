@@ -1,7 +1,11 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::app::{components::DarkModeToggleView, use_lang};
+use crate::app::{
+    components::DarkModeToggleView,
+    state::{use_store, StorageMode},
+    use_lang,
+};
 
 #[component]
 pub fn HeaderView() -> impl IntoView {
@@ -9,6 +13,7 @@ pub fn HeaderView() -> impl IntoView {
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let navigate = use_navigate();
     let lang = use_lang();
+    let store = use_store();
 
     let title = move || {
         let lang = format!("/{}", lang.get());
@@ -64,12 +69,23 @@ pub fn HeaderView() -> impl IntoView {
         }
     };
 
+    let storage_type = create_read_slice(store, |s| {
+        s.storage_preference.get().unwrap_or(StorageMode::None)
+    });
+
+    let toggle = move || {
+        let storage_type = storage_type.get();
+        view! {
+            <div class="order-last md:z-[0] md:order-none md:-ml-8 lg:-ml-16 md:w-full md:absolute max-w-screen-2xl flex md:justify-center items-center">
+                <DarkModeToggleView storage_type=storage_type/>
+            </div>
+        }
+    };
+
     view! {
         <header class="flex justify-center bg-stone-100 dark:bg-stone-900 shadow-sm">
             <div class="relative max-w-screen-2xl text-xl w-full px-6 md:px-8 lg:px-16 py-3 flex flex-wrap justify-between grow shrink-0">
-                <div class="order-last md:z-[0] md:order-none md:-ml-8 lg:-ml-16 md:w-full md:absolute max-w-screen-2xl flex md:justify-center items-center">
-                    <DarkModeToggleView/>
-                </div>
+                {toggle}
                 {title}
                 <div class="md:z-[1] flex flex-wrap gap-2">
                     <A class="underline hover:text-purple-800 active:text-purple-950" exact=true href={move || format!("/{}/contact", lang.get())} >{ t!("let_talk") }</A>

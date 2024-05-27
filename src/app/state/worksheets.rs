@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use super::{Contact, ContactFormState};
+
 #[derive(FormState, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WorkSheets {
     #[nested]
@@ -79,8 +81,9 @@ pub struct IterateWK {
 
 #[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InquireWK {
-    pub name: String,
-    pub email: String,
-    pub message: String,
-    pub include_worksheets: bool,
+    pub inquery_option: String,
+    pub custom_prompt: String,
+    pub personalized: bool,
+    #[nested]
+    pub contact: Contact,
 }
