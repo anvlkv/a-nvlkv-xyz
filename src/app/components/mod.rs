@@ -1,4 +1,5 @@
 mod assets;
+mod button;
 mod checkbox_input;
 mod contact_form;
 mod dark_mode_toggle;
@@ -18,6 +19,7 @@ mod undo_remove;
 mod worksheet;
 
 pub use assets::*;
+pub use button::*;
 pub use checkbox_input::*;
 pub use contact_form::*;
 pub use dark_mode_toggle::*;

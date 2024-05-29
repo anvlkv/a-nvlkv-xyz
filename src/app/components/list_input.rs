@@ -3,7 +3,7 @@ use leptos::*;
 use leptos_use::use_event_listener;
 use uuid::Uuid;
 
-use crate::app::components::{IconView, StringInputView};
+use crate::app::components::{ButtonView, IconView, StringInputView};
 
 #[component]
 pub fn ListInputView(
@@ -32,7 +32,7 @@ pub fn ListInputView(
 
     let element = create_node_ref::<html::Div>();
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
-    let button_element = create_node_ref::<html::Input>();
+    let button_element = create_node_ref::<html::AnyElement>();
 
     let is_multiline = input_type == "textarea".to_string();
 
@@ -74,7 +74,7 @@ pub fn ListInputView(
             let element = element.as_deref();
 
             if e.related_target()
-                .map(|t| t.dyn_ref::<web_sys::HtmlInputElement>().as_deref() == element)
+                .map(|t| t.dyn_ref::<web_sys::HtmlElement>().as_deref() == element)
                 .unwrap_or(false)
             {
                 e.prevent_default();
@@ -87,6 +87,8 @@ pub fn ListInputView(
     on_cleanup(move || {
         cleanup_listener();
     });
+
+    let add_entry_text = Signal::derive(move || add_entry_text.get());
 
     view! {
         <div class="flex flex-col" node_ref=element>
@@ -110,10 +112,17 @@ pub fn ListInputView(
                 </For>
             </ol>
             <div class="contents">
-                <input attr:type="button" class="px-2 py-1 mt-4 mx-8 lg:mx-15 xl:mx-20 md:px-3 md:py-2 md:min-w-28 rounded-full bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-2 border-solid border-purple-800 drop-shadow-sm text-purple-700 font-bold" value={add_entry_text} on:click={move |e| {
-                    e.prevent_default();
-                    on_add()
-                }} node_ref={button_element}/>
+                <ButtonView
+                    cta=1
+                    attr:class="mt-4 mx-8 lg:mx-15 xl:mx-20 md:px-3 md:py-2 md:min-w-28"
+                    on:click={move |e| {
+                        e.prevent_default();
+                        on_add()
+                    }}
+                    node_ref={button_element}
+                >
+                    {add_entry_text}
+                </ButtonView>
             </div>
         </div>
     }

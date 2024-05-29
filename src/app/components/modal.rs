@@ -1,6 +1,6 @@
 use leptos::*;
 
-use crate::app::STYLED_ROOT;
+use crate::app::{components::ButtonView, STYLED_ROOT};
 
 #[component]
 pub fn ModalView(
@@ -32,8 +32,19 @@ pub fn ModalView(
                         {children_view}
                         <hr class="border-t border-slate-400 mt-8 mb-4"/>
                         <div class="flex w-full justify-end">
-                            <button class="mr-4 px-2 py-1 md:px-3 md:py-2 md:min-w-28 rounded-full bg-purple-900 hover:bg-purple-800 text-stone-100 active:bg-purple-950 border-2 border-solid border-slate-50 drop-shadow-sm" on:click={move |_| on_resolve.call(true)}>{t!("util.ok")}</button>
-                            <button class="px-2 py-1 md:px-3 md:py-2 md:min-w-28 rounded-full bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-2 border-solid border-slate-50 drop-shadow-sm" on:click={move |_| on_resolve.call(false)}>{t!("util.cancel")}</button>
+                            <ButtonView
+                                attr:class="mr-4 min-w-18 md:min-w-28"
+                                on:click={move |_| on_resolve.call(true)}
+                                cta=2
+                            >
+                                {t!("util.ok")}
+                            </ButtonView>
+                            <ButtonView
+                                attr:class="min-w-18 md:min-w-28"
+                                on:click={move |_| on_resolve.call(false)}
+                            >
+                                {t!("util.cancel")}
+                            </ButtonView>
                         </div>
                     </div>
                 </div>

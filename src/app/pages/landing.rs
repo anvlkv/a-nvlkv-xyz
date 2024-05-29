@@ -2,7 +2,10 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
-use crate::app::{components::RvArtboardView, use_lang};
+use crate::app::{
+    components::{ButtonSize, ButtonView, RvArtboardView},
+    use_lang,
+};
 
 /// step 0
 #[component]
@@ -12,7 +15,7 @@ pub fn LandingView() -> impl IntoView {
     #[allow(unused_variables)]
     let (button_height, set_button_height) = create_signal::<f64>(0.0);
 
-    let button_element: NodeRef<html::Span> = create_node_ref();
+    let button_element: NodeRef<html::AnyElement> = create_node_ref();
 
     #[cfg(any(feature = "hydrate", feature = "csr"))]
     {
@@ -70,30 +73,25 @@ pub fn LandingView() -> impl IntoView {
                         fit="fitHeight"
                         alignment="bottomCenter"
                     />
-                    <A
-                        id="the-done-button"
-                        attr:type="button"
-                        attr:class="contents"
-                        href={move || format!("/{}/process/0", lang.get())}
+                    <ButtonView
+                        cta=2
+                        size=ButtonSize::Xl
+                        attr:id="the-done-button"
+                        attr:class="mt-4 block md:mt-8 md:mb-4 mx-auto shrink-0"
+                        link=Signal::derive(move || format!("/{}/process/0", lang.get()))
+                        on:pointerover={move |_| {
+                            pointer_cb.call(true)
+                        }}
+                        on:pointerenter={move |_| {
+                            pointer_cb.call(true)
+                        }}
+                        on:pointerleave={move |_| {
+                            pointer_cb.call(false)
+                        }}
+                        node_ref=button_element
                     >
-                        <span
-                            node_ref=button_element
-                            on:pointerover={move |_| {
-                                pointer_cb.call(true)
-                            }}
-                            on:pointerenter={move |_| {
-                                pointer_cb.call(true)
-                            }}
-                            on:pointerleave={move |_| {
-                                pointer_cb.call(false)
-                            }}
-                            class={
-                                "mt-4 block md:mt-8 md:mb-4 mx-auto shrink-0 px-10 md:px-16 py-2 lg:px-20 lg:py-3 2xl:px-24 2xl:py-6 rounded-full bg-purple-900 text-stone-100 border-4 border-solid border-slate-50 drop-shadow-md text-center"
-                            }
-                        >
-                            {t!("letters.done")}
-                        </span>
-                    </A>
+                        {t!("letters.done")}
+                    </ButtonView>
                     <div class="flex flex-col mt-24 min-w-32 items-stretch self-center whitespace-nowrap">
                         <span class="px-16">{t!("letters.row_1")}</span>
                         <span class="px-16 text-right">{t!("letters.row_2")}</span>

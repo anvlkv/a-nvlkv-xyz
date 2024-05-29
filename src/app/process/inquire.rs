@@ -1,16 +1,31 @@
 use leptos::*;
 use leptos_meta::*;
 
-use crate::app::components::{
-    use_wk_ctx, use_wk_state, CheckboxInputView, CheckedOption, DescriptionView, RadioInputView,
-    StringInputView, WorksheetHeader,
+use crate::app::{
+    components::{
+        use_wk_ctx, use_wk_state, ButtonSize, ButtonView, CheckboxInputView, CheckedOption,
+        DescriptionView, IconView, RadioInputView, StringInputView, WorksheetHeader,
+    },
+    process::inquire_personal,
+    state::WorkSheets,
 };
+
+use super::inquire_inferrence;
 
 /// step 7
 #[component]
 pub fn InquireView() -> impl IntoView {
     let state = use_wk_state();
     let wk_ctx = use_wk_ctx();
+    let (inquery_in_progress, set_inquery_in_progress) = create_signal(false);
+    let inquire_action = create_action(|wk: &WorkSheets| {
+        let wk = wk.clone();
+        async move { inquire_inferrence(wk).await }
+    });
+    let inquire_perssonal_action = create_action(|wk: &WorkSheets| {
+        let wk = wk.clone();
+        async move { inquire_personal(wk).await }
+    });
 
     let prompt_option = Signal::derive(move || state.get().inquire.get().inquery_option.clone());
     let show_prompt_input =
@@ -52,6 +67,17 @@ pub fn InquireView() -> impl IntoView {
     let contact_message =
         Signal::derive(move || state.get().inquire.get().contact.get().message.clone());
 
+    let on_submit = Callback::new(move |_| {
+        set_inquery_in_progress.set(true);
+
+        let inquery = state.get().inquire.get().get();
+        let wk = state.get().get();
+        if inquery.personalized {
+            inquire_perssonal_action.dispatch(wk.clone());
+        }
+        inquire_action.dispatch(wk);
+    });
+
     view! {
         <Title text={move || format!("{} | {}", t!("contact.title"), t!("name"))}/>
         <WorksheetHeader
@@ -67,7 +93,7 @@ pub fn InquireView() -> impl IntoView {
                     {t!("worksheets.inquire.description")}
                 </p>
             </DescriptionView>
-            <form>
+            <form on:submit=move |_| on_submit.call(())>
                 <div class="max-w-prose mb-4 whitespace-pre-line">
                     <p>{t!("worksheets.inquire.instruction_1")}</p>
                 </div>
@@ -112,6 +138,15 @@ pub fn InquireView() -> impl IntoView {
                         />
                     </label>
                 </Show>
+                <ButtonView
+                    cta=2
+                    size=ButtonSize::Lg
+                    attr:type="submit"
+                    on:click=move |_| on_submit.call(())
+                >
+                    <IconView icon="Send"/>
+                    {t!("worksheets.inquire.cta")}
+                </ButtonView>
             </form>
         </div>
     }

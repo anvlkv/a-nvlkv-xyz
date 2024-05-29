@@ -32,6 +32,7 @@ environment = { RUST_LOG = "spin=trace,a-nvlkv-xyz=trace" }
 source = "target/wasm32-wasi/debug/a_nvlkv_xyz.wasm"
 allowed_outbound_hosts = ["*://*.xata.sh:*"]
 key_value_stores = ["default"]
+ai_models = ["llama2-chat"]
 [component.a-nvlkv-xyz.build]
 # release
 # command = "LEPTOS_TAILWIND_VERSION=v3.4.3 LEPTOS_SASS_VERSION=1.77.2 cargo leptos build --release && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --release --no-default-features --features ssr"

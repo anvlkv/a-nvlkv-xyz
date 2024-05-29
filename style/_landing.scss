@@ -1,9 +1,7 @@
 $gradient: radial-gradient(ellipse 180% 10% at 50% 100%, #a855f7, transparent);
 
 #the-done-button {
-    > span {
-        background: $gradient, #581c87;
-    }
+    background: $gradient, #581c87;
 
     &,
     & + div > span {
@@ -22,12 +20,10 @@ $gradient: radial-gradient(ellipse 180% 10% at 50% 100%, #a855f7, transparent);
     }
 
     &:hover {
-        > span {
-            background: $gradient, #5b21b6;
+        background: $gradient, #5b21b6;
 
-            @include dark-mode {
-                background: $gradient, #2e1065;
-            }
+        @include dark-mode {
+            background: $gradient, #2e1065;
         }
 
         & + div > span {
@@ -37,15 +33,13 @@ $gradient: radial-gradient(ellipse 180% 10% at 50% 100%, #a855f7, transparent);
     }
 
     &:active {
-        > span {
-            background: $gradient, #5b21b6;
+        background: $gradient, #5b21b6;
 
-            @include dark-mode {
-                background: $gradient, #2e1065;
-            }
-
-            box-shadow: inset 0 0.1em 1em rgba(black, 0.75);
+        @include dark-mode {
+            background: $gradient, #2e1065;
         }
+
+        box-shadow: inset 0 0.1em 1em rgba(black, 0.75);
     }
 }
 

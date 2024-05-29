@@ -3,7 +3,7 @@ use leptos_router::*;
 use strum::VariantArray;
 
 use crate::app::{
-    components::{IconView, RvArtboardView},
+    components::{ButtonView, IconView, RvArtboardView},
     state::{use_store, ProcessStep, SeqStep},
     use_lang,
 };
@@ -98,8 +98,8 @@ pub fn StepperView() -> impl IntoView {
 
     view! {
         <aside class="flex flex-wrap lg:flex-nowrap flex-col md:justify-stretch items-stretch lg:items-center xl:items-stretch md:flex-row xl:flex-col pt-4 mx-4 xl:pt-0 xl:pr-4 xl:ml-0 xl:mr-4 xl:my-12 border-t-2 xl:border-t-0 xl:border-r-2 border-solid border-slate-400">
-            <button
-                class="md:basis-5/12 md:max-lg:ml-0 md:max-lg:mr-auto lg:basis-auto mb-2 xl:mb-4 px-2 py-1 md:px-3 md:py-2 md:min-w-28 rounded-full bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-2 border-solid border-slate-50 drop-shadow-sm"
+            <ButtonView
+                attr:class="md:basis-5/12 md:max-lg:ml-0 md:max-lg:mr-auto lg:basis-auto mb-2 xl:mb-4"
                 on:click={on_prev}
                 disabled={prev_button_disabled}
                 attr:title=prev_button_text
@@ -112,9 +112,10 @@ pub fn StepperView() -> impl IntoView {
                 >
                     <IconView icon="Prev"/>
                 </Show>
-            </button>
-            <button
-                class="md:basis-5/12 md:max-lg:ml-auto md:max-lg:mr-0 lg:basis-auto lg:order-last mb-2 xl:mb-4 px-2 py-1 md:px-3 md:py-2 md:min-w-28 rounded-full bg-purple-900 hover:bg-purple-800 text-stone-100 active:bg-purple-950 border-2 border-solid border-slate-50 drop-shadow-sm"
+            </ButtonView>
+            <ButtonView
+                cta=2
+                attr:class="md:basis-5/12 md:max-lg:ml-auto md:max-lg:mr-0 lg:basis-auto lg:order-last mb-2 xl:mb-4"
                 on:click={on_next}
                 disabled={next_button_disabled}
                 attr:title=next_button_text
@@ -127,7 +128,7 @@ pub fn StepperView() -> impl IntoView {
                 >
                     <IconView icon="Next"/>
                 </Show>
-            </button>
+            </ButtonView>
             <ol class="md:basis-full md:max-xl:mx-auto lg:basis-auto lg:shrink lg:order-2 xl:order-first flex flex-col flex-wrap sm:flex-row xl:flex-col justify-center xl:gap-4 xl:mb-4">
                 <For
                     each=move || ProcessStep::VARIANTS.into_iter()

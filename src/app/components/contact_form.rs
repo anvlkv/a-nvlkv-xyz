@@ -1,5 +1,7 @@
 use leptos::*;
 
+use crate::app::components::ButtonView;
+
 #[component]
 pub fn ContactFormView() -> impl IntoView {
     view! {
@@ -21,7 +23,9 @@ pub fn ContactFormView() -> impl IntoView {
                     <p>{t!("contact.message.label")}</p>
                     <textarea placeholder={t!("contact.message.placeholder")}/>
                 </label>
-                <button type="submit">{t!("contact.send")}</button>
+                <ButtonView attr:type="submit">
+                    {t!("contact.send")}
+                </ButtonView>
             </form>
         </div>
     }
