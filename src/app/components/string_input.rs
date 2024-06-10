@@ -13,6 +13,7 @@ const AUTOCOMPLETE_OPTION: &str = "_autocomplete-option";
 pub fn StringInputView(
     #[prop(into)] input_type: String,
     #[prop(into, optional)] placeholder: MaybeSignal<String>,
+    #[prop(into, optional)] disabled: MaybeSignal<bool>,
     #[prop(into, optional)] class: MaybeSignal<String>,
     #[prop(into, optional)] auto_focus: MaybeSignal<bool>,
     #[prop(into, optional)] on_blur: Option<Callback<ev::FocusEvent>>,
@@ -147,7 +148,7 @@ pub fn StringInputView(
     });
 
     let class = move || {
-        format!("w-full px-4 py-2 rounded border border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 text-lg focus:outline-purple-400 focus:outline {}", class.get())
+        format!("w-full px-4 py-2 rounded border border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 text-lg focus:outline-purple-400 focus:outline {} {}", if disabled.get() { "pointer-events-none contrast-50 saturate-50" } else {""}, class.get())
     };
 
     div()
@@ -156,13 +157,16 @@ pub fn StringInputView(
             match input_type.as_str() {
                 "textarea" => textarea().child(value_src.get_untracked()).into_any(),
                 "text" | "url" | "date" | "time" | "week" | "datetime-local" | "password"
-                | "email" | "tel" | "search" | "color" => input().into_any(),
+                | "email" | "tel" | "search" | "color" => {
+                    input().attr("type", input_type.clone()).into_any()
+                }
                 _ => {
                     unreachable!("input type {input_type} not supported")
                 }
             }
             .node_ref(element)
             .attrs(attrs)
+            .attr("disabled", disabled)
             .attr("id", move || value.get().id.to_string())
             .attr("class", class)
             .attr("placeholder", placeholder)

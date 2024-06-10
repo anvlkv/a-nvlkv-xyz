@@ -51,7 +51,7 @@ pub fn WorksheetHeader(
                         <button
                             on:click={move |_| toggle_description_hidden.call(())}
                             title=t!("util.info")
-                            class="-mb-0.5 text-sky-800 dark:text-sky-200"
+                            class="-mb-px text-sky-800 dark:text-sky-200"
                         >
                             <IconView icon="Info"/>
                         </button>

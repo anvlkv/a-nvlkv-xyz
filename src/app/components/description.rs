@@ -12,7 +12,7 @@ pub fn DescriptionView(
 ) -> impl IntoView {
     let class = move || {
         format!(
-            "flex items-start mb-3 rounded-lg max-w-prose lg:w-fit p-4 {} text-lg",
+            "flex items-start -ml-4 mb-3 rounded-lg max-w-prose lg:w-fit p-4 {} text-lg",
             if alternative.get() {
                 "bg-emerald-200 dark:bg-emerald-950 border border-emerald-400 dark:brder-emerald-800 text-emerald-800 dark:text-emerald-200"
             } else {

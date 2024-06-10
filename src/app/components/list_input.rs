@@ -185,7 +185,7 @@ fn ListItemView(
                 tabindex="2"
                 on:click={on_remove}
                 title=t!("util.delete")
-                class="grow-0 shrink-0 px-4 pb-0.5 border border-l-0 border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 hover:text-red-600 dark:hover:text-red-600 text-lg focus:outline-purple-400 focus:outline rounded-r-full"
+                class="grow-0 shrink-0 px-4 pb-0.5 border border-l-0 border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 hover:text-red-600 dark:hover:text-red-600 text-xs focus:outline-purple-400 focus:outline rounded-r-full"
             >
                 <IconView icon="Delete"/>
             </button>

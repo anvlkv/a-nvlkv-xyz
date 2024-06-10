@@ -26,7 +26,6 @@ pub fn ProcessSwitchView() -> impl IntoView {
                                 2 => ExampleSolutionView.into_view(),
                                 3 => ExampleCompromiseView.into_view(),
                                 4 => ExampleImplementView.into_view(),
-                                5 => ExampleIterateView.into_view(),
                                 _ => AboutView.into_view()
                             }
                         }

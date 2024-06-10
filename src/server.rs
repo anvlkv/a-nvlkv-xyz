@@ -22,6 +22,7 @@ async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
     register_explicit::<crate::app::projects::GetProjects>();
     register_explicit::<crate::app::projects::GetProjectDetails>();
     register_explicit::<crate::app::process::InquireInferrence>();
+    register_explicit::<crate::app::process::InquirePersonal>();
 
     let app = crate::app::App;
 

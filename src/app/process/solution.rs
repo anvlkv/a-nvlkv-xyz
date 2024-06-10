@@ -8,24 +8,24 @@ use form_signal::FormState;
 
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView,
-        ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
+        use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
+        HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
     },
     process::FixedProblemStatement,
-    state::ProcessStep,
+    state::{Completenes, ProcessStep},
     tabs_signal, use_lang,
 };
 
 /// step 3
 #[component]
 pub fn SolutionView() -> impl IntoView {
-    let state = use_wk_state();
+    let wk_state = use_wk_state();
     let wk_ctx = use_wk_ctx();
 
     let solution_delete_history = create_rw_signal(vec![]);
 
     let solutions_data = Signal::derive(move || {
-        state
+        wk_state
             .get()
             .solutions
             .try_get()
@@ -35,20 +35,20 @@ pub fn SolutionView() -> impl IntoView {
     let solutions_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
-        state.get().solutions.update(move |p| {
+        wk_state.get().solutions.update(move |p| {
             p.solutions.insert(index.unwrap_or(p.solutions.len()), next);
         });
         id
     };
     let solutions_value_remove = move |id: Uuid| {
-        state.get().solutions.update(move |p| {
+        wk_state.get().solutions.update(move |p| {
             let i = p.solutions.iter().position(|v| v.id == id).unwrap();
             let removed = p.solutions.remove(i).get_untracked();
             solution_delete_history.update(|h| h.push((removed, i, Instant::now())));
         })
     };
     let solution_restore = move |(val, at, _): HistoryEntry<String>| {
-        state.get().solutions.update(move |p| {
+        wk_state.get().solutions.update(move |p| {
             if p.solutions.len() >= at {
                 p.solutions.insert(at, FormState::new(val));
             } else {
@@ -58,6 +58,8 @@ pub fn SolutionView() -> impl IntoView {
     };
 
     let tabs = tabs_signal(ProcessStep::Solution);
+
+    let disable_cta = Signal::derive(move || !wk_state.get().solutions.get().get().is_complete());
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.solutions.title"), t!("process.title"), t!("name"))}/>
@@ -94,6 +96,15 @@ pub fn SolutionView() -> impl IntoView {
                     />
                 </div>
             </form>
+            <div class="flex w-full mt-8 justify-center">
+                <ButtonView
+                    cta=2
+                    size=ButtonSize::Lg
+                    disabled={disable_cta}
+                >
+                    {t!("worksheets.solutions.cta")}
+                </ButtonView>
+            </div>
         </div>
         <UndoRemove
             history=solution_delete_history
@@ -154,8 +165,10 @@ pub fn ExampleSolutionView() -> impl IntoView {
                     <p>{t!("worksheets.solutions.instruction")}</p>
                 </div>
                 <ReadOnlyView
-                    value=problem_statement
-                />
+                    label=t!("worksheets.problem.label_statement").to_string()
+                >
+                    {problem_statement}
+                </ReadOnlyView>
                 <div class="grid">
                     <h4 class="text-center text-xl mb-4">
                         {t!("worksheets.solutions.label_solutions")}

@@ -17,6 +17,7 @@ pub enum Icon {
     Restore,
     Send,
     Worksheet,
+    Download,
 }
 
 #[component]

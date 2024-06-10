@@ -16,7 +16,7 @@ pub fn FooterView() -> impl IntoView {
                 <A class="hover:underline hover:text-purple-800 active:text-purple-950" exact=true href={move || format!("/{}/links", lang.get())}>{ t!("menu.links") }</A>
                 <A class="hover:underline hover:text-purple-800 active:text-purple-950" exact=true href={move || format!("/{}/contact", lang.get())}>{ t!("menu.contact") }</A>
             </nav>
-            <small class="text-sm my-8">{"© a.nvlkv 2024"}</small>
+            <small class="text-sm my-8 text-center">{"© a.nvlkv 2024"}</small>
         </footer>
     }
 }

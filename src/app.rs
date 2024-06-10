@@ -43,6 +43,7 @@ pub fn App() -> impl IntoView {
                         <Route path=":lang" view=LocalizedRootView>
                             <Route path="" view=LandingView/>
                             <Route path="process" view=ProcessView ssr=SsrMode::PartiallyBlocked>
+                                <Route path="download" view=process::WorksheetsDownload/>
                                 <Route path=":step/:example?" view=process::ProcessSwitchView/>
                             </Route>
                             <Route path="projects" view=ProjectsView>

@@ -8,6 +8,7 @@ mod send_inquery;
 mod solution;
 mod stepper;
 mod switch;
+mod wk_download;
 
 pub use about::*;
 pub use compromise::*;
@@ -19,3 +20,4 @@ pub use send_inquery::*;
 pub use solution::*;
 pub use stepper::*;
 pub use switch::*;
+pub use wk_download::*;

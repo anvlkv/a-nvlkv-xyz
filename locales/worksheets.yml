@@ -19,7 +19,7 @@ about:
   cta:
     en: Get started
     ru: Начать
-    nl: Ga aan de slag
+    nl: Aan de slag
     ja: 始めましょう
   s_1:
     title:
@@ -98,6 +98,8 @@ worksheets:
         For example: Because of the "Problem A" the "Stakeholder B" experiences "Undesirable effects C"
     label_statement:
       en: Problem statement
+    cta:
+      en: Solve the problem
   solutions:
     example_title:
       en: Solutions for “%{title}”
@@ -120,12 +122,16 @@ worksheets:
       en: Add a solution
     placeholder_solution:
       en: |
-        For example: Incentivise positive impact over revenue
+        For example: Incentivise positive impact over revenue by...
+    cta:
+      en: Turn a dream a reality
   compromise:
     example_title:
       en: Compromise of “%{title}”
     title:
       en: Compromise
+    empty:
+      en: First, make a research design note
     description:
       en: |
         Every solution comes to oneself and those around with costs and uncertainty.
@@ -142,14 +148,19 @@ worksheets:
       en: Solutions
     label_stakeholders:
       en: Stakeholders
+    placeholder:
+      en: |
+        For example: Compare metrics "X" and "Y", ask open-ended question "Z"
     instruction_2:
       en: |
         Describe the research to be done on an implemented solution. Answer the questions:
         How will you find out if the solution is not working?
         How can you get insight from the stakeholders?
-        How can you keep your heart open to new stakeholders?
+        How can you keep your heart open to the new stakeholders?
     label_question:
       en: Research design note
+    cta:
+      en: Make it happen
   implement:
     example_title:
       en: Implementation of “%{title}”
@@ -166,14 +177,24 @@ worksheets:
       en: |
         List the most important distinct features of your solution.
         Place the features in two sections: “Now” and “Best”.
-    label_col_1:
+    label_now:
       en: Now
-    label_col_2:
-      en: Best
-    hint_col_1:
+    hint_now:
       en: How does the solution solve the problem?
-    hint_col_2:
+    placeholder_now:
+      en: "For example: It computes the impact"
+    add_now:
+      en: Add critical feature
+    label_best:
+      en: Best
+    add_best:
+      en: Add optimization
+    hint_best:
       en: What makes it the most efficient?
+    placeholder_best:
+      en: "For example: It keeps history"
+    cta:
+      en: To the moment of truth
   iterate:
     example_title:
       en: Tests & Iterations of “%{title}”
@@ -182,8 +203,80 @@ worksheets:
     description:
       en: |
         Keep your artifacts everevolving.
-        Have invested in crafting an artifact we can now collect our tangible returns:
-        all the positive impact we've had, all the research findings.
+        Aspire to bring the positive impact in a short iteration.
+        Remember that testing and learning also takes time.
+    cta:
+      en: Download summary PDF
+      ru: Скачайте краткое PDF
+      nl: Download samenvatting PDF
+      ja: 概要PDFをダウンロード
+    instruction_title:
+      en: Give this iteration a meaningful and inspiring title
+    label_title:
+      en: Iteration title
+    placeholder_title:
+      en: "For example: Mission possible"
+    instruction_dates:
+      en: Make commitment to a reasonable time frame
+    instruction_resources:
+      en: List all the necessary resources, epecially those you may need to prepare
+    label_date_1:
+      en: Start date
+    label_date_2:
+      en: Deadline
+    label_resources:
+      en: Resources
+    placeholder_resources:
+      en: "For example: Laptop"
+    add_resource:
+      en: Add resource
+    label_externals:
+      en: External resources
+    placeholder_external:
+      en: "For example: Design process consultant"
+    add_external:
+      en: Add external resource
+
+  inquire:
+    title:
+      en: Inquire
+    cta:
+      en: Inquire
+      ru: Задать вопрос
+      nl: Navragen
+      ja: 質問する
+    description:
+      en: |
+        Completed these worksheets I invite you to:
+        - Get preliminary evaluation with llama2, which may inspire a new iteration.
+        - Get me involved. Ask questions, share your thoughts, and workshets.
+    instruction_1:
+      en: Select one of the options to get an answer from llama2
+    inquery_FirstTime:
+      en: |
+        Following the process for the first time or using it on a new topic.
+        Find common mistakes, get feedback.
+    inquery_ScopeAndTime:
+      en: |
+        Concerned about the scope and timeframe of an iteration.
+        Find the right balance. Create contained but measurable impact.
+    inquery_EthicalDesign:
+      en: |
+        Intricate topic. Learn how to mitigate risks while still answering your research question.
+        Deliver ethical design.
+    inquery_Narrative:
+      en: |
+        Help communicating with a broader audience.
+        Create a narrative.
+    inquery_Custom:
+      en: Create your own prompt. Ask different.
+    placeholder:
+      en: "For example: How to improve the problem statement?"
+    instruction_2:
+      en: |
+        Receive personalized feedback. Ask any questions.
+        Share the worksheets along with any other background information you'd like me to know.
+  download:
     instruction_1:
       en: Run your artifact, gather data, answer the research question.
     instruction_2:
@@ -192,46 +285,39 @@ worksheets:
       en: In a constructive way digest what you've learned.
     instruction_4:
       en: With all the new insight, fearlesly start over.
-  inquire:
-    title:
-      en: Inquire
-    description:
-      en: |
-        Completed these worksheets I invite you to:
-        - Get preliminary evaluation with AI, which may inspire a new iteration on its own.
-        - Get me involved. Ask questions, share your thoughts, and workshets.
-    instruction_1:
-      en: Select one of the options to get an answer from AI
-    inquery_1:
-      en: |
-        Following the process for the first time or using it on a new topic.
-        Find common mistakes, get feedback.
-    inquery_2:
-      en: |
-        Concerned about the scope and timeframe of an iteration.
-        Find the right balance. Create contained but measurable impact.
-    inquery_3:
-      en: |
-        Intricate topic. Learn how to mitigate risks while still answering your research question.
-        Deliver ethical design.
-    inquery_4:
-      en: Create your own prompt. Ask different.
-    instruction_2:
-      en: |
-        Receive personalized feedback. Ask any questions.
-        Share the worksheets along with any other background information you'd like me to know.
 stepper:
   about:
     en: About
+    ru: О процессе
+    nl: Omschrijving
+    ja: 説明
   problem:
     en: Problem
+    ru: Проблема
+    nl: Probleem
+    ja: 問題
   solution:
     en: Solutions
+    ru: Решения
+    nl: Oplossingen
+    ja: 解決
   compromise:
     en: Compromise
+    ru: Компромисc
+    nl: Compromis
+    ja: 折り合い
   implement:
     en: Implement
+    ru: Воплощение
+    nl: Uitvoering
+    ja: 実施形態
   iterate:
     en: Test & Iterate
+    ru: Тесты и Итерации
+    nl: Testen en Herhalen
+    ja: テストと反復
   inquire:
     en: Inquire
+    ru: Вопросы
+    nl: Vragen
+    ja: 問い合わせる

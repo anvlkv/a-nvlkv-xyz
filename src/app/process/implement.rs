@@ -7,11 +7,14 @@ use web_time::Instant;
 
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView,
-        ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
+        use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
+        HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
     },
-    process::{FixedAssumptionStatement, FixedProblemStatement},
-    state::ProcessStep,
+    process::{
+        FixedProblemStatement, FixedQuestionStatement, FixedSolutionsChoice,
+        FixedStakeholdersChoice,
+    },
+    state::{Completenes, ProcessStep},
     tabs_signal, use_lang,
 };
 
@@ -91,6 +94,8 @@ pub fn ImplementView() -> impl IntoView {
 
     let tabs = tabs_signal(ProcessStep::Implement);
 
+    let disable_cta = Signal::derive(move || !state.get().implement.get().get().is_complete());
+
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.implement.title"), t!("process.title"), t!("name"))}/>
         <WorksheetHeader
@@ -115,38 +120,49 @@ pub fn ImplementView() -> impl IntoView {
                     <p>{t!("worksheets.implement.instruction")}</p>
                 </div>
                 <FixedProblemStatement/>
-                <FixedAssumptionStatement/>
-                <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
+                <FixedSolutionsChoice/>
+                <FixedStakeholdersChoice/>
+                <FixedQuestionStatement/>
+                <div class="grid lg:grid-cols-2 text-center mt-8 mb-4 gap-6">
                     <div>
                         <h4 class="text-xl mb-2">
-                            {t!("worksheets.implement.label_col_1")}
+                            {t!("worksheets.implement.label_now")}
                         </h4>
-                        <p class="mb-4">{t!("worksheets.implement.hint_col_1")}</p>
+                        <p class="mb-4">{t!("worksheets.implement.hint_now")}</p>
                         <ListInputView
                             input_type="text"
                             data=nows_data
                             add_value=nows_value_add
                             remove_value=nows_value_remove
                             add_entry_text={t!("worksheets.implement.add_now").to_string()}
-                            placeholder={t!("worksheets.implement.placeholder_nows").to_string()}
+                            placeholder={t!("worksheets.implement.placeholder_now").to_string()}
                         />
                     </div>
                     <div>
                         <h4 class="text-xl mb-2">
-                            {t!("worksheets.implement.label_col_2")}
+                            {t!("worksheets.implement.label_best")}
                         </h4>
-                        <p class="mb-4">{t!("worksheets.implement.hint_col_2")}</p>
+                        <p class="mb-4">{t!("worksheets.implement.hint_best")}</p>
                         <ListInputView
                             input_type="text"
                             data=bests_data
                             add_value=bests_value_add
                             remove_value=bests_value_remove
                             add_entry_text={t!("worksheets.implement.add_best").to_string()}
-                            placeholder={t!("worksheets.implement.placeholder_bests").to_string()}
+                            placeholder={t!("worksheets.implement.placeholder_best").to_string()}
                         />
                     </div>
                 </div>
             </form>
+            <div class="flex w-full mt-8 justify-center">
+                <ButtonView
+                    cta=2
+                    size=ButtonSize::Lg
+                    disabled={disable_cta}
+                >
+                    {t!("worksheets.implement.cta")}
+                </ButtonView>
+            </div>
         </div>
         <UndoRemove
             history=now_delete_history
@@ -160,6 +176,60 @@ pub fn ImplementView() -> impl IntoView {
 }
 
 #[component]
+pub fn FixedNowList() -> impl IntoView {
+    let state = use_wk_state();
+
+    let nows = Signal::derive(move || {
+        state
+            .get()
+            .implement
+            .try_get()
+            .map(|v| {
+                v.get()
+                    .now
+                    .into_iter()
+                    .filter(|e| !e.is_empty())
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default()
+    });
+
+    view! {
+        <ReadOnlyListView
+            value={nows}
+            label=t!("worksheets.implement.label_now").to_string()
+        />
+    }
+}
+
+#[component]
+pub fn FixedBestList() -> impl IntoView {
+    let state = use_wk_state();
+
+    let bests = Signal::derive(move || {
+        state
+            .get()
+            .implement
+            .try_get()
+            .map(|v| {
+                v.get()
+                    .best
+                    .into_iter()
+                    .filter(|e| !e.is_empty())
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default()
+    });
+
+    view! {
+        <ReadOnlyListView
+            value={bests}
+            label=t!("worksheets.implement.label_best").to_string()
+        />
+    }
+}
+
+#[component]
 pub fn ExampleImplementView() -> impl IntoView {
     let lang = use_lang();
     let (wk, example) = use_example_ctx();
@@ -167,7 +237,7 @@ pub fn ExampleImplementView() -> impl IntoView {
 
     let tabs = tabs_signal(ProcessStep::Implement);
 
-    let assumption_statement = Signal::derive(move || wk.get().compromise.assumption);
+    let question_statement = Signal::derive(move || wk.get().compromise.question);
     let problem_statement = Signal::derive(move || wk.get().problem.problem_statement);
 
     let nows_data = Signal::derive(move || wk.get().implement.now);
@@ -213,26 +283,30 @@ pub fn ExampleImplementView() -> impl IntoView {
                     <p>{t!("worksheets.implement.instruction")}</p>
                 </div>
                 <ReadOnlyView
-                    value=problem_statement
-                />
+                    label=t!("worksheets.problem.label_statement").to_string()
+                >
+                    {problem_statement}
+                </ReadOnlyView>
                 <ReadOnlyView
-                    value=assumption_statement
-                />
+                    label=t!("worksheets.compromise.label_question").to_string()
+                >
+                    {question_statement}
+                </ReadOnlyView>
                 <div class="grid lg:grid-cols-2 text-center mb-4 gap-6">
                     <div>
                         <h4 class="text-xl mb-2">
-                            {t!("worksheets.implement.label_col_1")}
+                            {t!("worksheets.implement.label_now")}
                         </h4>
-                        <p class="mb-4 italic">{t!("worksheets.implement.hint_col_1")}</p>
+                        <p class="mb-4 italic">{t!("worksheets.implement.hint_now")}</p>
                         <ReadOnlyListView
                             value=nows_data
                         />
                     </div>
                     <div>
                         <h4 class="text-xl mb-2">
-                            {t!("worksheets.implement.label_col_2")}
+                            {t!("worksheets.implement.label_best")}
                         </h4>
-                        <p class="mb-4 italic">{t!("worksheets.implement.hint_col_2")}</p>
+                        <p class="mb-4 italic">{t!("worksheets.implement.hint_best")}</p>
                         <ReadOnlyListView
                             value=bests_data
                         />

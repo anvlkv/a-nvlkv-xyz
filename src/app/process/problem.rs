@@ -10,10 +10,11 @@ use form_signal::FormState;
 
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, use_wk_state, DescriptionView, HistoryEntry, ListInputView,
-        ReadOnlyListView, ReadOnlyView, StringInputView, UndoRemove, WorksheetHeader,
+        use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
+        HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, StringInputView, UndoRemove,
+        WorksheetHeader,
     },
-    state::ProcessStep,
+    state::{Completenes, ProcessStep},
     tabs_signal, use_lang,
 };
 
@@ -116,6 +117,23 @@ pub fn ProblemView() -> impl IntoView {
 
     let tabs = tabs_signal(ProcessStep::Problem);
 
+    let disable_statement = Signal::derive(move || {
+        let data = wk_state.get().problem.get().get();
+        data.problems
+            .iter()
+            .filter(|e| !e.is_empty())
+            .next()
+            .is_none()
+            || data
+                .stakeholders
+                .iter()
+                .filter(|e| !e.is_empty())
+                .next()
+                .is_none()
+    });
+
+    let disable_cta = Signal::derive(move || !wk_state.get().problem.get().get().is_complete());
+
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.problem.title"), t!("process.title"), t!("name"))}/>
         <WorksheetHeader
@@ -166,14 +184,27 @@ pub fn ProblemView() -> impl IntoView {
                     </div>
                 </div>
                 <hr class="border-t border-slate-400 mt-4 mb-8"/>
-                <div class="max-w-prose mb-4 whitespace-pre-line">
-                    <p>{t!("worksheets.problem.instruction_2")}</p>
-                </div>
-                <StringInputView
-                    input_type="textarea"
-                    value=problem_statement
-                    placeholder={t!("worksheets.problem.placeholder_2").to_string()}/>
+                <label>
+                    <div class="max-w-prose mb-2 whitespace-pre-line">
+                        <p>{t!("worksheets.problem.instruction_2")}</p>
+                    </div>
+                    <StringInputView
+                        input_type="textarea"
+                        disabled={disable_statement}
+                        value=problem_statement
+                        placeholder={t!("worksheets.problem.placeholder_2").to_string()}
+                    />
+                </label>
             </form>
+            <div class="flex w-full mt-8 justify-center">
+                <ButtonView
+                    cta=2
+                    size=ButtonSize::Lg
+                    disabled={disable_cta}
+                >
+                    {t!("worksheets.problem.cta")}
+                </ButtonView>
+            </div>
         </div>
         <UndoRemove
             history=problem_delete_history
@@ -201,12 +232,17 @@ pub fn FixedProblemStatement() -> impl IntoView {
     });
     let href = Signal::derive(move || Some(format!("/{}/process/1", lang.get())));
 
+    let empty = Signal::derive(move || problem_statement.get().is_empty());
+
     view! {
         <ReadOnlyView
-            value=problem_statement
             fallback_title=t!("worksheets.problem.empty").to_string()
             fallback_href=href
-        />
+            label=t!("worksheets.problem.label_statement").to_string()
+            empty={empty}
+        >
+            {problem_statement}
+        </ReadOnlyView>
     }
 }
 
@@ -259,7 +295,7 @@ pub fn ExampleProblemView() -> impl IntoView {
                     {move || t!("worksheets.view_example", title=example.get().title)}
                 </A>
             </DescriptionView>
-            <div role="form">
+            <form role="form">
                 <div class="max-w-prose mb-4 whitespace-pre-line italic">
                     <p>{t!("worksheets.problem.instruction_1")}</p>
                 </div>
@@ -286,9 +322,12 @@ pub fn ExampleProblemView() -> impl IntoView {
                     <p>{t!("worksheets.problem.instruction_2")}</p>
                 </div>
                 <ReadOnlyView
-                    value=problem_statement
-                />
-            </div>
+                    fallback_title=t!("worksheets.problem.empty").to_string()
+                    label=t!("worksheets.problem.label_statement").to_string()
+                >
+                    {problem_statement}
+                </ReadOnlyView>
+            </form>
         </div>
     }
 }

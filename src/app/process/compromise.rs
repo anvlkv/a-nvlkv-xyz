@@ -4,30 +4,100 @@ use leptos_router::*;
 
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, use_wk_state, DescriptionView, ReadOnlyListView, ReadOnlyView,
-        StringInputView, WorksheetHeader,
+        use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, CheckedOption,
+        DescriptionView, ListSelectView, ReadOnlyListView, ReadOnlyView, StringInputView,
+        WorksheetHeader,
     },
     process::FixedProblemStatement,
-    state::ProcessStep,
+    state::{Completenes, ProblemWK, ProcessStep, SolutionsWK},
     tabs_signal, use_lang,
 };
 
 /// step 4
 #[component]
 pub fn CompromiseView() -> impl IntoView {
-    let state = use_wk_state();
+    let wk_state = use_wk_state();
     let wk_ctx = use_wk_ctx();
 
-    let assumption_statement = Signal::derive(move || {
-        state
+    let question_statement = Signal::derive(move || {
+        wk_state
             .get()
             .compromise
             .try_get()
-            .map(|v| v.assumption)
+            .map(|v| v.question)
+            .unwrap_or_default()
+    });
+
+    let solutions_list = Signal::derive(move || {
+        let wk_data: SolutionsWK = (&wk_state.get().solutions.get()).into();
+        wk_data
+            .solutions
+            .into_iter()
+            .filter(|s| !s.is_empty())
+            .map(|s| CheckedOption {
+                value: s.clone(),
+                label: view! {
+                    <ReadOnlyView>
+                        {s.clone()}
+                    </ReadOnlyView>
+                },
+            })
+            .collect::<Vec<_>>()
+    });
+
+    let stakeholders_list = Signal::derive(move || {
+        let wk_data: ProblemWK = (&wk_state.get().problem.get()).into();
+        wk_data
+            .stakeholders
+            .into_iter()
+            .filter(|s| !s.is_empty())
+            .map(|s| CheckedOption {
+                value: s.clone(),
+                label: view! {
+                    <ReadOnlyView>
+                        {s.clone()}
+                    </ReadOnlyView>
+                },
+            })
+            .collect::<Vec<_>>()
+    });
+
+    let solution_choices = Signal::derive(move || {
+        wk_state
+            .get()
+            .compromise
+            .try_get()
+            .map(|v| v.solution_choices)
+            .unwrap_or_default()
+    });
+
+    let stakeholder_choices = Signal::derive(move || {
+        wk_state
+            .get()
+            .compromise
+            .try_get()
+            .map(|v| v.stakeholder_choices)
             .unwrap_or_default()
     });
 
     let tabs = tabs_signal(ProcessStep::Compromise);
+
+    let disable_question = Signal::derive(move || {
+        let data = wk_state.get().compromise.get().get();
+        data.solution_choices
+            .iter()
+            .filter(|e| !e.is_empty())
+            .next()
+            .is_none()
+            || data
+                .stakeholder_choices
+                .iter()
+                .filter(|e| !e.is_empty())
+                .next()
+                .is_none()
+    });
+
+    let disable_cta = Signal::derive(move || !wk_state.get().compromise.get().get().is_complete());
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.compromise.title"), t!("process.title"), t!("name"))}/>
@@ -50,18 +120,25 @@ pub fn CompromiseView() -> impl IntoView {
                     <p>{t!("worksheets.compromise.instruction_1")}</p>
                 </div>
                 <FixedProblemStatement/>
-                <div class="grid grid-cols-2">
+                <div class="grid lg:grid-cols-2 gap-6 mt-8">
                     <div>
                         <h4 class="text-xl mb-4 w-full text-center">
                             {t!("worksheets.compromise.label_solutions")}
                         </h4>
-
+                        <ListSelectView
+                            max={Some(2)}
+                            options={solutions_list}
+                            value={solution_choices}
+                        />
                     </div>
                     <div>
                         <h4 class="text-xl mb-4 w-full text-center">
                             {t!("worksheets.compromise.label_stakeholders")}
                         </h4>
-
+                        <ListSelectView
+                            options={stakeholders_list}
+                            value={stakeholder_choices}
+                        />
                     </div>
                 </div>
                 <hr class="border-t border-slate-400 mt-4 mb-8"/>
@@ -72,35 +149,91 @@ pub fn CompromiseView() -> impl IntoView {
                     <p class="mb-2">{t!("worksheets.compromise.label_question")}</p>
                     <StringInputView
                         input_type="textarea"
-                        value=assumption_statement
+                        disabled={disable_question}
+                        value=question_statement
                         placeholder={t!("worksheets.compromise.placeholder").to_string()}/>
                 </label>
             </form>
+            <div class="flex w-full mt-8 justify-center">
+                <ButtonView
+                    cta=2
+                    size=ButtonSize::Lg
+                    disabled={disable_cta}
+                >
+                    {t!("worksheets.compromise.cta")}
+                </ButtonView>
+            </div>
         </div>
     }
 }
 
 #[component]
-pub fn FixedAssumptionStatement() -> impl IntoView {
+pub fn FixedQuestionStatement() -> impl IntoView {
     let state = use_wk_state();
     let lang = use_lang();
 
-    let assumption = Signal::derive(move || {
+    let question = Signal::derive(move || {
         state
             .get()
             .compromise
             .try_get()
-            .map(|v| v.assumption.get())
+            .map(|v| v.question.get())
             .unwrap_or_default()
     });
 
     let href = Signal::derive(move || Some(format!("/{}/process/3", lang.get())));
+    let empty = Signal::derive(move || question.get().is_empty());
 
     view! {
         <ReadOnlyView
-            value=assumption
             fallback_title=t!("worksheets.compromise.empty").to_string()
             fallback_href=href
+            label=t!("worksheets.compromise.label_question").to_string()
+            empty={empty}
+        >
+            {question}
+        </ReadOnlyView>
+    }
+}
+
+#[component]
+pub fn FixedSolutionsChoice() -> impl IntoView {
+    let state = use_wk_state();
+
+    let solutions = Signal::derive(move || {
+        state
+            .get()
+            .compromise
+            .try_get()
+            .map(|v| v.solution_choices.get())
+            .unwrap_or_default()
+    });
+
+    view! {
+        <ReadOnlyListView
+            value={solutions}
+            label=t!("worksheets.compromise.label_solutions").to_string()
+        />
+    }
+}
+
+#[component]
+pub fn FixedStakeholdersChoice() -> impl IntoView {
+    let state = use_wk_state();
+
+    let stakeholders = Signal::derive(move || {
+        state
+            .get()
+            .compromise
+            .try_get()
+            .map(|v| v.stakeholder_choices.get())
+            .unwrap_or_default()
+    });
+
+    view! {
+        <ReadOnlyListView
+            value={stakeholders}
+            label=t!("worksheets.compromise.label_stakeholders").to_string()
         />
     }
 }
@@ -113,7 +246,7 @@ pub fn ExampleCompromiseView() -> impl IntoView {
 
     let tabs = tabs_signal(ProcessStep::Compromise);
 
-    let assumption_statement = Signal::derive(move || wk.get().compromise.assumption);
+    let question_statement = Signal::derive(move || wk.get().compromise.question);
     let problem_statement = Signal::derive(move || wk.get().problem.problem_statement);
 
     let solutions_data = Signal::derive(move || wk.get().solutions.solutions);
@@ -159,9 +292,11 @@ pub fn ExampleCompromiseView() -> impl IntoView {
                     <p>{t!("worksheets.compromise.instruction_1")}</p>
                 </div>
                 <ReadOnlyView
-                    value=problem_statement
-                />
-                <div class="grid grid-cols-2">
+                        label=t!("worksheets.problem.label_statement").to_string()
+                    >
+                    {problem_statement}
+                </ReadOnlyView>
+                <div class="grid grid-cols-2 gap-6">
                     <div>
                         <h4 class="text-xl mb-4 w-full text-center">
                             {t!("worksheets.compromise.label_solutions")}
@@ -184,8 +319,10 @@ pub fn ExampleCompromiseView() -> impl IntoView {
                     <p>{t!("worksheets.compromise.instruction_2")}</p>
                 </div>
                 <ReadOnlyView
-                    value=assumption_statement
-                />
+                    label=t!("worksheets.compromise.label_question").to_string()
+                >
+                    {question_statement}
+                </ReadOnlyView>
             </div>
         </div>
     }

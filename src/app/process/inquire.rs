@@ -1,5 +1,6 @@
 use leptos::*;
 use leptos_meta::*;
+use strum::VariantArray;
 
 use crate::app::{
     components::{
@@ -7,7 +8,7 @@ use crate::app::{
         DescriptionView, IconView, RadioInputView, StringInputView, WorksheetHeader,
     },
     process::inquire_personal,
-    state::WorkSheets,
+    state::{Completenes, InqueryOption, WorkSheets, InquireWK},
 };
 
 use super::inquire_inferrence;
@@ -29,7 +30,7 @@ pub fn InquireView() -> impl IntoView {
 
     let prompt_option = Signal::derive(move || state.get().inquire.get().inquery_option.clone());
     let show_prompt_input =
-        Signal::derive(move || prompt_option.get().get().as_str() == "inquery_4");
+        Signal::derive(move || prompt_option.get().get() == InqueryOption::Custom.to_string());
 
     let share_value = Signal::derive(move || state.get().inquire.get().personalized.clone());
 
@@ -43,12 +44,13 @@ pub fn InquireView() -> impl IntoView {
         .into_view(),
     };
 
-    let inquery_options = (1..=4)
-        .map(|i| {
-            let option = format!("inquery_{i}");
+    let inquery_options = InqueryOption::VARIANTS
+        .iter()
+        .map(|opt| {
+            let option = format!("inquery_{opt}");
             let label_name = format!("worksheets.inquire.{option}");
             CheckedOption {
-                value: option.clone(),
+                value: opt.to_string(),
                 label: view! {
                     <p class="max-w-prose whitespace-pre-line">
                         {t!(label_name.as_str()).to_string()}
@@ -75,7 +77,18 @@ pub fn InquireView() -> impl IntoView {
         if inquery.personalized {
             inquire_perssonal_action.dispatch(wk.clone());
         }
-        inquire_action.dispatch(wk);
+        inquire_action.dispatch(WorkSheets{
+            inquire: InquireWK {
+                contact: Default::default(),
+                ..wk.inquire
+            },
+            ..wk
+        });
+    });
+
+    let disable_inquire = Signal::derive(move || {
+        let wk = state.get().get();
+        !wk.is_complete() || !wk.inquire.is_complete()
     });
 
     view! {
@@ -93,13 +106,19 @@ pub fn InquireView() -> impl IntoView {
                     {t!("worksheets.inquire.description")}
                 </p>
             </DescriptionView>
-            <form on:submit=move |_| on_submit.call(())>
+            <form on:submit=move |e| {
+                e.prevent_default();
+
+                on_submit.call(())
+            }>
                 <div class="max-w-prose mb-4 whitespace-pre-line">
                     <p>{t!("worksheets.inquire.instruction_1")}</p>
                 </div>
                 <RadioInputView options=inquery_options value=prompt_option />
                 <Show when=move || show_prompt_input.get()>
                     <StringInputView
+                        class="mt-2"
+                        attr:required=true
                         input_type="textarea"
                         value=custom_prompt
                         placeholder={t!("worksheets.inquire.placeholder").to_string()}
@@ -138,15 +157,21 @@ pub fn InquireView() -> impl IntoView {
                         />
                     </label>
                 </Show>
-                <ButtonView
-                    cta=2
-                    size=ButtonSize::Lg
-                    attr:type="submit"
-                    on:click=move |_| on_submit.call(())
-                >
-                    <IconView icon="Send"/>
-                    {t!("worksheets.inquire.cta")}
-                </ButtonView>
+                <div class="flex w-full mt-8 justify-center">
+                    <ButtonView
+                        cta=2
+                        size=ButtonSize::Lg
+                        attr:type="submit"
+                        on:click=move |e| {
+                            e.prevent_default();
+                            on_submit.call(())
+                        }
+                        disabled={disable_inquire}
+                    >
+                        <IconView icon="Send"/>
+                        {t!("worksheets.inquire.cta")}
+                    </ButtonView>
+                </div>
             </form>
         </div>
     }

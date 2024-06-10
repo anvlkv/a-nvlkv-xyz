@@ -43,7 +43,7 @@ pub fn ButtonView(
             match size.get() {
                 ButtonSize::Sm => "text-sm px-1 py-1 md:px-2 font-bold",
                 ButtonSize::Base => "text-base px-2 py-1 md:px-3 md:py-2 font-semibold",
-                ButtonSize::Lg => "text-lg px-6 py-3 md:px-8 md:py-6 font-normal",
+                ButtonSize::Lg => "text-xl px-6 py-2 md:px-8 md:py-4 font-normal",
                 ButtonSize::Xl => "text-4xl sm:text-5xl md:text-6xl lg:text-8xl 2xl:text-9xl px-10 md:px-16 py-2 lg:px-20 lg:py-3 2xl:px-24 2xl:py-6 font-light",
             }.split_whitespace()
         })
