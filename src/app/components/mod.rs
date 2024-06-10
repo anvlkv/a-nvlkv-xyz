@@ -1,7 +1,7 @@
 mod assets;
 mod button;
 mod checkbox_input;
-mod contact_form;
+mod contact;
 mod dark_mode_toggle;
 mod description;
 mod error;
@@ -22,7 +22,7 @@ mod worksheet;
 pub use assets::*;
 pub use button::*;
 pub use checkbox_input::*;
-pub use contact_form::*;
+pub use contact::*;
 pub use dark_mode_toggle::*;
 pub use description::*;
 pub use error::*;

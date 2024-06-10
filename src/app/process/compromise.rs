@@ -18,6 +18,8 @@ use crate::app::{
 pub fn CompromiseView() -> impl IntoView {
     let wk_state = use_wk_state();
     let wk_ctx = use_wk_ctx();
+    let lang = use_lang();
+    let link = Signal::derive(move || format!("/{}/process/4", lang.get()));
 
     let question_statement = Signal::derive(move || {
         wk_state
@@ -136,6 +138,7 @@ pub fn CompromiseView() -> impl IntoView {
                             {t!("worksheets.compromise.label_stakeholders")}
                         </h4>
                         <ListSelectView
+                            max={Some(2)}
                             options={stakeholders_list}
                             value={stakeholder_choices}
                         />
@@ -159,6 +162,7 @@ pub fn CompromiseView() -> impl IntoView {
                     cta=2
                     size=ButtonSize::Lg
                     disabled={disable_cta}
+                    link
                 >
                     {t!("worksheets.compromise.cta")}
                 </ButtonView>

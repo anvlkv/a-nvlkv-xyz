@@ -6,15 +6,15 @@ use web_time::Instant;
 
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
+        use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
         HistoryEntry, IconView, ListInputView, StringInputView, UndoRemove, WorksheetHeader,
     },
     process::{
         FixedBestList, FixedNowList, FixedProblemStatement, FixedQuestionStatement,
         FixedSolutionsChoice, FixedStakeholdersChoice,
     },
-    state::{Completenes, ProcessStep},
-    tabs_signal, use_lang,
+    state::Completenes,
+    use_lang,
 };
 
 /// step 6

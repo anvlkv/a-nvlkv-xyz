@@ -93,7 +93,7 @@ pub fn HeaderView() -> impl IntoView {
                         name="language"
                         on:change={onchange_lang}
                         value={move || lang.get().to_string()}
-                        class="bg-transparent max-w-min pr-2 border-r-2 border-solid border-slate-400"
+                        class="bg-transparent max-w-min pr-2 border-r-2 border-solid border-slate-400 appearance-none rounded-none after:content-['_▽']"
                     >
                         {options}
                     </select>

@@ -1,5 +1,6 @@
 use leptos::*;
 
+#[cfg_attr(not(feature="ssr"), allow(unused))]
 use crate::app::{state::ProjectData, util::coalesce_translations, Language};
 
 /// returns projects with translations for a selected langugae

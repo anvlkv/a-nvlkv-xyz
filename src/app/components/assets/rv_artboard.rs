@@ -1,4 +1,3 @@
-use futures::StreamExt;
 use leptos::{html::canvas, *};
 
 #[cfg(any(feature = "csr", feature = "hydrate"))]
@@ -56,6 +55,7 @@ pub fn RvArtboardView(
 
     #[cfg(any(feature = "csr", feature = "hydrate"))]
     {
+        use futures::StreamExt;
         use wasm_bindgen_futures::JsFuture;
 
         let rv = create_memo(|_| rv_animation::RvJs::new());

@@ -70,8 +70,8 @@ pub fn ProcessView() -> impl IntoView {
                     </div>
                 </section>
             </noscript>
-            <div class="flex flex-col xl:flex-row-reverse">
-                <section class="grow lg:w-full p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
+            <div class="flex relative flex-col xl:flex-row-reverse items-stretch">
+                <section class="grow p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
                     <Transition fallback={WorksheetDummy}>
                         <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
                             {process_view_with_data}
@@ -79,7 +79,9 @@ pub fn ProcessView() -> impl IntoView {
                     </Transition>
                 </section>
                 <Suspense>
-                    <StepperView/>
+                    <div class="contents xl:block xl:w-64 fixed-aside min-h-svh">
+                        <StepperView/>
+                    </div>
                 </Suspense>
             </div>
         </div>
@@ -129,7 +131,7 @@ fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<ProjectData>, lang: Lang
                 .iter()
                 .enumerate()
                 .filter_map(|(i, step)| {
-                    if i > 0 && i < ProcessStep::VARIANTS.len() - 1 {
+                    if i > 0 && i < ProcessStep::VARIANTS.len() - 2 {
                         Some(SeqStep {
                             href: format!("/{}/process/{}/{}", lang, i, ex.id),
                             process_step: *step,
@@ -148,7 +150,7 @@ fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<ProjectData>, lang: Lang
             .iter()
             .enumerate()
             .fold(vec![], |mut acc, (i, step)| {
-                if i > 0 && i < ProcessStep::VARIANTS.len() - 1 {
+                if i > 0 && i < ProcessStep::VARIANTS.len() - 2 {
                     // example
                     acc.extend(examples.iter().skip(1).map(|ex| SeqStep {
                         href: format!("/{}/process/{}/{}", lang, i, ex.id),
@@ -165,6 +167,13 @@ fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<ProjectData>, lang: Lang
                 acc
             }),
     );
+
+    // iterate
+    seq.push(SeqStep {
+        href: format!("/{}/process/{}", lang, 5),
+        process_step: ProcessStep::Iterate,
+        example: None,
+    });
 
     // inquire
     seq.push(SeqStep {

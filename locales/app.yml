@@ -38,10 +38,10 @@ menu:
     ja: お問い合わせ
 contact:
   title:
-    en: Inquiries
-    nl: Vragen
-    ru: Запросы
-    ja: お問い合わせ
+    en: Let's speak English
+    nl: Praten wij even Nederlands
+    ru: Поговорим по Русский
+    ja: 日本語を話しましょう
   description:
     en: Whether you like me involved or simply answer your questions about the process, don't hesitate to ask.
   label_worksheets:
@@ -64,12 +64,15 @@ contact:
     placeholder:
       en: Enter your message
   send:
-    en: Send your inquiry
+    en: Send your message
   success:
     title:
       en: Message sent
+      nl: Bericht verzonden
+      ru: Сообщение отправлено
+      ja: メッセージが送信されました
     description:
-      en: Thank you for your interest! We'll be in touch with you shortly
+      en: Thank you for your interest! I'll be in touch with you shortly
 resume:
   title:
     en: CV

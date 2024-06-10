@@ -22,31 +22,31 @@ pub fn AboutView() -> impl IntoView {
         ProcessStep::Solution,
         ProcessStep::Compromise,
         ProcessStep::Implement,
-        ProcessStep::Iterate
+        ProcessStep::Iterate,
     ]
-        .into_iter()
-        .enumerate()
-        .map(|(i, name)| {
-            let i = i + 1;
-            view! {
-                <li class="pb-3 flex items-start">
-                    <RvArtboardView
-                        attr:class="w-16 h-16 xl:w-20 xl:h-20"
-                        state_machine={format!("{name} State Machine")}
-                        name={format!("{name}")}
-                    />
-                    <div class="pl-3">
-                        <h5 class="pb-1 font-bold">
-                            {t!(format!("about.s_{i}.title").as_str()).to_string()}
-                        </h5>
-                        <p class="whitespace-pre-line">
-                            {t!(format!("about.s_{i}.description").as_str()).to_string()}
-                        </p>
-                    </div>
-                </li>
-            }
-        })
-        .collect_view();
+    .into_iter()
+    .enumerate()
+    .map(|(i, name)| {
+        let i = i + 1;
+        view! {
+            <li class="pb-3 flex items-start">
+                <RvArtboardView
+                    attr:class="w-16 h-16 xl:w-20 xl:h-20"
+                    state_machine={format!("{name} State Machine")}
+                    name={format!("{name}")}
+                />
+                <div class="pl-3">
+                    <h5 class="pb-1 font-bold">
+                        {t!(format!("about.s_{i}.title").as_str()).to_string()}
+                    </h5>
+                    <p class="whitespace-pre-line">
+                        {t!(format!("about.s_{i}.description").as_str()).to_string()}
+                    </p>
+                </div>
+            </li>
+        }
+    })
+    .collect_view();
 
     view! {
         <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>

@@ -23,6 +23,8 @@ use crate::app::{
 pub fn ImplementView() -> impl IntoView {
     let state = use_wk_state();
     let wk_ctx = use_wk_ctx();
+    let lang = use_lang();
+    let link = Signal::derive(move || format!("/{}/process/5", lang.get()));
 
     let now_delete_history = create_rw_signal(vec![]);
     let nows_data = Signal::derive(move || {
@@ -159,6 +161,7 @@ pub fn ImplementView() -> impl IntoView {
                     cta=2
                     size=ButtonSize::Lg
                     disabled={disable_cta}
+                    link
                 >
                     {t!("worksheets.implement.cta")}
                 </ButtonView>

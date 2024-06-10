@@ -248,10 +248,10 @@ worksheets:
     description:
       en: |
         Completed these worksheets I invite you to:
-        - Get preliminary evaluation with llama2, which may inspire a new iteration.
+        - Get preliminary evaluation with `llama2`, which may inspire a new iteration.
         - Get me involved. Ask questions, share your thoughts, and workshets.
     instruction_1:
-      en: Select one of the options to get an answer from llama2
+      en: Select one of the options to get an answer from `llama2`
     inquery_FirstTime:
       en: |
         Following the process for the first time or using it on a new topic.
@@ -276,6 +276,19 @@ worksheets:
       en: |
         Receive personalized feedback. Ask any questions.
         Share the worksheets along with any other background information you'd like me to know.
+    ai_disclaimer:
+      en: |
+        The following response is generated using AI.
+        While it may contain some common-sense information and useful advice please use it with necessary precaution.
+      nl: |
+        Het volgende antwoord wordt gegenereerd met behulp van AI.
+        Hoewel deze informatie op gezond verstand en nuttig advies kan bevatten, dient u deze met de nodige voorzorgsmaatregelen te gebruiken.
+      ru: |
+        Следующий ответ сгенирирован с помощью ИИ.
+        Хотя он может содержать некоторую информацию и полезные советы, используйте его с осторожностью.
+      ja: |
+        以下の回答は AI を使用して生成されています。
+        常識的な情報や役立つアドバイスが含まれている場合もありますが、必要な注意を払ってご利用ください。
   download:
     instruction_1:
       en: Run your artifact, gather data, answer the research question.

@@ -21,6 +21,8 @@ use crate::app::{
 pub fn SolutionView() -> impl IntoView {
     let wk_state = use_wk_state();
     let wk_ctx = use_wk_ctx();
+    let lang = use_lang();
+    let link = Signal::derive(move || format!("/{}/process/3", lang.get()));
 
     let solution_delete_history = create_rw_signal(vec![]);
 
@@ -101,6 +103,7 @@ pub fn SolutionView() -> impl IntoView {
                     cta=2
                     size=ButtonSize::Lg
                     disabled={disable_cta}
+                    link
                 >
                     {t!("worksheets.solutions.cta")}
                 </ButtonView>

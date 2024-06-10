@@ -1,6 +1,5 @@
 use html::AnyElement;
 use leptos::*;
-use leptos_router::{use_navigate, NavigateOptions};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub enum ButtonSize {
@@ -22,14 +21,8 @@ pub fn ButtonView(
     children: ChildrenFn,
 ) -> impl IntoView {
     let element = if let Some(href) = link {
-        let navigate = use_navigate();
-
         html::a()
             .attr("href", href.clone())
-            .on(ev::click, move |e| {
-                e.prevent_default();
-                navigate(href.get().as_str(), NavigateOptions::default())
-            })
             .attr("type", "button")
             .child(children)
             .into_any()

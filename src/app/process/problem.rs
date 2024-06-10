@@ -23,6 +23,8 @@ use crate::app::{
 pub fn ProblemView() -> impl IntoView {
     let wk_state = use_wk_state();
     let wk_ctx = use_wk_ctx();
+    let lang = use_lang();
+    let link = Signal::derive(move || format!("/{}/process/2", lang.get()));
 
     let problem_statement = Signal::derive(move || {
         wk_state
@@ -201,6 +203,7 @@ pub fn ProblemView() -> impl IntoView {
                     cta=2
                     size=ButtonSize::Lg
                     disabled={disable_cta}
+                    link
                 >
                     {t!("worksheets.problem.cta")}
                 </ButtonView>

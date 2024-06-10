@@ -98,7 +98,7 @@ pub fn StepperView() -> impl IntoView {
     };
 
     view! {
-        <aside class="flex flex-wrap lg:flex-nowrap flex-col md:justify-stretch items-stretch lg:items-center xl:items-stretch md:flex-row xl:flex-col pt-4 mx-4 md:mb-8 xl:pt-0 xl:pr-4 xl:ml-0 xl:mr-4 xl:my-12 border-t-2 xl:border-t-0 xl:border-r-2 border-solid border-slate-400">
+        <aside class="xl:fixed xl:max-h-min xl:h-fit flex flex-wrap lg:flex-nowrap flex-col md:justify-stretch items-stretch lg:items-center xl:items-stretch md:flex-row xl:flex-col pt-4 mx-4 md:mb-8 xl:pt-0 xl:pr-4 xl:ml-0 xl:mr-4 xl:mt-12 border-t-2 xl:border-t-0 xl:border-r-2 border-solid border-slate-400">
             <ButtonView
                 attr:class="md:basis-5/12 md:max-lg:ml-0 md:max-lg:mr-auto lg:basis-auto mb-2 xl:mb-4"
                 on:click={on_prev}

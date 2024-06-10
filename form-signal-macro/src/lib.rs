@@ -88,7 +88,7 @@ pub fn derive_form_state(item: proc_macro::TokenStream) -> proc_macro::TokenStre
         ),
     );
 
-    let impl_self = make_self(&ident, &generics, &struct_name,);
+    let impl_self = make_self(&ident, &generics, &struct_name);
 
     let expanded = quote! {
         #[derive(Clone, Debug, PartialEq, Eq)]

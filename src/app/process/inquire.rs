@@ -5,10 +5,11 @@ use strum::VariantArray;
 use crate::app::{
     components::{
         use_wk_ctx, use_wk_state, ButtonSize, ButtonView, CheckboxInputView, CheckedOption,
-        DescriptionView, IconView, RadioInputView, StringInputView, WorksheetHeader,
+        ContactForm, DescriptionView, ErrorView, IconView, RadioInputView, StringInputView,
+        WorksheetHeader,
     },
     process::inquire_personal,
-    state::{Completenes, InqueryOption, WorkSheets, InquireWK},
+    state::{Completenes, InqueryOption, InquireWK, WorkSheets},
 };
 
 use super::inquire_inferrence;
@@ -18,14 +19,14 @@ use super::inquire_inferrence;
 pub fn InquireView() -> impl IntoView {
     let state = use_wk_state();
     let wk_ctx = use_wk_ctx();
-    let (inquery_in_progress, set_inquery_in_progress) = create_signal(false);
     let inquire_action = create_action(|wk: &WorkSheets| {
         let wk = wk.clone();
-        async move { inquire_inferrence(wk).await }
+        async move { inquire_inferrence(wk).await.map_err(|e| ServerFnErrorErr::from(e)) }
     });
-    let inquire_perssonal_action = create_action(|wk: &WorkSheets| {
+    let inquire_personal_action = create_action(|wk: &WorkSheets| {
         let wk = wk.clone();
-        async move { inquire_personal(wk).await }
+        let contact = wk.inquire.contact.clone();
+        async move { inquire_personal(Some(wk), contact).await.map_err(|e| ServerFnErrorErr::from(e)) }
     });
 
     let prompt_option = Signal::derive(move || state.get().inquire.get().inquery_option.clone());
@@ -34,7 +35,7 @@ pub fn InquireView() -> impl IntoView {
 
     let share_value = Signal::derive(move || state.get().inquire.get().personalized.clone());
 
-    let share_option = CheckedOption {
+    let share_option = Signal::derive(|| CheckedOption {
         value: "share".to_string(),
         label: view! {
             <p class="max-w-prose whitespace-pre-line">
@@ -42,42 +43,38 @@ pub fn InquireView() -> impl IntoView {
             </p>
         }
         .into_view(),
-    };
+    });
 
-    let inquery_options = InqueryOption::VARIANTS
-        .iter()
-        .map(|opt| {
-            let option = format!("inquery_{opt}");
-            let label_name = format!("worksheets.inquire.{option}");
-            CheckedOption {
-                value: opt.to_string(),
-                label: view! {
-                    <p class="max-w-prose whitespace-pre-line">
-                        {t!(label_name.as_str()).to_string()}
-                    </p>
+    let inquery_options = Signal::derive(|| {
+        InqueryOption::VARIANTS
+            .iter()
+            .map(|opt| {
+                let option = format!("inquery_{opt}");
+                let label_name = format!("worksheets.inquire.{option}");
+                CheckedOption {
+                    value: opt.to_string(),
+                    label: view! {
+                        <p class="max-w-prose whitespace-pre-line">
+                            {t!(label_name.as_str()).to_string()}
+                        </p>
+                    }
+                    .into_view(),
                 }
-                .into_view(),
-            }
-        })
-        .collect::<Vec<_>>();
+            })
+            .collect::<Vec<_>>()
+    });
 
     let custom_prompt = Signal::derive(move || state.get().inquire.get().custom_prompt);
 
-    let contact_name = Signal::derive(move || state.get().inquire.get().contact.get().name.clone());
-    let contact_email =
-        Signal::derive(move || state.get().inquire.get().contact.get().email.clone());
-    let contact_message =
-        Signal::derive(move || state.get().inquire.get().contact.get().message.clone());
+    let contact_value = Signal::derive(move || state.get().inquire.get().contact.get());
 
     let on_submit = Callback::new(move |_| {
-        set_inquery_in_progress.set(true);
-
         let inquery = state.get().inquire.get().get();
         let wk = state.get().get();
         if inquery.personalized {
-            inquire_perssonal_action.dispatch(wk.clone());
+            inquire_personal_action.dispatch(wk.clone());
         }
-        inquire_action.dispatch(WorkSheets{
+        inquire_action.dispatch(WorkSheets {
             inquire: InquireWK {
                 contact: Default::default(),
                 ..wk.inquire
@@ -92,87 +89,122 @@ pub fn InquireView() -> impl IntoView {
     });
 
     view! {
-        <Title text={move || format!("{} | {}", t!("contact.title"), t!("name"))}/>
+        <Title text={move || format!("{} | {} | {}", t!("worksheets.inquire.title"), t!("process.title"), t!("name"))}/>
         <WorksheetHeader
             title={t!("worksheets.inquire.title").to_string()}
             description_id="inquire"
         />
         <div class="grow w-full">
-            <DescriptionView
-                hidden=wk_ctx.description_hidden
-                toggle_hidden=wk_ctx.toggle_description_hidden
+            <Show
+                when={move || inquire_action.value().get().is_none() && !inquire_action.pending().get()}
+                fallback=move || view!{
+                    <InquireResult inquire_action inquire_personal_action/>
+                }
             >
-                <p class="whitespace-pre-line">
-                    {t!("worksheets.inquire.description")}
-                </p>
-            </DescriptionView>
-            <form on:submit=move |e| {
-                e.prevent_default();
+                <DescriptionView
+                    hidden=wk_ctx.description_hidden
+                    toggle_hidden=wk_ctx.toggle_description_hidden
+                >
+                    <p class="whitespace-pre-line">
+                        {t!("worksheets.inquire.description")}
+                    </p>
+                </DescriptionView>
+                <form on:submit=move |e| {
+                    e.prevent_default();
 
-                on_submit.call(())
-            }>
-                <div class="max-w-prose mb-4 whitespace-pre-line">
-                    <p>{t!("worksheets.inquire.instruction_1")}</p>
-                </div>
-                <RadioInputView options=inquery_options value=prompt_option />
-                <Show when=move || show_prompt_input.get()>
-                    <StringInputView
-                        class="mt-2"
-                        attr:required=true
-                        input_type="textarea"
-                        value=custom_prompt
-                        placeholder={t!("worksheets.inquire.placeholder").to_string()}
-                    />
-                </Show>
-                <hr class="border-t border-slate-400 mt-4 mb-8" />
-                <CheckboxInputView option=share_option value=share_value />
-                <Show when=move || share_value.get().get()>
-                    <label class="block my-2">
-                        <p class="mb-1">{t!("contact.name.label")}</p>
+                    on_submit.call(())
+                }>
+                    <div class="max-w-prose mb-4 whitespace-pre-line">
+                        <p>{t!("worksheets.inquire.instruction_1")}</p>
+                    </div>
+                    <RadioInputView options=inquery_options value=prompt_option />
+                    <Show when=move || show_prompt_input.get()>
                         <StringInputView
-                            attr:required=true
-                            attr:autocomplete="given-name"
-                            input_type="text"
-                            value=contact_name
-                            placeholder=t!("contact.name.placeholder").to_string()
-                        />
-                    </label>
-                    <label class="block my-2">
-                        <p class="mb-1">{t!("contact.email.label")}</p>
-                        <StringInputView
-                            attr:required=true
-                            attr:autocomplete="email"
-                            input_type="email"
-                            value=contact_email
-                            placeholder=t!("contact.email.placeholder").to_string()
-                        />
-                    </label>
-                    <label class="block my-2">
-                        <p class="mb-1">{t!("contact.message.label")}</p>
-                        <StringInputView
+                            class="mt-2"
                             attr:required=true
                             input_type="textarea"
-                            value=contact_message
-                            placeholder=t!("contact.message.placeholder").to_string()
+                            value=custom_prompt
+                            placeholder={t!("worksheets.inquire.placeholder").to_string()}
                         />
-                    </label>
-                </Show>
-                <div class="flex w-full mt-8 justify-center">
-                    <ButtonView
-                        cta=2
-                        size=ButtonSize::Lg
-                        attr:type="submit"
-                        on:click=move |e| {
-                            e.prevent_default();
-                            on_submit.call(())
-                        }
-                        disabled={disable_inquire}
-                    >
-                        <IconView icon="Send"/>
-                        {t!("worksheets.inquire.cta")}
-                    </ButtonView>
-                </div>
-            </form>
+                    </Show>
+                    <hr class="border-t border-slate-400 mt-4 mb-8" />
+                    <CheckboxInputView option=share_option value=share_value />
+                    <Show when=move || share_value.get().get()>
+                        <ContactForm value=contact_value/>
+                    </Show>
+                    <div class="flex w-full mt-8 justify-center">
+                        <ButtonView
+                            cta=2
+                            size=ButtonSize::Lg
+                            attr:type="submit"
+                            on:click=move |e| {
+                                e.prevent_default();
+                                on_submit.call(())
+                            }
+                            disabled={disable_inquire}
+                        >
+                            <IconView icon="Send"/>
+                            {t!("worksheets.inquire.cta")}
+                        </ButtonView>
+                    </div>
+                </form>
+            </Show>
         </div>
+    }
+}
+
+#[component]
+fn InquireResult(
+    inquire_action: Action<WorkSheets, Result<String, ServerFnErrorErr<String>>>,
+    inquire_personal_action: Action<WorkSheets, Result<(), ServerFnErrorErr<String>>>,
+) -> impl IntoView {
+    let pending_personal = inquire_personal_action.pending();
+    let pending = inquire_action.pending();
+    let done_personal = inquire_personal_action.value();
+    let response = inquire_action.value();
+    view! {
+        <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
+            {move || if pending_personal.get() {
+                view!{
+                    <p class="text-lg mb-4">
+                        <IconView attr:class="animate__animated animate__infinite animate__rotateIn" icon="Wait"/>
+                        <span>{t!("util.pending")}</span>
+                    </p>
+                }.into_view()
+            } else if let Some(r) = done_personal.get() {
+                view!{
+                    <p class="text-lg">
+                        <IconView icon="Done"/>
+                        <span>{t!("contact.success.title")}</span>
+                        <span class="hidden">{r}</span>
+                    </p>
+                    <p class="max-w-prose mt-4">
+                        {t!("contact.success.description")}
+                    </p>
+                    <hr class="border-t border-slate-400 mt-4 mb-8"/>
+                }.into_view()
+            } else {
+                ().into_view()
+            }}
+            {move || if pending.get() {
+                view!{
+                    <p class="text-lg">
+                        <IconView attr:class="animate__animated animate__infinite animate__rotateIn" icon="Wait"/>
+                        <span>{t!("util.pending")}</span>
+                    </p>
+                }.into_view()
+            } else if let Some(r) = response.get() {
+                view!{
+                    <p class="max-w-prose my-4 text-sm whitespace-pre-line">
+                        {t!("worksheets.inquire.ai_disclaimer")}
+                    </p>
+                    <p class="max-w-prose whitespace-pre-line">
+                        {r}
+                    </p>
+                }.into_view()
+            } else {
+                ().into_view()
+            }}
+        </ErrorBoundary>
     }
 }
