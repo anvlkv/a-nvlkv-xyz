@@ -49,7 +49,7 @@ pub fn RvArtboardView(
     #[prop(into, optional)] input_bool: MaybeSignal<Option<(String, bool)>>,
     #[prop(into, optional)] input_num: MaybeSignal<Option<(String, f64)>>,
     #[prop(into, optional)] input_trigger: MaybeSignal<Option<String>>,
-    #[prop(into, optional)] on_loaded: Option<Callback<()>>,
+    #[prop(into, optional)] on_loaded: Option<Callback<String>>,
 ) -> impl IntoView {
     let canvas_el = create_node_ref::<html::Canvas>();
 
@@ -120,10 +120,10 @@ pub fn RvArtboardView(
                 spawn_local(async move {
                     let fut = JsFuture::from(promise);
                     if fut.await.is_ok() {
-                        if let Some(on_loaded) = on_loaded {
-                            on_loaded.call(());
-                        }
                         log::debug!("animation loaded: {file}/{name}/{state_machine}");
+                        if let Some(on_loaded) = on_loaded {
+                            on_loaded.call(name);
+                        }
                     } else {
                         log::error!("error loading animation: {file}/{name}/{state_machine}")
                     }

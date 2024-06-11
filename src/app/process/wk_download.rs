@@ -53,11 +53,20 @@ fn PrintView() -> impl IntoView {
     let stakeholders = move || data.get().compromise.stakeholder_choices;
     let question = move || data.get().compromise.question;
     let iteration_title = move || data.get().iterate.title;
+    let iteration_start_date = move || data.get().iterate.start_date;
+    let iteration_end_date = move || data.get().iterate.end_date;
+    let iteration_resources = move || data.get().iterate.resources;
+    let iteration_external_resources = move || data.get().iterate.external_resources;
     let now = move || data.get().implement.now;
     let best = move || data.get().implement.best;
 
-    let (rv_loaded, set_rv_loaded) =
-        create_signal(HashSet::<&'static str>::from_iter(vec!["Inquire"]));
+    let (rv_loaded, set_rv_loaded) = create_signal(HashSet::<&'static str>::from_iter(vec![
+        "Inquire",
+        "Problem",
+        "Compromise",
+        "Iterate",
+        "Implement",
+    ]));
 
     create_effect(move |_| {
         let body = document().get_elements_by_tag_name("body").item(0).unwrap();
@@ -77,18 +86,24 @@ fn PrintView() -> impl IntoView {
         }
     });
 
+    let on_rv_loaded = Callback::new(move |name: String| {
+        set_rv_loaded.update(|v| {
+            v.remove(name.as_str());
+        })
+    });
+
     view! {
         <Title text={move || format!("{}_{}_{}", iteration_title(), t!("about.title"), t!("name")).replace(&['.', '|', '/', '\\', '>', '<', '!', '?', '*'], "-")}/>
         <div
             class="font-sans bg-white text-black"
         >
             <section class="sheet padding-10mm">
-                <header class="flex w-full justify-start items-center border-b border-black">
+                <header class="flex gap-2 w-full justify-start items-center border-b border-black">
                     <RvArtboardView
                         name="Inquire"
                         state_machine="Inquire State Machine"
                         attr:class="w-16 h-16"
-                        on_loaded={move |_| set_rv_loaded.update(|v|{ v.remove("Inquire");})}
+                        on_loaded={on_rv_loaded}
                     />
                     <h1 class="text-2xl">
                         {t!("about.title")}
@@ -99,59 +114,146 @@ fn PrintView() -> impl IntoView {
                     </div>
                 </header>
 
-                <h2>
-                    {t!("worksheets.problem.label_statement")}
-                </h2>
-                <p>
-                    {problem_statement}
-                </p>
-            </section>
-            <section class="sheet padding-10mm">
-                <div class="grid grid-cols-2">
-                    <div>
-                        <h3>
-                            {t!("worksheets.compromise.label_solutions")}
-                        </h3>
-                        <ul>
-                            {move || solutions().iter().map(|s| view!{<li>{s}</li>}).collect_view()}
-                        </ul>
+                <main class="contents">
+                    <div class="flex gap-2 w-full py-4 border-b border-black">
+                        <RvArtboardView
+                            name="Iterate"
+                            state_machine="Iterate State Machine"
+                            attr:class="w-16 h-16"
+                            on_loaded={on_rv_loaded}
+                        />
+                        <div class="grow">
+                            <h2 class="text-xl">
+                                {t!("worksheets.download.iteration")}{": "} {iteration_title}
+                            </h2>
+                            <div class="grid grid-cols-2 w-full">
+                                <p>
+                                    {t!("worksheets.iterate.label_date_1")}{": "}{iteration_start_date}
+                                </p>
+                                <p>
+                                    {t!("worksheets.iterate.label_date_2")}{": "}{iteration_end_date}
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h3>
-                            {t!("worksheets.compromise.label_stakeholders")}
-                        </h3>
-                        <ul>
-                            {move || stakeholders().iter().map(|s| view!{<li>{s}</li>}).collect_view()}
-                        </ul>
+                    <div class="flex gap-2 w-full py-4 border-b border-black">
+                        <RvArtboardView
+                            name="Problem"
+                            state_machine="Problem State Machine"
+                            attr:class="w-16 h-16"
+                            on_loaded={on_rv_loaded}
+                        />
+                        <div class="grow flex gap-2 items-baseline">
+                            <h2 class="text-xl">
+                                {t!("worksheets.download.problem")}{": "}
+                            </h2>
+                            <p>
+                                {problem_statement}
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <h2>
-                    {t!("worksheets.compromise.label_question")}
-                </h2>
-                <p>
-                    {question}
-                </p>
-                <h2>
-                    {t!("worksheets.implement.title")}
-                </h2>
-                <div class="grid grid-cols-2">
-                    <div>
-                        <h3>
-                            {t!("worksheets.implement.label_now")}
-                        </h3>
-                        <ul>
-                            {move || now().iter().map(|s| view!{<li>{s}</li>}).collect_view()}
-                        </ul>
+                    <div class="flex gap-2 w-full py-4 border-b border-black">
+                        <RvArtboardView
+                            name="Compromise"
+                            state_machine="Compromise State Machine"
+                            attr:class="w-16 h-16"
+                            on_loaded={on_rv_loaded}
+                        />
+                        <div class="grow grid grid-cols-2 gap-2">
+                            <h2 class="text-xl col-span-full">
+                                {t!("worksheets.download.compromise")}{": "}
+                            </h2>
+                            <div>
+                                <h3 class="text-lg">
+                                    {t!("worksheets.compromise.label_solutions")}
+                                </h3>
+                                <ul class="list-disc pl-6">
+                                    {move || solutions().iter().map(|s| view!{
+                                        <li class="mb-1">{s}</li>
+                                    }).collect_view()}
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-lg">
+                                    {t!("worksheets.compromise.label_stakeholders")}
+                                </h3>
+                                <ul class="list-disc pl-6">
+                                    {move || stakeholders().iter().map(|s| view!{
+                                        <li class="mb-1">{s}</li>
+                                    }).collect_view()}
+                                </ul>
+                            </div>
+                            <div class="col-span-full flex gap-2 items-baseline">
+                                <h3 class="text-lg">
+                                    {t!("worksheets.download.research")}{": "}
+                                </h3>
+                                <p>
+                                    {question}
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h3>
-                            {t!("worksheets.implement.label_best")}
-                        </h3>
-                        <ul>
-                            {move || best().iter().map(|s| view!{<li>{s}</li>}).collect_view()}
-                        </ul>
+                    <div class="flex gap-2 w-full py-4 border-b border-black">
+                        <RvArtboardView
+                            name="Implement"
+                            state_machine="Implement State Machine"
+                            attr:class="w-16 h-16"
+                            on_loaded={on_rv_loaded}
+                        />
+                        <div class="grow grid grid-cols-2 gap-2">
+                            <h2 class="text-xl col-span-full">
+                                {t!("worksheets.implement.title")}{": "}
+                            </h2>
+                            <div>
+                                <h3 class="text-lg">
+                                    {t!("worksheets.implement.label_now")}
+                                </h3>
+                                <h4>
+                                    {t!("worksheets.implement.hint_now")}
+                                </h4>
+                                <ul class="list-disc pl-6">
+                                    {move || now().iter().map(|s| view!{
+                                        <li class="mb-1">{s}</li>
+                                    }).collect_view()}
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-lg">
+                                    {t!("worksheets.implement.label_best")}
+                                </h3>
+                                <h4>
+                                    {t!("worksheets.implement.hint_best")}
+                                </h4>
+                                <ul class="list-disc pl-6">
+                                    {move || best().iter().map(|s| view!{
+                                        <li class="mb-1">{s}</li>
+                                    }).collect_view()}
+                                </ul>
+                            </div>
+                            <hr class="col-span-full my-2"/>
+                            <div>
+                                <h3 class="text-lg">
+                                    {t!("worksheets.iterate.label_resources")}
+                                </h3>
+                                <ul class="list-disc pl-6">
+                                    {move || iteration_resources().iter().map(|s| view!{
+                                        <li class="mb-1">{s}</li>
+                                    }).collect_view()}
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-lg">
+                                    {t!("worksheets.iterate.label_externals")}
+                                </h3>
+                                <ul class="list-disc pl-6">
+                                    {move || iteration_external_resources().iter().map(|s| view!{
+                                        <li class="mb-1">{s}</li>
+                                    }).collect_view()}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </main>
             </section>
         </div>
     }

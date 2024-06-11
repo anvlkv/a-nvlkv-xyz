@@ -305,8 +305,26 @@ worksheets:
       nl: Resultaatgericht ontwerpproces door Sacha Nowolokov
       ru: Процесс проектирования, ориентированный на результат, от Саши Новолокова
       ja: ササ・ノボロコフによる成果重視の設計プロセス
-    instruction_2:
-      en: Celebrate all the positive impact your artifact have brought!
+    iteration:
+      en: Iteration
+      nl: Iteratie
+      ja: 反復
+      ru: Итерация
+    problem:
+      en: The problem we aim to solve
+      ru: Мы намереваемся решить проблему
+      nl: Het probleem dat we willen oplossen
+      ja: 解決を目指す問題
+    compromise:
+      en: The choice we've made
+      ru: Мы сделали выбор
+      nl: De keuze die we hebben gemaakt
+      ja: 下した選択
+    research:
+      en: This iteration's research
+      ru: Исследование в этой итерации
+      nl: Het onderzoek van deze iteratie
+      ja: この反復の研究
     instruction_3:
       en: In a constructive way digest what you've learned.
     instruction_4:
