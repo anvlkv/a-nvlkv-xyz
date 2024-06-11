@@ -104,7 +104,13 @@ links:
     ru: Ссылки
     ja: リンク
 not_found:
-  en: Page not found
-  nl: Pagina niet gevonded
-  ru: Страница не найдена
-  ja: ページが見つかりません
+  title:
+    en: Page not found
+    nl: Pagina niet gevonded
+    ru: Страница не найдена
+    ja: ページが見つかりません
+  cta:
+    en: Fearlessly start over
+    nl: Begin onbevreesd opnieuw
+    ru: Бесстрашно начните сначала
+    ja: 恐れずにやり直す

@@ -24,7 +24,8 @@ pub async fn inquire_inferrence(wk: WorkSheets) -> Result<String, ServerFnError<
         return Ok("Helpful answer".to_string());
     }
 
-    use spin_sdk::llm;
+    use spin_sdk::{key_value, llm};
+    use crate::server::safe_error;
 
     let WorkSheets {
         problem,
@@ -35,18 +36,43 @@ pub async fn inquire_inferrence(wk: WorkSheets) -> Result<String, ServerFnError<
         inquire,
     } = wk;
 
-    let problem = sanitize_input(serde_json::to_string(&problem).map_err(|e| e.to_string())?);
-    let solutions = sanitize_input(serde_json::to_string(&solutions).map_err(|e| e.to_string())?);
-    let compromise = sanitize_input(serde_json::to_string(&compromise).map_err(|e| e.to_string())?);
-    let implement = sanitize_input(serde_json::to_string(&implement).map_err(|e| e.to_string())?);
-    let iterate = sanitize_input(serde_json::to_string(&iterate).map_err(|e| e.to_string())?);
+    let problem = sanitize_input(serde_json::to_string(&problem).map_err(safe_error)?);
+    let solutions = sanitize_input(serde_json::to_string(&solutions).map_err(safe_error)?);
+    let compromise = sanitize_input(serde_json::to_string(&compromise).map_err(safe_error)?);
+    let implement = sanitize_input(serde_json::to_string(&implement).map_err(safe_error)?);
+    let iterate = sanitize_input(serde_json::to_string(&iterate).map_err(safe_error)?);
 
-    let (inst, i_ctx) = match InqueryOption::from_str(inquire.inquery_option.as_str()).map_err(|e| e.to_string())? {
-        InqueryOption::FirstTime => ("It is a first time entry. How to improve it?".to_string(), Some("Some common mistakes are: choosing a problem which is too intrinsic, forgeting some important stakeholders, confusing stakeholders to shareholders, defining a solution too technically or too vaguely, not having outlined the research, forgetting some necessary resources")),
-        InqueryOption::ScopeAndTime => ("How to adjust the scope and timeframe of this iteration?".to_string(), Some("It is common to wish for too much at once, underestimate time for implementation and testing a solution.")),
-        InqueryOption::EthicalDesign => ("Suggest an ethical approach to implementing and testing the proposed solution.".to_string(), Some("Ethical design would be concerned with feelings and future wellbeing of enlisted or other potential stakeholders.")),
-        InqueryOption::Narrative => ("Suggest a narrative communicating the main idea of this iteration to a broader audience.".to_string(), Some("A helpfull narrative would illustrate a usecase, use a presona, relatable wording.")),
-        InqueryOption::Custom => (sanitize_input(inquire.custom_prompt), None),
+    let (inst, i_ctx, max_tokens, temperature) = match InqueryOption::from_str(inquire.inquery_option.as_str()).map_err(safe_error)? {
+        InqueryOption::FirstTime => (
+            "It is a first time entry. How to improve it?".to_string(),
+            Some("Some common mistakes are: choosing a problem which is too intrinsic, forgeting some important stakeholders, confusing stakeholders to shareholders, defining a solution too technically or too vaguely, not having outlined the research, forgetting some necessary resources, showing signs of change avoidance."),
+            1024,
+            0.85
+        ),
+        InqueryOption::ScopeAndTime => (
+            "How to adjust the scope and timeframe of this iteration?".to_string(),
+            Some("It is common to wish for too much at once, underestimate time for implementation and testing a solution."),
+            512,
+            0.65
+        ),
+        InqueryOption::EthicalDesign => (
+            "Suggest an ethical approach to implementing and testing the proposed solution.".to_string(),
+            Some("Ethical design would be concerned with feelings and future wellbeing of enlisted or other potential stakeholders."),
+            512,
+            0.5
+        ),
+        InqueryOption::Narrative => (
+            "Suggest a narrative communicating the main idea of this iteration to a broader audience.".to_string(),
+            Some("A helpfull narrative would illustrate a usecase, use a presona, relatable wording."),
+            2056,
+            0.9
+        ),
+        InqueryOption::Custom => (
+            sanitize_input(inquire.custom_prompt),
+            None,
+            2056,
+            0.6
+        ),
     };
 
     let prompt = format!(
@@ -93,15 +119,15 @@ pub async fn inquire_inferrence(wk: WorkSheets) -> Result<String, ServerFnError<
         llm::InferencingModel::Llama2Chat,
         prompt.as_str(),
         llm::InferencingParams {
-            max_tokens: 1024,
+            max_tokens,
             repeat_penalty: 1.1,
             repeat_penalty_last_n_token_count: 64,
-            temperature: 0.95,
+            temperature,
             top_k: 40,
             top_p: 0.82,
         },
     )
-    .map_err(|e| e.to_string())?;
+    .map_err(safe_error)?;
 
     Ok(response.text)
 }
@@ -114,10 +140,11 @@ pub async fn inquire_personal(
     use spin_sdk::pg::ParameterValue;
 
     use crate::server::get_db_conn;
+    use crate::server::safe_error;
 
-    let conn = get_db_conn().map_err(|e| e.to_string())?;
+    let conn = get_db_conn().map_err(safe_error)?;
 
-    let wk_data = serde_json::to_string(&wk).map_err(|e| e.to_string())?;
+    let wk_data = serde_json::to_string(&wk).map_err(safe_error)?;
     let name = contact.name;
     let email = contact.email;
     let message = contact.message;
@@ -134,7 +161,7 @@ pub async fn inquire_personal(
         ParameterValue::Str(wk_data),
     ];
 
-    conn.execute(sql, &params).map_err(|e| e.to_string())?;
+    conn.execute(sql, &params).map_err(safe_error)?;
 
     Ok(())
 }

@@ -28,36 +28,59 @@ pub fn App() -> impl IntoView {
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-32x32.png" sizes="32x32" />
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-16x16.png" sizes="16x16" />
         <Link rel="preload" href="/pkg/anvlkv-done-button.riv" attr:as="fetch" crossorigin="anonymous"/>
+
+        <Meta attr:http-equiv="Content-Security-Policy" content="
+          default-src;
+          script-src 'self' unpkg.com cdn.jsdelivr.net cdnjs.cloudflare.com 'unsafe-inline' 'wasm-unsafe-eval';
+          style-src 'self' cdnjs.cloudflare.com 'unsafe-inline';
+          img-src 'self' data: xata.io;
+          font-src 'self';
+          connect-src 'self' unpkg.com cdn.jsdelivr.net;
+          media-src 'self';
+          object-src 'none';
+          child-src;
+          frame-src 'self';
+          form-action 'self';
+          base-uri;
+          manifest-src 'self';
+        "/>
+
         // cdn libs
-        <Script src="https://unpkg.com/@rive-app/canvas@2.15.2"/>
+        <Script
+            src="https://unpkg.com/@rive-app/canvas@2.17.3"
+            integrity="sha384-S6ym4vurJm2ceWBIlCGYq8aG9EJvqCthpBoVP40V0gJ3QS+TkORGHohsYBNpYzTT"
+            crossorigin="anonymous"
+        />
         <Link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+            integrity="sha384-Gu3KVV2H9d+yA4QDpVB7VcOyhJlAVrcXd0thEjr4KznfaFPLe0xQJyonVxONa4ZC"
+            crossorigin="anonymous"
         />
 
         // app
-        <StoreProvider>
-            <div class="font-sans min-h-screen w-screen overflow-auto md:overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50" id={STYLED_ROOT}>
-                <Router>
-                    <Routes>
-                        <Route path=":lang" view=LocalizedRootView>
-                            <Route path="" view=LandingView/>
-                            <Route path="process" view=ProcessView ssr=SsrMode::PartiallyBlocked>
-                                <Route path="download" view=process::WorksheetsDownload/>
-                                <Route path=":step/:example?" view=process::ProcessSwitchView/>
+        <div class="contents">
+            <StoreProvider>
+                    <Router>
+                        <Routes>
+                            <Route path=":lang/process/download" view=process::WorksheetsDownload/>
+                            <Route path=":lang" view=LocalizedRootView>
+                                <Route path="" view=LandingView/>
+                                <Route path="process" view=ProcessView ssr=SsrMode::PartiallyBlocked>
+                                    <Route path=":step/:example?" view=process::ProcessSwitchView/>
+                                </Route>
+                                <Route path="projects" view=ProjectsView>
+                                    <Route path="" view=projects::ProjectsGridView />
+                                    <Route path=":id" view=projects::CaseView />
+                                </Route>
+                                <Route path="contact" view=ContactView />
+                                <Route path="resume" view=ResumeView />
+                                <Route path="links" view=LinksView />
                             </Route>
-                            <Route path="projects" view=ProjectsView>
-                                <Route path="" view=projects::ProjectsGridView />
-                                <Route path=":id" view=projects::CaseView />
-                            </Route>
-                            <Route path="contact" view=ContactView />
-                            <Route path="resume" view=ResumeView />
-                            <Route path="links" view=LinksView />
-                        </Route>
-                        <Route path="*any" view=NotFound/>
-                    </Routes>
-                </Router>
-            </div>
-        </StoreProvider>
+                            <Route path="*any" view=NotFound/>
+                        </Routes>
+                    </Router>
+            </StoreProvider>
+        </div>
     }
 }

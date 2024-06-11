@@ -36,7 +36,7 @@ pub fn ReadOnlyView(
     let label = Signal::derive(move || label.get());
 
     view! {
-        <blockquote class="max-w-prose w-full my-2 mx-auto p-4 text-lg rounded border border-slate-300 dark:border-slate-700">
+        <blockquote class="max-w-prose whitespace-pre-line w-full my-2 mx-auto p-4 text-lg rounded border border-slate-300 dark:border-slate-700">
             <Show
                 when={not_empty}
                 fallback

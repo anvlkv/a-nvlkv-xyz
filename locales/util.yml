@@ -86,6 +86,11 @@ util:
     ja: |
       申し訳ありませんが、問題が発生しました...
       今すぐ、または後でページをリロードしてください。
+  fullscreen:
+    en: Fullscreen
+    ru: Полноэкранный режим
+    nl: Volledig schermmodus
+    ja: 全画面
 privacy:
   short:
     en: Privacy

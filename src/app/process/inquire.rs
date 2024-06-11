@@ -5,11 +5,12 @@ use strum::VariantArray;
 use crate::app::{
     components::{
         use_wk_ctx, use_wk_state, ButtonSize, ButtonView, CheckboxInputView, CheckedOption,
-        ContactForm, DescriptionView, ErrorView, IconView, RadioInputView, StringInputView,
-        WorksheetHeader,
+        ContactForm, DescriptionView, ErrorView, IconView, RadioInputView, ReadOnlyView,
+        StringInputView, WorksheetHeader,
     },
     process::inquire_personal,
     state::{Completenes, InqueryOption, InquireWK, WorkSheets},
+    use_lang,
 };
 
 use super::inquire_inferrence;
@@ -21,12 +22,20 @@ pub fn InquireView() -> impl IntoView {
     let wk_ctx = use_wk_ctx();
     let inquire_action = create_action(|wk: &WorkSheets| {
         let wk = wk.clone();
-        async move { inquire_inferrence(wk).await.map_err(|e| ServerFnErrorErr::from(e)) }
+        async move {
+            inquire_inferrence(wk)
+                .await
+                .map_err(|e| ServerFnErrorErr::from(e))
+        }
     });
     let inquire_personal_action = create_action(|wk: &WorkSheets| {
         let wk = wk.clone();
         let contact = wk.inquire.contact.clone();
-        async move { inquire_personal(Some(wk), contact).await.map_err(|e| ServerFnErrorErr::from(e)) }
+        async move {
+            inquire_personal(Some(wk), contact)
+                .await
+                .map_err(|e| ServerFnErrorErr::from(e))
+        }
     });
 
     let prompt_option = Signal::derive(move || state.get().inquire.get().inquery_option.clone());
@@ -158,34 +167,30 @@ fn InquireResult(
     inquire_action: Action<WorkSheets, Result<String, ServerFnErrorErr<String>>>,
     inquire_personal_action: Action<WorkSheets, Result<(), ServerFnErrorErr<String>>>,
 ) -> impl IntoView {
+    let state = use_wk_state();
     let pending_personal = inquire_personal_action.pending();
     let pending = inquire_action.pending();
     let done_personal = inquire_personal_action.value();
     let response = inquire_action.value();
+    let lang = use_lang();
+    let link = Signal::derive(move || format!("/{}/process/0", lang.get()));
+    let (last_chance, set_last_chance) = create_signal(false);
+    let contact_value = Signal::derive(move || state.get().inquire.get().contact.get());
+    let send_disabled =
+        Signal::derive(move || !state.get().inquire.get().contact.get().get().is_complete());
+    let submit = move |e: ev::SubmitEvent| {
+        e.prevent_default();
+        let wk = state.get().get();
+        inquire_personal_action.dispatch(wk);
+        set_last_chance.set(false);
+    };
+
+    create_effect(move |_| {
+        window().scroll_to_with_x_and_y(0.0, 0.0);
+    });
+
     view! {
         <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
-            {move || if pending_personal.get() {
-                view!{
-                    <p class="text-lg mb-4">
-                        <IconView attr:class="animate__animated animate__infinite animate__rotateIn" icon="Wait"/>
-                        <span>{t!("util.pending")}</span>
-                    </p>
-                }.into_view()
-            } else if let Some(r) = done_personal.get() {
-                view!{
-                    <p class="text-lg">
-                        <IconView icon="Done"/>
-                        <span>{t!("contact.success.title")}</span>
-                        <span class="hidden">{r}</span>
-                    </p>
-                    <p class="max-w-prose mt-4">
-                        {t!("contact.success.description")}
-                    </p>
-                    <hr class="border-t border-slate-400 mt-4 mb-8"/>
-                }.into_view()
-            } else {
-                ().into_view()
-            }}
             {move || if pending.get() {
                 view!{
                     <p class="text-lg">
@@ -198,13 +203,75 @@ fn InquireResult(
                     <p class="max-w-prose my-4 text-sm whitespace-pre-line">
                         {t!("worksheets.inquire.ai_disclaimer")}
                     </p>
-                    <p class="max-w-prose whitespace-pre-line">
-                        {r}
+                    <ReadOnlyView>
+                        {r.clone()}
+                    </ReadOnlyView>
+                    <hr class="border-t border-slate-400 mt-4 mb-8"/>
+                }.into_view()
+            } else {
+                ().into_view()
+            }}
+            {move || if pending_personal.get() {
+                view!{
+                    <p class="text-lg mb-4">
+                        <IconView attr:class="animate__animated  animate__infinite animate__rotateIn" icon="Wait"/>
+                        <span>{t!("util.pending")}</span>
+                    </p>
+                }.into_view()
+            } else if let Some(r) = done_personal.get() {
+                view!{
+                    <p class="text-lg">
+                        <IconView attr:class="dark:text-emerald-400 text-emerald-600" icon="Done"/>
+                        <span>{t!("contact.success.title")}</span>
+                        <span class="hidden">{r}</span>
+                    </p>
+                    <p class="max-w-prose mt-4">
+                        {t!("contact.success.description")}
                     </p>
                 }.into_view()
             } else {
                 ().into_view()
             }}
+            <Show when=move || last_chance.get()>
+                <form on:submit={submit} class="flex flex-col items-stretch">
+                    <h3 class="text-lg mb-4">{t!("worksheets.inquire.cta_3")}</h3>
+                    <ContactForm value=contact_value/>
+                    <div class="flex justify-center">
+                        <ButtonView
+                            cta=2
+                            size=ButtonSize::Lg
+                            attr:type="submit"
+                            attr:class="my-8"
+                            disabled={send_disabled}
+                        >
+                            <IconView icon="Send"/>
+                            {t!("contact.send")}
+                        </ButtonView>
+                    </div>
+                </form>
+            </Show>
+            <Show when={move|| !pending_personal.get() && !pending.get()}>
+                <div class="flex w-full mt-8 gap-8 justify-center">
+                    <ButtonView
+                        cta=1
+                        size=ButtonSize::Lg
+                        link
+                    >
+                        <IconView icon="Restart"/>
+                        {t!("worksheets.inquire.cta_2")}
+                    </ButtonView>
+                    <Show when={move || done_personal.get().is_none() && !last_chance.get()}>
+                        <ButtonView
+                            cta=2
+                            size=ButtonSize::Lg
+                            on:click={move |_| set_last_chance.set(true)}
+                        >
+                            <IconView icon="Send"/>
+                            {t!("worksheets.inquire.cta_3")}
+                        </ButtonView>
+                    </Show>
+                </div>
+            </Show>
         </ErrorBoundary>
     }
 }

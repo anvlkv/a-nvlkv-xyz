@@ -37,6 +37,7 @@ pub fn WorksheetHeader(
 
     let description_hidden = ctx.description_hidden.clone();
     let toggle_description_hidden = ctx.toggle_description_hidden.clone();
+    let toggle_fullscreen = ctx.toggle_fullscreen.clone();
     let title = Signal::derive(move || title.get());
     let tabs = Signal::derive(move || tabs.get());
 
@@ -46,16 +47,23 @@ pub fn WorksheetHeader(
                 {title}
             </h2>
             <div class="flex flex-wrap justify-end grow items-end h-full">
-                <div class="border-b-2 px-2 border-slate-400 grow rounded-t-lg after:content-[' ']">
+                <div class="flex gap-1 border-b-2 px-2 border-slate-400 grow rounded-t-lg after:content-[' ']">
                     <Show when={move || description_hidden.get()}>
                         <button
                             on:click={move |_| toggle_description_hidden.call(())}
                             title=t!("util.info")
-                            class="-mb-px text-sky-800 dark:text-sky-200"
+                            class="mb-px text-sky-800 dark:text-sky-200"
                         >
                             <IconView icon="Info"/>
                         </button>
                     </Show>
+                    <button
+                        on:click={move |_| toggle_fullscreen.call(())}
+                        title=t!("util.fullscreen")
+                        class="mb-px text-sky-800 dark:text-sky-200"
+                    >
+                        <IconView icon="Fullscreen"/>
+                    </button>
                 </div>
                 <For each=move || tabs.get()
                     key=|state| state.href.clone()

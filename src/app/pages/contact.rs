@@ -3,7 +3,7 @@ use leptos_meta::Title;
 use leptos_router::ActionForm;
 
 use crate::app::{
-    components::{ButtonSize, ButtonView, ContactForm, IconView, ErrorView},
+    components::{ButtonSize, ButtonView, ContactForm, ErrorView, IconView},
     process::InquireContact,
     state::{Completenes, ContactFormState},
 };
@@ -29,7 +29,7 @@ pub fn ContactView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {}", t!("contact.title"), t!("name"))}/>
-        <ActionForm action={inquire_personal_action} class="mx-auto max-w-screen-2xl px-6 md:px-8 lg:px-16 min-h-full">
+        <ActionForm action={inquire_personal_action} class="mx-auto max-w-screen-2xl px-6 md:px-8 lg:px-16 min-h-full w-full">
             <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
                 <div class="flex flex-col w-full items-stretch p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
                     <Show
@@ -62,11 +62,11 @@ pub fn ContactView() -> impl IntoView {
 
 #[component]
 fn ContactResult(
-    inquire_personal_action: Action<InquireContact, Result<String, ServerFnError<String>>>
+    inquire_personal_action: Action<InquireContact, Result<String, ServerFnError<String>>>,
 ) -> impl IntoView {
     let pending = inquire_personal_action.pending();
     let done = inquire_personal_action.value();
-    view!{
+    view! {
         {move || if pending.get() {
             view!{
                 <p class="text-lg">
@@ -77,7 +77,7 @@ fn ContactResult(
         } else if let Some(r) = done.get() {
             view!{
                 <p class="text-lg">
-                    <IconView icon="Done"/>
+                    <IconView attr:class="dark:text-emerald-400 text-emerald-600" icon="Done"/>
                     <span>{t!("contact.success.title")}</span>
                     <span class="hidden">
                         {r.map_err(|e| ServerFnErrorErr::from(e))}

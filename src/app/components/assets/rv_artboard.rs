@@ -1,6 +1,6 @@
 use leptos::{html::canvas, *};
 
-#[cfg(any(feature = "csr", feature = "hydrate"))]
+#[cfg(feature = "client")]
 mod rv_animation {
     use js_sys::Promise;
     use wasm_bindgen::prelude::*;
@@ -53,7 +53,7 @@ pub fn RvArtboardView(
 ) -> impl IntoView {
     let canvas_el = create_node_ref::<html::Canvas>();
 
-    #[cfg(any(feature = "csr", feature = "hydrate"))]
+    #[cfg(feature = "client")]
     {
         use futures::StreamExt;
         use wasm_bindgen_futures::JsFuture;

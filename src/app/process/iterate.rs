@@ -6,8 +6,8 @@ use web_time::Instant;
 
 use crate::app::{
     components::{
-        use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
-        HistoryEntry, IconView, ListInputView, StringInputView, UndoRemove, WorksheetHeader,
+        use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView, HistoryEntry, IconView,
+        ListInputView, StringInputView, UndoRemove, WorksheetHeader,
     },
     process::{
         FixedBestList, FixedNowList, FixedProblemStatement, FixedQuestionStatement,
@@ -23,14 +23,13 @@ pub fn IterateView() -> impl IntoView {
     let wk_ctx = use_wk_ctx();
     let state = use_wk_state();
     let lang = use_lang();
+    let download_link = move || format!("/{}/process/download", lang.get());
 
     let title = Signal::derive(move || state.get().iterate.get().title);
     let start_date = Signal::derive(move || state.get().iterate.get().start_date);
     let end_date = Signal::derive(move || state.get().iterate.get().end_date);
     let resources = Signal::derive(move || state.get().iterate.get().resources);
     let external_resources = Signal::derive(move || state.get().iterate.get().external_resources);
-
-    let download_link = Signal::derive(move || format!("/{}/process/download", lang.get()));
 
     let resources_delete_history = create_rw_signal(vec![]);
     let externals_delete_history = create_rw_signal(vec![]);
@@ -99,7 +98,15 @@ pub fn IterateView() -> impl IntoView {
         }
     });
 
-    let disable_download = Signal::derive(move || !state.get().get().is_complete());
+    let download_action = create_action(|_| async move {});
+
+    let download_in_progress = download_action.pending();
+    let disable_download =
+        Signal::derive(move || !state.get().get().is_complete() || download_in_progress.get());
+
+    let on_download = move |_| {
+        download_action.dispatch(());
+    };
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.iterate.title"), t!("process.title"), t!("name"))}/>
@@ -193,14 +200,26 @@ pub fn IterateView() -> impl IntoView {
                 <ButtonView
                     cta=2
                     size=ButtonSize::Lg
-                    attr:target="_blank"
-                    link=download_link
+                    on:click={on_download}
                     disabled={disable_download}
                 >
-                    <IconView icon="Download"/>
-                    {t!("worksheets.iterate.cta")}
+                    {move || if download_in_progress.get() {
+                        view!{
+                            <IconView icon="Wait"/>
+                            {t!("util.pending")}
+                        }
+                    } else {
+                        view!{
+                            <IconView icon="Download"/>
+                            {t!("worksheets.iterate.cta")}
+                        }
+                    }}
+
                 </ButtonView>
             </div>
+            // <Show when=move || download_in_progress.get()>
+                <iframe src={download_link} class="w-full h-screen"/>
+            // </Show>
         </div>
         <UndoRemove
             history=resources_delete_history

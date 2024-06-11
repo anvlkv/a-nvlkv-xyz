@@ -17,7 +17,7 @@ pub fn LandingView() -> impl IntoView {
 
     let button_element: NodeRef<html::AnyElement> = create_node_ref();
 
-    #[cfg(any(feature = "hydrate", feature = "csr"))]
+    #[cfg(feature = "client")]
     {
         use std::rc::Rc;
 
@@ -100,11 +100,11 @@ pub fn LandingView() -> impl IntoView {
                 </div>
                 <div id="process-intro" class="col-span-2 md:col-span-4 py-6 flex flex-col md:flex-row gap-16 text-base sm:text-lg">
                     <p class="basis-full md:basis-1/2">
-                        {t!("landing.p1_s1")}{" "}
+                        {t!("landing.p1_s1")}
                         <A href={move || format!("/{}/process/0", lang.get())} attr:class="underline text-purple-800 dark:text-purple-200">
                             {t!("landing.p1_link")}
                         </A>
-                        {" "}{t!("landing.p1_s2")}
+                        {t!("landing.p1_s2")}
                         <br/>
                         {t!("landing.p1_s3")}
                     </p>

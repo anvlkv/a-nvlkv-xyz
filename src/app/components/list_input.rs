@@ -66,7 +66,7 @@ pub fn ListInputView(
 
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let on_blur_item = move |e: ev::FocusEvent| {
-        #[cfg(any(feature = "hydrate", feature = "csr"))]
+        #[cfg(feature = "client")]
         {
             use wasm_bindgen::JsCast;
 

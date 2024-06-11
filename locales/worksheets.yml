@@ -45,7 +45,7 @@ about:
     title:
       en: Test & Iterate
     description:
-      en: Learn, celebrate, and fearlesly start over.
+      en: Learn, celebrate, and fearlessly start over.
 worksheets:
   example:
     en: "Example: %{title}"
@@ -289,15 +289,28 @@ worksheets:
       ja: |
         以下の回答は AI を使用して生成されています。
         常識的な情報や役立つアドバイスが含まれている場合もありますが、必要な注意を払ってご利用ください。
+    cta_2:
+      en: Reiterate
+      ru: Повторить итерацию
+      nl: Herhaal iteratie
+      ja: 繰り返す
+    cta_3:
+      en: Ask a question
+      ru: Задать вопрос
+      nl: Een vraag stellen
+      ja: 質問する
   download:
-    instruction_1:
-      en: Run your artifact, gather data, answer the research question.
+    signature:
+      en: Outcomes oriented design process by Sasha Novolokov
+      nl: Resultaatgericht ontwerpproces door Sacha Nowolokov
+      ru: Процесс проектирования, ориентированный на результат, от Саши Новолокова
+      ja: ササ・ノボロコフによる成果重視の設計プロセス
     instruction_2:
       en: Celebrate all the positive impact your artifact have brought!
     instruction_3:
       en: In a constructive way digest what you've learned.
     instruction_4:
-      en: With all the new insight, fearlesly start over.
+      en: With all the new insight, fearlessly start over.
 stepper:
   about:
     en: About

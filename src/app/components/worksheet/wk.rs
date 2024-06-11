@@ -22,6 +22,8 @@ pub struct WorksheetState {
     pub description_hidden: Signal<bool>,
     pub toggle_description_hidden: Callback<()>,
     pub set_current_description: WriteSignal<String>,
+    pub toggle_fullscreen: Callback<()>,
+    pub is_fullscreen: Signal<bool>,
 }
 
 pub const WK_STORAGE: &str = "worksheet_storage";
@@ -36,9 +38,11 @@ pub fn use_wk_state() -> Signal<WorkSheetsFormState> {
     Signal::derive(move || ctx.form.get().unwrap_or_default())
 }
 
+#[cfg_attr(feature = "ssr", allow(unused))]
 #[component]
 pub fn WorksheetView(
     #[prop(into)] storage_type: StorageMode,
+    #[prop(into, optional)] fs_element: Option<NodeRef<html::Div>>,
     children: ChildrenFn,
 ) -> impl IntoView {
     let (current_description, set_current_description) = create_signal(String::default());
@@ -114,11 +118,42 @@ pub fn WorksheetView(
         }
     });
 
+    #[cfg_attr(feature = "ssr", allow(unused))]
+    let (is_fullscreen, set_is_fullscreen) = create_signal(false);
+    let on_tooggle_fullscreen = Callback::new(move |_| {
+        if let Some(fs_element) = fs_element {
+            #[cfg(feature = "client")]
+            {
+                let doc = document();
+                if let Some(el) = doc.fullscreen_element() {
+                    el.class_list().remove_1("full-screen").unwrap();
+                    doc.exit_fullscreen();
+                    set_is_fullscreen.set(false);
+                } else if let Some(el) = fs_element.get().as_deref() {
+                    match el.request_fullscreen() {
+                        Ok(_) => {
+                            el.class_list().add_1("full-screen").unwrap();
+                            set_is_fullscreen.set(true);
+                        }
+                        Err(e) => {
+                            log::error!("fullscreen error: {:?}", js_sys::Error::from(e));
+                            set_is_fullscreen.set(false);
+                        }
+                    }
+                } else {
+                    log::warn!("not fullscreen; fullscreen element not provided");
+                }
+            }
+        }
+    });
+
     provide_context(WorksheetState {
         form: wk_state,
         description_hidden,
         toggle_description_hidden: on_toggle_hidden,
+        toggle_fullscreen: on_tooggle_fullscreen,
         set_current_description,
+        is_fullscreen: is_fullscreen.into(),
     });
 
     view! {

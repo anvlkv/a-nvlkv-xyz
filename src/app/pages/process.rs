@@ -25,6 +25,8 @@ pub fn ProcessView() -> impl IntoView {
         |lang| async move { get_projects(lang, 3, 0, true).await.map(|(d, _)| d) },
     );
 
+    let fullscreen_root = create_node_ref::<html::Div>();
+
     let process_view_with_data = Signal::derive(move || {
         let lang = store.get().lang;
         if let Some(data) = examples.get() {
@@ -52,6 +54,7 @@ pub fn ProcessView() -> impl IntoView {
         leptos::error::Result::<View>::Ok(view! {
             <WorksheetView
                 storage_type=storage_type
+                fs_element=fullscreen_root
             >
                 <Outlet/>
             </WorksheetView>
@@ -60,7 +63,10 @@ pub fn ProcessView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>
-        <div class="grow mx-auto w-full max-w-screen-2xl px-6 md:px-8 lg:px-16">
+        <div
+            class="grow mx-auto w-full max-w-screen-2xl px-6 md:px-8 lg:px-16"
+            node_ref={fullscreen_root}
+        >
             <noscript>
                 <section class="grow lg:w-full p-8 my-6 lg:my-8 flex items-start mb-3 rounded-lg max-w-prose p-4 bg-amber-200 dark:bg-amber-950 border border-amber-400 dark:brder-amber-800 text-sky-800 dark:text-sky-200 text-lg rounded-xl shadow">
                     <div class="flex flex-col">
@@ -71,7 +77,7 @@ pub fn ProcessView() -> impl IntoView {
                 </section>
             </noscript>
             <div class="flex relative flex-col xl:flex-row-reverse items-stretch">
-                <section class="grow p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
+                <section class="grow p-8 my-6 lg:my-8 lg:mb-20 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
                     <Transition fallback={WorksheetDummy}>
                         <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
                             {process_view_with_data}
@@ -79,7 +85,7 @@ pub fn ProcessView() -> impl IntoView {
                     </Transition>
                 </section>
                 <Suspense>
-                    <div class="contents xl:block xl:w-64 fixed-aside min-h-svh">
+                    <div class="contents xl:block xl:w-64 fixed-aside min-h-svh shrink-0">
                         <StepperView/>
                     </div>
                 </Suspense>

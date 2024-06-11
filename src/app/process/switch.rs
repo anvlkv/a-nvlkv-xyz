@@ -1,11 +1,15 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::app::{components::ExampleView, process::*};
+use crate::app::{
+    components::{use_wk_ctx, ExampleView},
+    process::*,
+};
 
 #[component]
 pub fn ProcessSwitchView() -> impl IntoView {
     let params = use_params_map();
+    let wk_ctx = use_wk_ctx();
 
     let view = move || {
         let p = params.get();
@@ -15,6 +19,16 @@ pub fn ProcessSwitchView() -> impl IntoView {
             .flatten()
             .unwrap_or_default();
         let example = p.get("example");
+
+        create_effect(move |_| {
+            if wk_ctx.is_fullscreen.get() {
+                if let Some(el) = document().fullscreen_element() {
+                    el.set_scroll_top(0);
+                }
+            } else {
+                window().scroll_to_with_x_and_y(0.0, 0.0);
+            }
+        });
 
         match example {
             Some(_) => {

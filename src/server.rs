@@ -1,4 +1,4 @@
-use std::str;
+use std::{str, fmt::Display};
 
 use leptos_spin::{render_best_match_to_stream, server_fn::register_explicit, RouteTable};
 use spin_sdk::{
@@ -120,4 +120,14 @@ pub fn xata_rest_builder(path: &str) -> anyhow::Result<spin_sdk::http::RequestBu
         .uri(format!("{xata_rest_url}/db/{db_name}:{db_branch}/{path}"));
 
     Ok(req)
+}
+
+pub fn safe_error<T: Display>(err: T) -> String {
+    cfg_if::cfg_if!{
+        if #[cfg(debug_assertions)] {
+            err.to_string()
+        } else {
+            format!("Server error")
+        }
+    }
 }

@@ -1,6 +1,6 @@
 use leptos::*;
 
-#[cfg_attr(not(feature="ssr"), allow(unused))]
+#[cfg_attr(not(feature = "ssr"), allow(unused))]
 use crate::app::{state::ProjectData, util::coalesce_translations, Language};
 
 /// returns projects with translations for a selected langugae
@@ -23,10 +23,11 @@ pub async fn get_projects(
         http::{run, send, Method, Response},
         pg::{Decode, ParameterValue},
     };
+    use crate::server::safe_error;
 
     log::debug!("Getting examples {lang:?} {count} : {offset}");
 
-    let conn = get_db_conn().map_err(|e| e.to_string())?;
+    let conn = get_db_conn().map_err(safe_error)?;
 
     let sql = r#"
         SELECT reltuples AS estimate FROM pg_class where relname = 'projects';
@@ -35,7 +36,7 @@ pub async fn get_projects(
     let projects_count = conn
         .query(sql, &[])
         .map(|d| f32::decode(&d.rows[0][0]).unwrap())
-        .map_err(|e| e.to_string())?;
+        .map_err(safe_error)?;
 
     let sql = format!(
         r#"
@@ -70,7 +71,7 @@ pub async fn get_projects(
 
     let data = conn
         .query(sql.as_str(), params.as_slice())
-        .map_err(|e| e.to_string())?;
+        .map_err(safe_error)?;
 
     let examples_data: Vec<_> = data
         .rows
@@ -113,7 +114,7 @@ pub async fn get_projects(
     .map_err(|e: anyhow::Error| e.to_string())?;
 
     let json_string = String::from_utf8_lossy(&res).to_string();
-    let images_data = jzon::parse(json_string.as_str()).map_err(|e| e.to_string())?;
+    let images_data = jzon::parse(json_string.as_str()).map_err(safe_error)?;
 
     let examples = examples_data
         .into_iter()

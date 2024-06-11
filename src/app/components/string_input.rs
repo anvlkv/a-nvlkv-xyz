@@ -77,7 +77,7 @@ pub fn StringInputView(
 
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let on_blur_input_el = move |e: ev::FocusEvent| {
-        #[cfg(any(feature = "hydrate", feature = "csr"))]
+        #[cfg(feature = "client")]
         {
             use wasm_bindgen::JsCast;
             if e.related_target()
@@ -98,7 +98,7 @@ pub fn StringInputView(
 
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let on_blur_autocomplete_el = move |e: ev::FocusEvent| {
-        #[cfg(any(feature = "hydrate", feature = "csr"))]
+        #[cfg(feature = "client")]
         {
             use wasm_bindgen::JsCast;
 

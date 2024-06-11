@@ -16,8 +16,9 @@ pub async fn get_project_details(
         http::{run, send, Method, Response},
         pg::{Decode, ParameterValue},
     };
+    use crate::server::safe_error;
 
-    let conn = get_db_conn().map_err(|e| e.to_string())?;
+    let conn = get_db_conn().map_err(safe_error)?;
 
     let sql = format!(
         r#"
@@ -46,16 +47,22 @@ pub async fn get_project_details(
 
     let data = conn
         .query(sql.as_str(), params.as_slice())
-        .map_err(|e| e.to_string())?;
+        .map_err(safe_error)?;
 
-    let row = data
-        .rows
-        .first()
-        .ok_or(ServerFnError::ServerError("Not found".to_string()))?;
+    let row = match data.rows.first() {
+        Some(r) => r,
+        None => {
+            if let Some(resp) = use_context::<leptos_spin::ResponseOptions>() {
+                resp.set_status(404);
+            }
 
-    let id = String::decode(&row[0]).map_err(|e| e.to_string())?;
-    let title = String::decode(&row[2]).map_err(|e| e.to_string())?;
-    let description = String::decode(&row[4]).map_err(|e| e.to_string())?;
+            return Err(ServerFnError::Request("Not found".to_string()));
+        }
+    };
+
+    let id = String::decode(&row[0]).map_err(safe_error)?;
+    let title = String::decode(&row[2]).map_err(safe_error)?;
+    let description = String::decode(&row[4]).map_err(safe_error)?;
     let description_2 = String::decode(&row[6]).unwrap_or_default();
     let article = description_2.lines().map(|l| l.to_string()).collect();
     let main_image_alt = String::decode(&row[8]).ok();
@@ -64,10 +71,10 @@ pub async fn get_project_details(
         .map(|s| serde_json::from_str::<WorkSheets>(s.as_str()).ok())
         .ok()
         .flatten();
-    let translation_warning = bool::decode(&row[1]).map_err(|e| e.to_string())?
-        || bool::decode(&row[3]).map_err(|e| e.to_string())?
-        || bool::decode(&row[5]).map_err(|e| e.to_string())?
-        || bool::decode(&row[9]).map_err(|e| e.to_string())?;
+    let translation_warning = bool::decode(&row[1]).map_err(safe_error)?
+        || bool::decode(&row[3]).map_err(safe_error)?
+        || bool::decode(&row[5]).map_err(safe_error)?
+        || bool::decode(&row[9]).map_err(safe_error)?;
 
     let mut images_req =
         xata_rest_builder("tables/projects/query").map_err(|e: anyhow::Error| e.to_string())?;
@@ -86,7 +93,7 @@ pub async fn get_project_details(
     .map_err(|e: anyhow::Error| e.to_string())?;
 
     let json_string = String::from_utf8_lossy(&res).to_string();
-    let images_data = jzon::parse(json_string.as_str()).map_err(|e| e.to_string())?;
+    let images_data = jzon::parse(json_string.as_str()).map_err(safe_error)?;
 
     let record = images_data["records"]
         .as_array()

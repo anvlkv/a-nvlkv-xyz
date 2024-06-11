@@ -19,6 +19,7 @@ pub enum Icon {
     Worksheet,
     Download,
     Wait,
+    Fullscreen,
 }
 
 #[component]
@@ -26,8 +27,8 @@ pub fn IconView(
     #[prop(into)] icon: MaybeSignal<String>,
     #[prop(attrs, into)] attrs: Vec<(&'static str, Attribute)>,
 ) -> impl IntoView {
-    html::i().attrs(attrs).attr("class", move || {
+    html::i().attrs(attrs).dyn_classes(move || {
         let icon = Icon::from_str(icon.get().as_str()).expect("icon name");
-        format!("uiw-{icon} mx-0.5")
+        [format!("uiw-{icon} mx-0.5")]
     })
 }
