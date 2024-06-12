@@ -282,7 +282,7 @@ pub fn ExampleCompromiseView() -> impl IntoView {
             <DescriptionView
                 hidden=wk_ctx.description_hidden
                 toggle_hidden=wk_ctx.toggle_description_hidden
-                alternative=true
+                alternative=1
             >
                 <p class="whitespace-pre-line">
                     {move || example.get().description}

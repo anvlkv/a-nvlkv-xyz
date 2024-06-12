@@ -29,6 +29,14 @@ impl Completenes for WorkSheets {
             && self.implement.is_complete()
             && self.iterate.is_complete()
     }
+
+    fn is_empty(&self) -> bool {
+        self.problem.is_empty()
+            && self.solutions.is_empty()
+            && self.compromise.is_empty()
+            && self.implement.is_empty()
+            && self.iterate.is_empty()
+    }
 }
 
 impl Default for WorkSheets {
@@ -85,6 +93,22 @@ impl Completenes for ProblemWK {
                 .next()
                 .is_some()
     }
+
+    fn is_empty(&self) -> bool {
+        self.problem_statement.is_empty()
+            && self
+                .problems
+                .iter()
+                .filter(|r| !r.is_empty())
+                .next()
+                .is_none()
+            && self
+                .stakeholders
+                .iter()
+                .filter(|r| !r.is_empty())
+                .next()
+                .is_none()
+    }
 }
 
 #[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -117,14 +141,30 @@ impl Completenes for CompromiseWK {
                 .solution_choices
                 .iter()
                 .filter(|r| !r.is_empty())
-                .count()
-                > 0
+                .next()
+                .is_some()
             && self
                 .stakeholder_choices
                 .iter()
                 .filter(|r| !r.is_empty())
-                .count()
-                > 0
+                .next()
+                .is_some()
+    }
+
+    fn is_empty(&self) -> bool {
+        self.question.is_empty()
+            && self
+                .solution_choices
+                .iter()
+                .filter(|r| !r.is_empty())
+                .next()
+                .is_none()
+            && self
+                .stakeholder_choices
+                .iter()
+                .filter(|r| !r.is_empty())
+                .next()
+                .is_none()
     }
 }
 
@@ -140,6 +180,11 @@ impl Completenes for ImplementWK {
     fn is_complete(&self) -> bool {
         self.now.iter().filter(|r| !r.is_empty()).next().is_some()
             && self.best.iter().filter(|r| !r.is_empty()).next().is_some()
+    }
+
+    fn is_empty(&self) -> bool {
+        self.now.iter().filter(|r| !r.is_empty()).next().is_none()
+            && self.best.iter().filter(|r| !r.is_empty()).next().is_none()
     }
 }
 
@@ -213,4 +258,8 @@ impl Completenes for InquireWK {
 
 pub trait Completenes {
     fn is_complete(&self) -> bool;
+
+    fn is_empty(&self) -> bool {
+        !self.is_complete()
+    }
 }

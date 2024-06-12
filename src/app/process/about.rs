@@ -1,12 +1,11 @@
 use crate::app::{
-    components::{IconView, RvArtboardView, WorksheetHeader},
-    state::{use_store, ProcessStep},
+    components::{ButtonSize, ButtonView, IconView, RvArtboardView, WorksheetHeader},
+    state::{use_store, Completenes, ProcessStep},
     use_lang,
 };
 
 use leptos::*;
 use leptos_meta::*;
-use leptos_router::*;
 
 /// step 1
 #[component]
@@ -16,6 +15,10 @@ pub fn AboutView() -> impl IntoView {
 
     let show_privacy_choice =
         create_read_slice(state, move |s| s.storage_preference.get().is_some());
+
+    let has_data = Signal::derive(move || !state.get().wk.get().is_empty());
+
+    let clear_wk = move |_| state.update(|s| s.wk = Default::default());
 
     let steps = vec![
         ProcessStep::Problem,
@@ -55,7 +58,7 @@ pub fn AboutView() -> impl IntoView {
             title={t!("about.title").to_string()}
         />
         <div class="grow w-full">
-            <div class="grid lg:grid-cols-2 gap-10 content-stretch">
+            <div class="grid lg:grid-cols-2 gap-6 content-stretch">
                 <p class="max-w-prose pb-4 col-start-1 whitespace-pre-line">
                     {t!("about.description_1")}
                 </p>
@@ -66,26 +69,37 @@ pub fn AboutView() -> impl IntoView {
                     {steps}
                 </ol>
                 <div class="max-w-prose col-start-1 lg:row-start-3 flex mb-3 mt-auto items-center">
-                    <button
-                        on:click={move |_| state.get().show_privacy_prompt.set(true)}
-                        class={move || if show_privacy_choice.get() { "contents" } else { "hidden" }}
-                        title={t!("privacy.short")}
-                    >
-                        <RvArtboardView
-                            attr:class="grow-0 shrink-0 h-14 aspect-square mr-4"
-                            state_machine="Privacy State Machine"
-                            name="Privacy"
-                        />
-                    </button>
-                    <A
-                        attr:type="button"
-                        href={move || format!("/{}/process/1", lang.get())}
-                        class="shrink-0 grow py-3 rounded-full bg-purple-900 hover:bg-purple-800 active:bg-purple-950 text-stone-100 border-2 border-solid border-slate-50 drop-shadow-md text-center"
+                    <Show when=move || show_privacy_choice.get()>
+                        <button
+                            on:click={move |_| state.get().show_privacy_prompt.set(true)}
+                            title={t!("privacy.short")}
+                        >
+                            <RvArtboardView
+                                attr:class="grow-0 shrink-0 h-14 aspect-square mr-4"
+                                state_machine="Privacy State Machine"
+                                name="Privacy"
+                            />
+                        </button>
+                    </Show>
+                    <ButtonView
+                        link={Signal::derive(move || format!("/{}/process/1", lang.get()))}
+                        size=ButtonSize::Lg
+                        cta=2
+                        attr:class="shrink-0 grow"
                     >
                         {t!("about.cta")}
                         <IconView icon="Next"/>
-                    </A>
+                    </ButtonView>
                 </div>
+                <Show when=move || has_data.get()>
+                    <ButtonView
+                        on:click={clear_wk}
+                        size=ButtonSize::Lg
+                    >
+                        <IconView icon="Restart"/>
+                        {t!("worksheets.inquire.cta_2")}
+                    </ButtonView>
+                </Show>
             </div>
         </div>
     }

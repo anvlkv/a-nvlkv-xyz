@@ -5,7 +5,7 @@ use leptos_meta::*;
 use web_time::Duration;
 
 use crate::app::{
-    components::{use_wk_state, Localized, RvArtboardView, WorksheetView},
+    components::{use_wk_state, ButtonView, Localized, RvArtboardView, WorksheetView},
     state::{use_store, StorageMode, WorkSheets},
 };
 
@@ -81,7 +81,7 @@ fn PrintView() -> impl IntoView {
                     let win = window();
                     _ = win.print();
                 },
-                Duration::from_millis(100),
+                Duration::from_millis(200),
             )
         }
     });
@@ -94,11 +94,22 @@ fn PrintView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{}_{}_{}", iteration_title(), t!("about.title"), t!("name")).replace(&['.', '|', '/', '\\', '>', '<', '!', '?', '*'], "-")}/>
-        <div
-            class="font-sans bg-white text-black"
+        <ButtonView
+            cta=2
+            on:click={move |_| {
+                let win = window();
+                _ = win.print();
+            }}
+            disabled={Signal::derive(move || !rv_loaded.get().is_empty())}
+            attr:class="z-10 fixed print:hidden top-10 right-10"
         >
-            <section class="sheet padding-10mm">
-                <header class="flex gap-2 w-full justify-start items-center border-b border-black">
+            {t!("util.print")}
+        </ButtonView>
+        <div
+        class="font-sans text-black -mt-40 -ml-40  print:mt-0 print:ml-0 scale-50 print:scale-100"
+        >
+            <div class="sheet padding-10mm">
+                <header class="flex gap-2 w-full justify-start items-center border-b border-gray-500">
                     <RvArtboardView
                         name="Inquire"
                         state_machine="Inquire State Machine"
@@ -108,14 +119,14 @@ fn PrintView() -> impl IntoView {
                     <h1 class="text-2xl">
                         {t!("about.title")}
                     </h1>
-                    <div class="h-full text-sm pl-4 ml-auto mr-0 border-l border-black">
+                    <div class="h-full text-sm pl-4 ml-auto mr-0 border-l border-gray-500">
                         <p>{t!("worksheets.download.signature")}</p>
                         <a href="https://a.nvlkv.xyz" class="underline">{"https://a.nvlkv.xyz"}</a>
                     </div>
                 </header>
 
                 <main class="contents">
-                    <div class="flex gap-2 w-full py-4 border-b border-black">
+                    <section class="flex gap-2 w-full py-4 border-b border-gray-500">
                         <RvArtboardView
                             name="Iterate"
                             state_machine="Iterate State Machine"
@@ -135,8 +146,8 @@ fn PrintView() -> impl IntoView {
                                 </p>
                             </div>
                         </div>
-                    </div>
-                    <div class="flex gap-2 w-full py-4 border-b border-black">
+                    </section>
+                    <section class="flex gap-2 w-full py-4 border-b border-gray-500">
                         <RvArtboardView
                             name="Problem"
                             state_machine="Problem State Machine"
@@ -151,8 +162,8 @@ fn PrintView() -> impl IntoView {
                                 {problem_statement}
                             </p>
                         </div>
-                    </div>
-                    <div class="flex gap-2 w-full py-4 border-b border-black">
+                    </section>
+                    <section class="flex gap-2 w-full py-4 border-b border-gray-500">
                         <RvArtboardView
                             name="Compromise"
                             state_machine="Compromise State Machine"
@@ -164,7 +175,7 @@ fn PrintView() -> impl IntoView {
                                 {t!("worksheets.download.compromise")}{": "}
                             </h2>
                             <div>
-                                <h3 class="text-lg">
+                                <h3 class="text-lg text-center w-full">
                                     {t!("worksheets.compromise.label_solutions")}
                                 </h3>
                                 <ul class="list-disc pl-6">
@@ -174,7 +185,7 @@ fn PrintView() -> impl IntoView {
                                 </ul>
                             </div>
                             <div>
-                                <h3 class="text-lg">
+                                <h3 class="text-lg text-center w-full">
                                     {t!("worksheets.compromise.label_stakeholders")}
                                 </h3>
                                 <ul class="list-disc pl-6">
@@ -192,8 +203,8 @@ fn PrintView() -> impl IntoView {
                                 </p>
                             </div>
                         </div>
-                    </div>
-                    <div class="flex gap-2 w-full py-4 border-b border-black">
+                    </section>
+                    <section class="flex gap-2 w-full py-4 border-b border-gray-500">
                         <RvArtboardView
                             name="Implement"
                             state_machine="Implement State Machine"
@@ -205,10 +216,10 @@ fn PrintView() -> impl IntoView {
                                 {t!("worksheets.implement.title")}{": "}
                             </h2>
                             <div>
-                                <h3 class="text-lg">
+                                <h3 class="text-lg text-center w-full">
                                     {t!("worksheets.implement.label_now")}
                                 </h3>
-                                <h4>
+                                <h4 class="text-lg font-thin text-center w-full">
                                     {t!("worksheets.implement.hint_now")}
                                 </h4>
                                 <ul class="list-disc pl-6">
@@ -218,10 +229,10 @@ fn PrintView() -> impl IntoView {
                                 </ul>
                             </div>
                             <div>
-                                <h3 class="text-lg">
+                                <h3 class="text-lg text-center w-full">
                                     {t!("worksheets.implement.label_best")}
                                 </h3>
-                                <h4>
+                                <h4 class="text-lg font-thin text-center w-full">
                                     {t!("worksheets.implement.hint_best")}
                                 </h4>
                                 <ul class="list-disc pl-6">
@@ -230,9 +241,9 @@ fn PrintView() -> impl IntoView {
                                     }).collect_view()}
                                 </ul>
                             </div>
-                            <hr class="col-span-full my-2"/>
+                            <hr class="col-span-full my-2 border-t border-slate-400"/>
                             <div>
-                                <h3 class="text-lg">
+                                <h3 class="text-lg text-center w-full">
                                     {t!("worksheets.iterate.label_resources")}
                                 </h3>
                                 <ul class="list-disc pl-6">
@@ -242,7 +253,7 @@ fn PrintView() -> impl IntoView {
                                 </ul>
                             </div>
                             <div>
-                                <h3 class="text-lg">
+                                <h3 class="text-lg text-center w-full">
                                     {t!("worksheets.iterate.label_externals")}
                                 </h3>
                                 <ul class="list-disc pl-6">
@@ -252,9 +263,9 @@ fn PrintView() -> impl IntoView {
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </main>
-            </section>
+            </div>
         </div>
     }
 }

@@ -1,13 +1,14 @@
 use form_signal::FormState;
 use leptos::*;
 use leptos_meta::*;
+use leptos_router::use_navigate;
 use uuid::Uuid;
 use web_time::Instant;
 
 use crate::app::{
     components::{
         use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView, HistoryEntry, IconView,
-        ListInputView, StringInputView, UndoRemove, WorksheetHeader,
+        ListInputView, ModalView, StringInputView, UndoRemove, WorksheetHeader,
     },
     process::{
         FixedBestList, FixedNowList, FixedProblemStatement, FixedQuestionStatement,
@@ -98,15 +99,20 @@ pub fn IterateView() -> impl IntoView {
         }
     });
 
-    let download_action = create_action(|_| async move {});
+    let (show_download, set_show_download) = create_signal(false);
 
-    let download_in_progress = download_action.pending();
-    let disable_download =
-        Signal::derive(move || !state.get().get().is_complete() || download_in_progress.get());
+    let disable_download = Signal::derive(move || !state.get().get().is_complete());
 
     let on_download = move |_| {
-        download_action.dispatch(());
+        set_show_download.set(true);
     };
+
+    let navigate = use_navigate();
+    let on_download_complete = Callback::new(move |_| {
+        set_show_download.set(false);
+        let link = format!("/{}/process/6", lang.get());
+        navigate(link.as_str(), Default::default());
+    });
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.iterate.title"), t!("process.title"), t!("name"))}/>
@@ -203,24 +209,25 @@ pub fn IterateView() -> impl IntoView {
                     on:click={on_download}
                     disabled={disable_download}
                 >
-                    {move || if download_in_progress.get() {
-                        view!{
-                            <IconView icon="Wait"/>
-                            {t!("util.pending")}
-                        }
-                    } else {
-                        view!{
-                            <IconView icon="Download"/>
-                            {t!("worksheets.iterate.cta")}
-                        }
-                    }}
-
+                    <IconView icon="Download"/>
+                    {t!("worksheets.iterate.cta")}
                 </ButtonView>
             </div>
-            // <Show when=move || download_in_progress.get()>
-                <iframe src={download_link} class="w-full h-screen"/>
-            // </Show>
         </div>
+        <ModalView
+            curtain=true
+            when=show_download
+            on_resolve=on_download_complete
+        >
+            <h3 class="text-xl mb-2">{t!("worksheets.iterate.cta")}</h3>
+            <DescriptionView>
+                <p class="whitespace-pre-line">
+                    <IconView icon="Info"/>
+                    {t!("util.browser_pdf")}
+                </p>
+            </DescriptionView>
+            <iframe src={download_link} class="w-[50vw] rounded-lg aspect-video"/>
+        </ModalView>
         <UndoRemove
             history=resources_delete_history
             on_restore=resources_restore

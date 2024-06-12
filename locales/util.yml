@@ -53,6 +53,16 @@ util:
     nl: Schakel JavaScript in uw browser in en laad de pagina opnieuw om de applicatie te gebruiken.
     ru: Пожалуйста, включите JavaScript в вашем браузере и перезагрузите страницу, чтобы пользоваться приложением.
     ja: アプリを使用するには、ブラウザの JavaScript を有効にしてこのページを再読み込みしてください。
+  browser_pdf:
+    en: Please select save to PDF as a destination in the browser's print dialog
+    ru: Пожалуйста, выберите сохранить в PDF в качестве назначения в диалоге печати браузера
+    nl: Selecteer opslaan in PDF als bestemming in het afdrukvenster van uw browser
+    ja: ブラウザの印刷ダイアログで保存先として PDF に保存を選択してください
+  print:
+    en: Print
+    nl: Afdrukken
+    ja: 印刷する
+    ru: Печать
   empty:
     en: Nothing here...
     nl: Niks hier...
@@ -124,6 +134,21 @@ privacy:
     nl: Alle gegevens worden gewist zodra u deze pagina sluit of opnieuw laadt.
     ru: Все данные будут удалены как только вы закроете или презагрузите эту страницу.
     ja: このページを閉じるかリロードすると、すべてのデータがクリアされます。
+  link_before:
+    en: May you have any additional concerns, please check
+    ru: В случае сомнений, пожалуйста ознакомьтесь с
+    nl: Als u nog vragen heeft, raadpleeg dan het
+    ja: 他にご不明な点がございましたら、
+  link_after:
+    en: " of the repo."
+    ru: " в репозитории."
+    nl: " van de repository."
+    ja: をご確認ください。
+  link:
+    en: " the privacy section"
+    ru: " секцией о конфиденциальности"
+    nl: " privacygedeelte"
+    ja: プライバシーセクション
 lang_en:
   long:
     en: English

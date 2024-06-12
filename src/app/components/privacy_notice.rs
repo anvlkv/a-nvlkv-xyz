@@ -46,7 +46,12 @@ pub fn PrivacyNoticeView() -> impl IntoView {
     };
 
     view! {
-        <ModalView when={when} curtain=true on_resolve=on_resolve>
+        <ModalView
+            when={when}
+            curtain=true
+            on_resolve=on_resolve
+            cancel_btn=true
+        >
             <PrivacyContent storage_option=storage_option_form/>
         </ModalView>
     }
@@ -76,7 +81,7 @@ fn PrivacyContent(#[prop(into)] storage_option: Signal<FormState<String>>) -> im
     });
 
     view! {
-        <div class="flex">
+        <div class="flex max-w-prose">
             <RvArtboardView
                 attr:class="w-32 h-32 mr-4"
                 state_machine="Privacy State Machine"
@@ -86,6 +91,17 @@ fn PrivacyContent(#[prop(into)] storage_option: Signal<FormState<String>>) -> im
                 <p class="mb-4">{t!("privacy.notice")}</p>
                 <p class="mb-4">{t!("privacy.prompt")}</p>
                 <RadioInputView options={options} value={storage_option}/>
+                <p>
+                    {t!("privacy.link_before")}
+                    <a
+                        target="_blank"
+                        class="underline"
+                        href="https://github.com/anvlkv/a-nvlkv-xyz#privacy"
+                    >
+                        {t!("privacy.link")}
+                    </a>
+                    {t!("privacy.link_after")}
+                </p>
             </form>
         </div>
     }

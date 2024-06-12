@@ -39,4 +39,9 @@ button:disabled {
 
 .full-screen {
     overflow-y: auto;
+    /* bg-stone-300 dark:bg-stone-950 */
+    background: #d6d3d1;
+    @include dark-mode() {
+        background: #0c0a09;
+    }
 }

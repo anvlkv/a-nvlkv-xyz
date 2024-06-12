@@ -33,7 +33,7 @@ pub fn App() -> impl IntoView {
           default-src;
           script-src 'self' unpkg.com cdn.jsdelivr.net cdnjs.cloudflare.com 'unsafe-inline' 'wasm-unsafe-eval';
           style-src 'self' cdnjs.cloudflare.com 'unsafe-inline';
-          img-src 'self' data: xata.io;
+          img-src 'self' data: *.xata.sh;
           font-src 'self';
           connect-src 'self' unpkg.com cdn.jsdelivr.net;
           media-src 'self';

@@ -68,4 +68,8 @@ impl Completenes for Contact {
     fn is_complete(&self) -> bool {
         !self.name.is_empty() && !self.email.is_empty() && !self.message.is_empty()
     }
+
+    fn is_empty(&self) -> bool {
+        self.name.is_empty() && self.email.is_empty() && self.message.is_empty()
+    }
 }

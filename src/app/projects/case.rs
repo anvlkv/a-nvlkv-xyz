@@ -35,14 +35,14 @@ pub fn CaseView() -> impl IntoView {
 
             let page_title = format!("{} | {} | {}", data.title, t!("case.title"), t!("name"));
             let alt = t!("util.alt_fallback", title = data.title.as_str()).to_string();
-            let main_img = match data.main_image_url {
+            let main_img = match data.main_image_url.as_ref() {
                 Some(src) => {
                     let alt = data.main_image_alt.unwrap_or(alt.clone());
 
                     view! {
                         <div class="row-start-1 row-span-4 lg:row-span-5 lg:row-start-1 col-span-full">
                             <PictureView
-                                src
+                                src=src.clone()
                                 alt
                                 attr:class="mx-auto w-full max-w-screen-2xl"
                             />
@@ -56,6 +56,7 @@ pub fn CaseView() -> impl IntoView {
             let extra_img = data
                 .images
                 .iter()
+                .chain(data.main_image_url.as_ref())
                 .map(|src| {
                     view! {
                         <PictureModalView
