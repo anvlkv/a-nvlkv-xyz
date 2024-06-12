@@ -57,7 +57,7 @@ pub enum ProcessStep {
     Inquire = 6,
 }
 
-#[derive(Debug, Default, Clone, PartialEq, FormState, Eq, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, PartialEq, FormState, Eq, Serialize, Deserialize, Hash)]
 pub struct Contact {
     pub name: String,
     pub email: String,

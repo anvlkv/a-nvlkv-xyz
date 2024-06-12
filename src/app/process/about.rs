@@ -1,11 +1,14 @@
 use crate::app::{
-    components::{ButtonSize, ButtonView, IconView, RvArtboardView, WorksheetHeader},
-    state::{use_store, Completenes, ProcessStep},
+    components::{
+        ButtonSize, ButtonView, HistoryEntry, IconView, RvArtboardView, UndoRemove, WorksheetHeader,
+    },
+    state::{use_store, Completenes, ProcessStep, WorkSheets, WorkSheetsFormState},
     use_lang,
 };
 
 use leptos::*;
 use leptos_meta::*;
+use web_time::Instant;
 
 /// step 1
 #[component]
@@ -18,7 +21,17 @@ pub fn AboutView() -> impl IntoView {
 
     let has_data = Signal::derive(move || !state.get().wk.get().is_empty());
 
-    let clear_wk = move |_| state.update(|s| s.wk = Default::default());
+    let wk_clear_history = create_rw_signal(vec![]);
+
+    let clear_wk = move |_| {
+        let wk = state.get().wk;
+        wk_clear_history.set(vec![(wk.get(), 0, Instant::now())]);
+        wk.clear();
+    };
+
+    let wk_restore = move |(wk, _, _): HistoryEntry<WorkSheets>| {
+        state.update(|s| s.wk = WorkSheetsFormState::new(wk));
+    };
 
     let steps = vec![
         ProcessStep::Problem,
@@ -58,7 +71,7 @@ pub fn AboutView() -> impl IntoView {
             title={t!("about.title").to_string()}
         />
         <div class="grow w-full">
-            <div class="grid lg:grid-cols-2 gap-6 content-stretch">
+            <div class="grid lg:grid-cols-2 gap-6 content-stretch pb-3">
                 <p class="max-w-prose pb-4 col-start-1 whitespace-pre-line">
                     {t!("about.description_1")}
                 </p>
@@ -68,39 +81,49 @@ pub fn AboutView() -> impl IntoView {
                 <ol class="max-w-prose row-span-3 lg:col-start-2 lg:row-start-1">
                     {steps}
                 </ol>
-                <div class="max-w-prose col-start-1 lg:row-start-3 flex mb-3 mt-auto items-center">
-                    <Show when=move || show_privacy_choice.get()>
-                        <button
-                            on:click={move |_| state.get().show_privacy_prompt.set(true)}
-                            title={t!("privacy.short")}
-                        >
-                            <RvArtboardView
-                                attr:class="grow-0 shrink-0 h-14 aspect-square mr-4"
-                                state_machine="Privacy State Machine"
-                                name="Privacy"
-                            />
-                        </button>
-                    </Show>
+                <div class="max-w-prose col-start-1 lg:row-start-3 flex mt-auto items-center">
                     <ButtonView
                         link={Signal::derive(move || format!("/{}/process/1", lang.get()))}
                         size=ButtonSize::Lg
                         cta=2
                         attr:class="shrink-0 grow"
                     >
-                        {t!("about.cta")}
+                        {move || if has_data.get() {
+                            t!("about.cta_alt").to_string()
+                        } else {
+                            t!("about.cta").to_string()
+                        }}
                         <IconView icon="Next"/>
                     </ButtonView>
                 </div>
-                <Show when=move || has_data.get()>
-                    <ButtonView
-                        on:click={clear_wk}
-                        size=ButtonSize::Lg
-                    >
-                        <IconView icon="Restart"/>
-                        {t!("worksheets.inquire.cta_2")}
-                    </ButtonView>
-                </Show>
+                <div class="max-w-prose col-start-1 flex justify-between items-stretch gap-4">
+                    <Show when=move || show_privacy_choice.get()>
+                        <ButtonView
+                            on:click={move |_| state.get().show_privacy_prompt.set(true)}
+                        >
+                            <RvArtboardView
+                                attr:class="grow-0 shrink-0 h-8 aspect-square inline-block"
+                                state_machine="Privacy State Machine"
+                                name="Privacy"
+                            />
+                            {t!("privacy.short")}
+                        </ButtonView>
+                    </Show>
+                    <Show when=move || has_data.get()>
+                        <ButtonView
+                            on:click={clear_wk}
+                            cta=-1
+                        >
+                            <IconView icon="Restart"/>
+                            {t!("worksheets.inquire.cta_2")}
+                        </ButtonView>
+                    </Show>
+                </div>
             </div>
         </div>
+        <UndoRemove
+            history=wk_clear_history
+            on_restore=wk_restore
+        />
     }
 }

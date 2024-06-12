@@ -12,7 +12,7 @@ pub enum ButtonSize {
 
 #[component]
 pub fn ButtonView(
-    #[prop(into, optional)] cta: MaybeSignal<u8>,
+    #[prop(into, optional)] cta: MaybeSignal<i8>,
     #[prop(into, optional)] size: MaybeSignal<ButtonSize>,
     #[prop(into, optional)] disabled: MaybeSignal<bool>,
     #[prop(into, optional)] link: Option<MaybeSignal<String>>,
@@ -42,6 +42,7 @@ pub fn ButtonView(
         })
         .dyn_classes(move || {
             match cta.get() {
+                -1 => "bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-red-800 dark:border-red-400 text-red-700 dark:text-red:300",
                 0 => "bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-slate-50",
                 1 => "bg-stone-300 dark:bg-stone-950 hover:bg-stone-200 dark:hover:bg-stone-800 active:bg-stone-300 dark:active:bg-stone:700 border-purple-800 dark:border-purple-400 text-purple-700 dark:text-purple:300",
                 _ => "bg-purple-900 hover:bg-purple-800 text-stone-100 active:bg-purple-950 border-slate-50"

@@ -16,8 +16,9 @@ pub fn ResumeView() -> impl IntoView {
     );
 
     view! {
-        <Title text={move || format!("{} | {}", t!("resume.title"), t!("name"))}/>
-        <div class="mx-auto max-w-screen-2xl px-6 md:px-8 lg:px-16 min-h-full flex justify-center items-center">
+        <Title text={move || format!("{} | {}", t!("cv.title"), t!("name"))}/>
+        <div class="mx-auto max-w-screen-xl px-6 md:px-8 lg:px-16 min-h-full flex flex-col justify-center items-center">
+            <h2 class="text-2xl mt-8 mb-4 mx-auto text-center print:hidden">{t!("cv.title")}</h2>
             <Transition fallback=CvDummyView>
                 <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
                     {move || match entries.get() {

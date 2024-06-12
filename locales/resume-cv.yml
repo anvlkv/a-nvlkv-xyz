@@ -1,6 +1,11 @@
 _version: 2
 
 cv:
+  title:
+    en: Résumé
+    nl: Cv
+    ru: Резюме
+    ja: 履歴書
   present:
     en: present
     ja: 現在

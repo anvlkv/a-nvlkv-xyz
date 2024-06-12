@@ -73,12 +73,6 @@ contact:
       ja: メッセージが送信されました
     description:
       en: Thank you for your interest! I'll be in touch with you shortly
-resume:
-  title:
-    en: CV
-    nl: Cv
-    ru: Резюме
-    ja: 履歴書
 projects:
   title:
     en: Projects

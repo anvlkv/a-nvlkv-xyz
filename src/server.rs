@@ -25,6 +25,7 @@ async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
     register_explicit::<crate::app::process::InquirePersonal>();
     register_explicit::<crate::app::process::InquireContact>();
     register_explicit::<crate::app::resume::GetCvEntries>();
+    register_explicit::<crate::app::pages::GetLinks>();
 
     let app = crate::app::App;
 
@@ -125,7 +126,7 @@ pub fn safe_error<T: Display>(err: T) -> String {
         if #[cfg(debug_assertions)] {
             err.to_string()
         } else {
-            eprintln!("{err:#?}");
+            eprintln!("{}", err.to_string());
             format!("Server error")
         }
     }
