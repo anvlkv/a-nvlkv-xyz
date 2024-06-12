@@ -115,10 +115,10 @@ pub fn PictureModalView(
             <Portal>
                 <div
                     role="presentation"
-                    class="absolute min-w-screen min-h-screen h-full w-full bg-gray-950 opacity-75 top-0 left-0"
+                    class="absolute min-w-screen min-h-dvh h-full w-full bg-gray-950 opacity-75 top-0 left-0"
                 ></div>
                 <div
-                    class="fixed top-0 left-0 min-w-screen min-h-screen w-full h-full flex justify-center items-center font-sans text-slate-950 dark:text-slate-50 pt-10 lg:p-15"
+                    class="fixed top-0 left-0 min-w-screen min-h-dvh w-full h-full flex justify-center items-center font-sans text-slate-950 dark:text-slate-50 pt-10 lg:p-15"
                 >
                     <button
                         on:click=move |e| {
@@ -133,7 +133,7 @@ pub fn PictureModalView(
                     <PictureView
                         src=src
                         alt=alt
-                        attr:class="max-h-screen w-auto max-w-full animate__animated animate__fadeInDown"
+                        attr:class="max-h-dvh w-auto max-w-full animate__animated animate__fadeInDown"
                         node_ref=target
                     />
                 </div>

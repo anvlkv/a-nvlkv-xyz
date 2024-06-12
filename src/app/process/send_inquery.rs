@@ -19,13 +19,15 @@ fn sanitize_input(value: String) -> String {
 #[cfg_attr(debug_assertions, allow(unreachable_code, unused))]
 #[server(InquireInferrence, "/api")]
 pub async fn inquire_inferrence(wk: WorkSheets) -> Result<String, ServerFnError<String>> {
+    println!("inquire inferrence");
+
     #[cfg(debug_assertions)]
     {
         return Ok("Helpful answer".to_string());
     }
 
-    use spin_sdk::{key_value, llm};
     use crate::server::safe_error;
+    use spin_sdk::{key_value, llm};
 
     let WorkSheets {
         problem,
@@ -137,6 +139,8 @@ pub async fn inquire_personal(
     wk: Option<WorkSheets>,
     contact: Contact,
 ) -> Result<(), ServerFnError<String>> {
+    println!("inquire personal");
+
     use spin_sdk::pg::ParameterValue;
 
     use crate::server::get_db_conn;

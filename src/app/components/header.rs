@@ -84,7 +84,7 @@ pub fn HeaderView() -> impl IntoView {
     };
 
     view! {
-        <header class="flex justify-center bg-stone-100 dark:bg-stone-900 shadow-sm">
+        <header class="flex justify-center bg-stone-100 dark:bg-stone-900 shadow-sm print:hidden">
             <div class="relative max-w-screen-2xl text-xl w-full px-6 md:px-8 lg:px-16 py-3 flex flex-wrap justify-between grow shrink-0">
                 {toggle}
                 {title}

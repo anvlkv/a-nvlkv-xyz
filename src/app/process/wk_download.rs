@@ -17,12 +17,6 @@ pub fn WorksheetsDownload() -> impl IntoView {
     });
 
     view! {
-        <Link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css"
-            integrity="sha384-Velkkr4y29T3b+5t49UmQaVHkJrr1GJRHHq1BG3nSpmQrdf5Dv525IDQRdqkxZpd"
-            crossorigin="anonymous"
-        />
         <Localized>
         {
             move || {
@@ -69,7 +63,7 @@ fn PrintView() -> impl IntoView {
     ]));
 
     create_effect(move |_| {
-        let body = document().get_elements_by_tag_name("body").item(0).unwrap();
+        let body = document().body().unwrap();
         body.class_list().add_2("A4", "landscape").unwrap();
     });
 

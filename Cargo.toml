@@ -39,7 +39,7 @@ wasm-bindgen-futures = { version = "0.4.42", optional = true }
 serde_json = "1.0.117"
 jzon = "0.12.5"
 futures = "0.3.30"
-chrono = { version = "0.4.38", features=["clock"] }
+chrono = { version = "0.4.38", features = ["clock", "serde"] }
 
 
 [dependencies.web-sys]
@@ -79,6 +79,7 @@ ssr = [
     "leptos-use/ssr",
     "leptos-use/wasm_ssr",
     "leptos/spin",
+    "chrono/unstable-locales",
     "dep:spin-sdk",
     "dep:leptos-spin",
     "dep:leptos_integration_utils",

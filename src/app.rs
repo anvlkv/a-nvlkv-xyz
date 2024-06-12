@@ -2,6 +2,7 @@ pub mod components;
 pub mod pages;
 pub mod process;
 pub mod projects;
+pub mod resume;
 pub mod state;
 pub mod util;
 
@@ -23,6 +24,12 @@ pub fn App() -> impl IntoView {
     view! {
         // site head
         <Stylesheet id="leptos" href="/pkg/a_nvlkv_xyz.css"/>
+        <Link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css"
+            integrity="sha384-Velkkr4y29T3b+5t49UmQaVHkJrr1GJRHHq1BG3nSpmQrdf5Dv525IDQRdqkxZpd"
+            crossorigin="anonymous"
+        />
         <Link rel="manifest" href="/pkg/manifest.json" />
         <Link rel="icon" attr:type="image/ico" href="/pkg/favicon.ico" />
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-32x32.png" sizes="32x32" />
@@ -31,7 +38,7 @@ pub fn App() -> impl IntoView {
 
         <Meta attr:http-equiv="Content-Security-Policy" content="
           default-src;
-          script-src 'self' unpkg.com cdn.jsdelivr.net cdnjs.cloudflare.com 'unsafe-inline' 'wasm-unsafe-eval';
+          script-src 'self' unpkg.com cdn.jsdelivr.net cdnjs.cloudflare.com 'unsafe-inline' 'wasm-unsafe-eval' 'unsafe-eval';
           style-src 'self' cdnjs.cloudflare.com 'unsafe-inline';
           img-src 'self' data: *.xata.sh;
           font-src 'self';

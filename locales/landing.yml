@@ -28,13 +28,13 @@ letters:
     ja: 完了
 landing:
   p1_s1:
-    en: In the name of harmony and peace on planet Earth, may we communicate with each other in sincere, concise, and helpful ways. May we all live meaningful and fulfilling lives. May we get the most important work
-    ru: Ради гармонии и мира на Земле, пусть наша коммуникация будет искрення, лаконична и полезна. Пусть все мы живем значимой и полноценной жизнью. Пусть самую важную работу мы
+    en: "In the name of harmony and peace on planet Earth, may we communicate with each other in sincere, concise, and helpful ways. May we all live meaningful and fulfilling lives. May we get the most important work "
+    ru: "Ради гармонии и мира на Земле, пусть наша коммуникация будет искрення, лаконична и полезна. Пусть все мы живем значимой и полноценной жизнью. Пусть самую важную работу мы "
     nl:
   p1_link:
-    en: " done "
-    nl: " klaar "
-    ru: " выполним "
+    en: done
+    nl: klaar
+    ru: выполним
     ja: 完了
   p1_s2:
     en: " with care and compassion."

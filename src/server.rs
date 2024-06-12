@@ -1,4 +1,4 @@
-use std::{str, fmt::Display};
+use std::{fmt::Display, str};
 
 use leptos_spin::{render_best_match_to_stream, server_fn::register_explicit, RouteTable};
 use spin_sdk::{
@@ -13,7 +13,7 @@ const TEMPORARY_REDIRECT_CODE: u16 = 307;
 #[http_component]
 async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
     let url = req.path_with_query().unwrap();
-    log::debug!("handling request: {:?} {}", req.method(), req.uri());
+    println!("handling request: {:?} {}", req.method(), req.uri());
 
     let mut conf = leptos::get_configuration(None).await.unwrap();
     conf.leptos_options.output_name = "a_nvlkv_xyz".to_owned();
@@ -24,6 +24,7 @@ async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
     register_explicit::<crate::app::process::InquireInferrence>();
     register_explicit::<crate::app::process::InquirePersonal>();
     register_explicit::<crate::app::process::InquireContact>();
+    register_explicit::<crate::app::resume::GetCvEntries>();
 
     let app = crate::app::App;
 
@@ -38,7 +39,7 @@ async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
         }
         (Err(redirect), _) => {
             // redirect to language
-            log::warn!("redirecting: {url} to {redirect}");
+            println!("redirecting: {url} to {redirect}");
 
             let res = OutgoingResponse::new(
                 TEMPORARY_REDIRECT_CODE,
@@ -67,7 +68,6 @@ fn lang_code_or_redirect(req: &IncomingRequest) -> Result<String, String> {
     });
 
     if let Some(lang) = selected_language {
-        log::debug!("lang from url: {lang}");
         Ok(lang.to_string())
     } else {
         let lang_h = req
@@ -88,8 +88,6 @@ fn lang_code_or_redirect(req: &IncomingRequest) -> Result<String, String> {
                 .unwrap_or(supported_languages.first().unwrap())
                 .to_string()
         };
-
-        log::debug!("lang from header: {suggested_language}");
 
         let route = [suggested_language.as_str()]
             .into_iter()
@@ -123,10 +121,11 @@ pub fn xata_rest_builder(path: &str) -> anyhow::Result<spin_sdk::http::RequestBu
 }
 
 pub fn safe_error<T: Display>(err: T) -> String {
-    cfg_if::cfg_if!{
+    cfg_if::cfg_if! {
         if #[cfg(debug_assertions)] {
             err.to_string()
         } else {
+            eprintln!("{err:#?}");
             format!("Server error")
         }
     }

@@ -81,7 +81,7 @@ pub fn CaseView() -> impl IntoView {
                         {
                             format!(r#"
                             .case-grid {{
-                                grid-template-rows: repeat(5, minmax(0, 15vh)) repeat({}, 1fr);
+                                grid-template-rows: repeat(5, minmax(0, 15dvh)) repeat({}, 1fr);
                             }}
 
                             .article-grid {{
@@ -96,7 +96,7 @@ pub fn CaseView() -> impl IntoView {
 
                             @media (min-width: 1024px) {{
                                 .case-grid {{
-                                    grid-template-rows: repeat(5, 19.5vh) repeat({max_span_rows}, 1fr);
+                                    grid-template-rows: repeat(5, 19.5dvh) repeat({max_span_rows}, 1fr);
                                 }}
 
                                 .article-grid {{
@@ -161,7 +161,7 @@ pub fn CaseView() -> impl IntoView {
 #[component]
 fn CaseDummy() -> impl IntoView {
     view! {
-        <div class="case-grid grid grid-cols-1 grid-rows-[repeat(5,_19.5vh)_repeat(3,_1fr)] lg:grid-cols-2">
+        <div class="case-grid grid grid-cols-1 grid-rows-[repeat(5,_19.5dvh)_repeat(3,_1fr)] lg:grid-cols-2">
             <div class="row-start-1 row-end-6 col-start-1 lg:col-end-3">
                 <div class="dummy-line w-full h-full bg-stone-400 dark:bg-stone-600 after:content-[' ']"></div>
             </div>

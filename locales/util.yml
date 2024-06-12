@@ -129,15 +129,18 @@ privacy:
     ja: データをブラウザのローカル ストレージに保存します。 保存されたデータは、このアプリを再度使用するときに利用できます。
   no_storage:
     en: No storage
+    ru: Не сохранять
+    nl: Geen opslag
+    ja: ストレージなし
   no_storage_description:
     en: All data is cleared once you close or reload this page.
     nl: Alle gegevens worden gewist zodra u deze pagina sluit of opnieuw laadt.
     ru: Все данные будут удалены как только вы закроете или презагрузите эту страницу.
     ja: このページを閉じるかリロードすると、すべてのデータがクリアされます。
   link_before:
-    en: May you have any additional concerns, please check
-    ru: В случае сомнений, пожалуйста ознакомьтесь с
-    nl: Als u nog vragen heeft, raadpleeg dan het
+    en: "May you have any additional concerns, please check "
+    ru: "В случае сомнений, пожалуйста ознакомьтесь с "
+    nl: "Als u nog vragen heeft, raadpleeg dan het "
     ja: 他にご不明な点がございましたら、
   link_after:
     en: " of the repo."
@@ -145,9 +148,9 @@ privacy:
     nl: " van de repository."
     ja: をご確認ください。
   link:
-    en: " the privacy section"
-    ru: " секцией о конфиденциальности"
-    nl: " privacygedeelte"
+    en: the privacy section
+    ru: секцией о конфиденциальности
+    nl: privacygedeelte
     ja: プライバシーセクション
 lang_en:
   long:

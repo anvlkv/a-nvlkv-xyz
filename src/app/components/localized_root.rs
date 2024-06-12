@@ -45,7 +45,7 @@ pub enum Language {
 #[component]
 pub fn LocalizedRootView() -> impl IntoView {
     view! {
-        <div class="font-sans min-h-screen w-screen overflow-auto md:overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50" id={STYLED_ROOT}>
+        <div class="font-sans min-h-dvh w-screen overflow-auto md:overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50" id={STYLED_ROOT}>
             <Localized>
                 <ThemedHtml/>
                 <HeaderView/>

@@ -73,3 +73,15 @@ impl Completenes for Contact {
         self.name.is_empty() && self.email.is_empty() && self.message.is_empty()
     }
 }
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct CvEntry {
+    pub id: String,
+    pub start_date: String,
+    pub end_date: Option<String>,
+    pub title: String,
+    pub description: String,
+    pub skills: Vec<String>,
+    pub org_name: String,
+    pub translation_warning: bool,
+}

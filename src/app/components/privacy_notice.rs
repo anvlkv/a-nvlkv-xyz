@@ -81,7 +81,7 @@ fn PrivacyContent(#[prop(into)] storage_option: Signal<FormState<String>>) -> im
     });
 
     view! {
-        <div class="flex max-w-prose">
+        <div class="flex flex-col items-center lg:flex-row max-w-prose">
             <RvArtboardView
                 attr:class="w-32 h-32 mr-4"
                 state_machine="Privacy State Machine"

@@ -15,6 +15,7 @@ pub async fn get_projects(
     offset: usize,
     wk_only: bool,
 ) -> Result<(Vec<ProjectData>, f32), ServerFnError<String>> {
+    use crate::server::safe_error;
     use crate::{
         app::state::WorkSheets,
         server::{get_db_conn, xata_rest_builder},
@@ -23,9 +24,8 @@ pub async fn get_projects(
         http::{run, send, Method, Response},
         pg::{Decode, ParameterValue},
     };
-    use crate::server::safe_error;
 
-    log::debug!("Getting examples {lang:?} {count} : {offset}");
+    println!("Getting examples {lang:?} {count} : {offset}");
 
     let conn = get_db_conn().map_err(safe_error)?;
 
