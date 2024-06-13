@@ -6,6 +6,7 @@ use crate::app::{
     components::{ButtonSize, ButtonView, ContactForm, ErrorView, IconView},
     process::InquireContact,
     state::{Completenes, ContactFormState},
+    tracking::SessionId,
 };
 
 #[component]
@@ -26,10 +27,17 @@ pub fn ContactView() -> impl IntoView {
     let inquire_personal_action = create_server_action::<InquireContact>();
     let pending = inquire_personal_action.pending();
     let value = inquire_personal_action.value();
+    let session_id = use_context::<SessionId>().unwrap();
 
     view! {
         <Title text={move || format!("{} | {}", t!("contact.title"), t!("name"))}/>
         <ActionForm action={inquire_personal_action} class="mx-auto max-w-screen-2xl px-6 md:px-8 lg:px-16 min-h-full w-full">
+            <input
+                attr:type="hidden"
+                name="session_id"
+                value={move || session_id.0.get()}
+            />
+
             <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
                 <div class="flex flex-col w-full items-stretch p-8 my-6 lg:my-8 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
                     <Show

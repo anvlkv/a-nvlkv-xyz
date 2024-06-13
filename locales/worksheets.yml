@@ -266,7 +266,8 @@ worksheets:
         List the most important distinct features of your solution.
         Place the features in two sections: “Now” and “Best”.
     label_now:
-      en: 今
+      en: Now
+      ja: 今
     hint_now:
       en: How does the solution solve the problem?
       ja: 解決はどのようにして問題を解決しますか?

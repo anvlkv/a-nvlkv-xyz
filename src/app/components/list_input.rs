@@ -120,6 +120,7 @@ pub fn ListInputView(
                         on_add()
                     }}
                     node_ref={button_element}
+                    attr:tabindex={2}
                 >
                     {add_entry_text}
                 </ButtonView>

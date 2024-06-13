@@ -4,6 +4,7 @@ pub mod process;
 pub mod projects;
 pub mod resume;
 pub mod state;
+pub mod tracking;
 pub mod util;
 
 use leptos::*;
@@ -24,12 +25,7 @@ pub fn App() -> impl IntoView {
     view! {
         // site head
         <Stylesheet id="leptos" href="/pkg/a_nvlkv_xyz.css"/>
-        <Link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css"
-            integrity="sha384-Velkkr4y29T3b+5t49UmQaVHkJrr1GJRHHq1BG3nSpmQrdf5Dv525IDQRdqkxZpd"
-            crossorigin="anonymous"
-        />
+
         <Link rel="manifest" href="/pkg/manifest.json" />
         <Link rel="icon" attr:type="image/ico" href="/pkg/favicon.ico" />
         <Link rel="icon" attr:type="image/png" href="/pkg/favicon-32x32.png" sizes="32x32" />
@@ -67,27 +63,27 @@ pub fn App() -> impl IntoView {
 
         // app
         <div class="contents">
-            <StoreProvider>
-                    <Router>
-                        <Routes>
-                            <Route path=":lang/process/download" view=process::WorksheetsDownload/>
-                            <Route path=":lang" view=LocalizedRootView>
-                                <Route path="" view=LandingView/>
-                                <Route path="process" view=ProcessView ssr=SsrMode::PartiallyBlocked>
-                                    <Route path=":step/:example?" view=process::ProcessSwitchView/>
-                                </Route>
-                                <Route path="projects" view=ProjectsView>
-                                    <Route path="" view=projects::ProjectsGridView />
-                                    <Route path=":id" view=projects::CaseView />
-                                </Route>
-                                <Route path="contact" view=ContactView />
-                                <Route path="resume" view=ResumeView />
-                                <Route path="links" view=LinksView />
+            <Router>
+                <Routes>
+                    <Route path="" view=StoreProvider>
+                        <Route path=":lang/process/download" view=process::WorksheetsDownload/>
+                        <Route path=":lang" view=LocalizedRootView>
+                            <Route path="" view=LandingView/>
+                            <Route path="process" view=ProcessView ssr=SsrMode::PartiallyBlocked>
+                                <Route path=":step/:example?" view=process::ProcessSwitchView/>
                             </Route>
-                            <Route path="*any" view=NotFound/>
-                        </Routes>
-                    </Router>
-            </StoreProvider>
+                            <Route path="projects" view=ProjectsView>
+                                <Route path="" view=projects::ProjectsGridView />
+                                <Route path=":id" view=projects::CaseView />
+                            </Route>
+                            <Route path="contact" view=ContactView />
+                            <Route path="resume" view=ResumeView />
+                            <Route path="links" view=LinksView />
+                        </Route>
+                        <Route path="*any" view=NotFound/>
+                    </Route>
+                </Routes>
+            </Router>
         </div>
     }
 }

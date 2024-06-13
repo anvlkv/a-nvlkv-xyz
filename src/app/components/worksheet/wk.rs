@@ -7,7 +7,7 @@ use leptos_use::{
     utils::JsonCodec,
 };
 
-use crate::app::state::{use_store, State, StorageMode, WorkSheets, WorkSheetsFormState};
+use crate::app::state::{use_store, AppState, StorageMode, WorkSheets, WorkSheetsFormState};
 
 #[derive(PartialEq, Clone)]
 pub struct Tab {
@@ -18,7 +18,7 @@ pub struct Tab {
 
 #[derive(Clone)]
 pub struct WorksheetState {
-    pub form: Resource<State, WorkSheetsFormState>,
+    pub form: Resource<AppState, WorkSheetsFormState>,
     pub description_hidden: Signal<bool>,
     pub toggle_description_hidden: Callback<()>,
     pub set_current_description: WriteSignal<String>,

@@ -9,7 +9,7 @@ use crate::app::Language;
 use super::{worksheets::*, ProjectData};
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct State {
+pub struct AppState {
     pub wk: WorkSheetsFormState,
     pub examples: Vec<ProjectData>,
     pub sequence: Vec<SeqStep>,

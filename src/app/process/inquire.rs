@@ -10,6 +10,7 @@ use crate::app::{
     },
     process::inquire_personal,
     state::{Completenes, InqueryOption, InquireWK, WorkSheets},
+    tracking::SessionId,
     use_lang,
 };
 
@@ -20,19 +21,21 @@ use super::inquire_inferrence;
 pub fn InquireView() -> impl IntoView {
     let state = use_wk_state();
     let wk_ctx = use_wk_ctx();
-    let inquire_action = create_action(|wk: &WorkSheets| {
-        let wk = wk.clone();
+    let session_id = use_context::<SessionId>().unwrap();
+
+    let inquire_action = create_action(|data: &(WorkSheets, Option<String>)| {
+        let (wk, session_id) = data.clone();
         async move {
-            inquire_inferrence(wk)
+            inquire_inferrence(wk, session_id)
                 .await
                 .map_err(|e| ServerFnErrorErr::from(e))
         }
     });
-    let inquire_personal_action = create_action(|wk: &WorkSheets| {
-        let wk = wk.clone();
+    let inquire_personal_action = create_action(|data: &(WorkSheets, Option<String>)| {
+        let (wk, session_id) = data.clone();
         let contact = wk.inquire.contact.clone();
         async move {
-            inquire_personal(Some(wk), contact)
+            inquire_personal(Some(wk), contact, session_id)
                 .await
                 .map_err(|e| ServerFnErrorErr::from(e))
         }
@@ -80,16 +83,20 @@ pub fn InquireView() -> impl IntoView {
     let on_submit = Callback::new(move |_| {
         let inquery = state.get().inquire.get().get();
         let wk = state.get().get();
+        let session_id = session_id.0.get();
         if inquery.personalized {
-            inquire_personal_action.dispatch(wk.clone());
+            inquire_personal_action.dispatch((wk.clone(), session_id.clone()));
         }
-        inquire_action.dispatch(WorkSheets {
-            inquire: InquireWK {
-                contact: Default::default(),
-                ..wk.inquire
+        inquire_action.dispatch((
+            WorkSheets {
+                inquire: InquireWK {
+                    contact: Default::default(),
+                    ..wk.inquire
+                },
+                ..wk
             },
-            ..wk
-        });
+            session_id,
+        ));
     });
 
     let disable_inquire = Signal::derive(move || {
@@ -164,8 +171,11 @@ pub fn InquireView() -> impl IntoView {
 
 #[component]
 fn InquireResult(
-    inquire_action: Action<WorkSheets, Result<String, ServerFnErrorErr<String>>>,
-    inquire_personal_action: Action<WorkSheets, Result<(), ServerFnErrorErr<String>>>,
+    inquire_action: Action<(WorkSheets, Option<String>), Result<String, ServerFnErrorErr<String>>>,
+    inquire_personal_action: Action<
+        (WorkSheets, Option<String>),
+        Result<(), ServerFnErrorErr<String>>,
+    >,
 ) -> impl IntoView {
     let state = use_wk_state();
     let pending_personal = inquire_personal_action.pending();
@@ -178,10 +188,13 @@ fn InquireResult(
     let contact_value = Signal::derive(move || state.get().inquire.get().contact.get());
     let send_disabled =
         Signal::derive(move || !state.get().inquire.get().contact.get().get().is_complete());
+    let session_id = use_context::<SessionId>().unwrap();
+
     let submit = move |e: ev::SubmitEvent| {
         e.prevent_default();
         let wk = state.get().get();
-        inquire_personal_action.dispatch(wk);
+        let session_id = session_id.0.get();
+        inquire_personal_action.dispatch((wk, session_id));
         set_last_chance.set(false);
     };
 

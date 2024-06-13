@@ -9,18 +9,34 @@ pub use types::*;
 pub use worksheets::*;
 
 use leptos::*;
+use leptos_router::Outlet;
 use leptos_use::{
     storage::{use_local_storage, use_local_storage_with_options, UseStorageOptions},
     utils::JsonCodec,
 };
 
-use super::components::WK_STORAGE;
+use crate::app::tracking::SessionIdProvider;
+
+use super::{components::WK_STORAGE, tracking::new_tracking_session};
 
 #[derive(Clone)]
-struct Store(RwSignal<State>);
+struct Store(RwSignal<AppState>);
 
 #[component]
-pub fn StoreProvider(children: Children) -> impl IntoView {
+pub fn StoreProvider() -> impl IntoView {
+    let session_id = create_resource(
+        || (),
+        |_| async move {
+            match new_tracking_session().await {
+                Ok(id) => Some(id),
+                Err(e) => {
+                    eprintln!("{e}");
+                    None
+                }
+            }
+        },
+    );
+
     let (remembered_storage_preference, set_remembered_storage_preference, del_storage_preference) =
         use_local_storage::<Option<StorageMode>, JsonCodec>("storage_preference");
 
@@ -31,7 +47,7 @@ pub fn StoreProvider(children: Children) -> impl IntoView {
         );
 
     let state = create_rw_signal({
-        let mut state = State::default();
+        let mut state = AppState::default();
 
         if let Some(storage_prefernce) = remembered_storage_preference.get_untracked() {
             state.storage_preference = FormState::new(Some(storage_prefernce));
@@ -56,10 +72,18 @@ pub fn StoreProvider(children: Children) -> impl IntoView {
         }
     });
 
-    children().into_view()
+    view! {
+        <Transition>
+            <SessionIdProvider
+                init_id=session_id
+            >
+                <Outlet/>
+            </SessionIdProvider>
+        </Transition>
+    }
 }
 
-pub fn use_store() -> RwSignal<State> {
+pub fn use_store() -> RwSignal<AppState> {
     let ctx = use_context::<Store>().expect("State not provided");
     ctx.0
 }

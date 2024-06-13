@@ -18,7 +18,10 @@ fn sanitize_input(value: String) -> String {
 
 #[cfg_attr(debug_assertions, allow(unreachable_code, unused))]
 #[server(InquireInferrence, "/api")]
-pub async fn inquire_inferrence(wk: WorkSheets) -> Result<String, ServerFnError<String>> {
+pub async fn inquire_inferrence(
+    wk: WorkSheets,
+    tracking_id: Option<String>,
+) -> Result<String, ServerFnError<String>> {
     println!("inquire inferrence");
 
     #[cfg(debug_assertions)]
@@ -26,8 +29,8 @@ pub async fn inquire_inferrence(wk: WorkSheets) -> Result<String, ServerFnError<
         return Ok("Helpful answer".to_string());
     }
 
-    use crate::server::safe_error;
-    use spin_sdk::{key_value, llm};
+    use crate::{app::tracking::complete_inferrence, server::safe_error};
+    use spin_sdk::llm;
 
     let WorkSheets {
         problem,
@@ -131,6 +134,10 @@ pub async fn inquire_inferrence(wk: WorkSheets) -> Result<String, ServerFnError<
     )
     .map_err(safe_error)?;
 
+    if let Some(tracking_id) = tracking_id {
+        _ = complete_inferrence(tracking_id);
+    }
+
     Ok(response.text)
 }
 
@@ -138,13 +145,16 @@ pub async fn inquire_inferrence(wk: WorkSheets) -> Result<String, ServerFnError<
 pub async fn inquire_personal(
     wk: Option<WorkSheets>,
     contact: Contact,
+    tracking_id: Option<String>,
 ) -> Result<(), ServerFnError<String>> {
     println!("inquire personal");
 
-    use spin_sdk::pg::ParameterValue;
+    use spin_sdk::pg::{Decode, ParameterValue};
 
-    use crate::server::get_db_conn;
-    use crate::server::safe_error;
+    use crate::{
+        app::tracking::complete_personal,
+        server::{get_db_conn, safe_error},
+    };
 
     let conn = get_db_conn().map_err(safe_error)?;
 
@@ -155,7 +165,8 @@ pub async fn inquire_personal(
 
     let sql = r#"
         INSERT INTO "personal_inquery" (name, email, message, wk)
-        VALUES($1, $2, $3, $4::text::json);
+        VALUES($1, $2, $3, $4::text::json)
+        RETURNING xata_id;
     "#;
 
     let params = [
@@ -165,7 +176,13 @@ pub async fn inquire_personal(
         ParameterValue::Str(wk_data),
     ];
 
-    conn.execute(sql, &params).map_err(safe_error)?;
+    let data = conn.query(sql, &params).map_err(safe_error)?;
+
+    let id = String::decode(&data.rows[0][0]).map_err(safe_error)?;
+
+    if let Some(tracking_id) = tracking_id {
+        _ = complete_personal(tracking_id, id);
+    }
 
     Ok(())
 }
@@ -175,6 +192,7 @@ pub async fn inquire_contact(
     name: String,
     email: String,
     message: String,
+    session_id: Option<String>,
 ) -> Result<String, ServerFnError<String>> {
     inquire_personal(
         None,
@@ -183,6 +201,7 @@ pub async fn inquire_contact(
             email,
             message,
         },
+        session_id,
     )
     .await
     .map(|_| "Message sent".to_string())

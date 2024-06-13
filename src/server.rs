@@ -26,6 +26,9 @@ async fn handle_a_nvlkv_xyz(req: IncomingRequest, resp_out: ResponseOutparam) {
     register_explicit::<crate::app::process::InquireContact>();
     register_explicit::<crate::app::resume::GetCvEntries>();
     register_explicit::<crate::app::pages::GetLinks>();
+    register_explicit::<crate::app::tracking::NewSession>();
+    register_explicit::<crate::app::tracking::RestoreSession>();
+    register_explicit::<crate::app::tracking::WkDownloadSession>();
 
     let app = crate::app::App;
 

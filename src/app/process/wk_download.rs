@@ -2,11 +2,11 @@ use std::collections::HashSet;
 
 use leptos::*;
 use leptos_meta::*;
-use web_time::Duration;
 
 use crate::app::{
     components::{use_wk_state, ButtonView, Localized, RvArtboardView, WorksheetView},
     state::{use_store, StorageMode, WorkSheets},
+    tracking::{complete_wk_download, SessionId},
 };
 
 #[component]
@@ -17,6 +17,12 @@ pub fn WorksheetsDownload() -> impl IntoView {
     });
 
     view! {
+        <Link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css"
+            integrity="sha384-Velkkr4y29T3b+5t49UmQaVHkJrr1GJRHHq1BG3nSpmQrdf5Dv525IDQRdqkxZpd"
+            crossorigin="anonymous"
+        />
         <Localized>
         {
             move || {
@@ -53,6 +59,13 @@ fn PrintView() -> impl IntoView {
     let iteration_external_resources = move || data.get().iterate.external_resources;
     let now = move || data.get().implement.now;
     let best = move || data.get().implement.best;
+    let session_id = use_context::<SessionId>().unwrap();
+    let complete_download = create_action(|id: &String| {
+        let id = id.clone();
+        async move {
+            _ = complete_wk_download(id).await;
+        }
+    });
 
     let (rv_loaded, set_rv_loaded) = create_signal(HashSet::<&'static str>::from_iter(vec![
         "Inquire",
@@ -67,18 +80,7 @@ fn PrintView() -> impl IntoView {
         body.class_list().add_2("A4", "landscape").unwrap();
     });
 
-    create_effect(move |_| {
-        if rv_loaded.get().is_empty() {
-            // TODO: emit event from rive artboards once played the stale state
-            set_timeout(
-                || {
-                    let win = window();
-                    _ = win.print();
-                },
-                Duration::from_millis(200),
-            )
-        }
-    });
+    let print_not_ready = Signal::derive(move || !rv_loaded.get().is_empty());
 
     let on_rv_loaded = Callback::new(move |name: String| {
         set_rv_loaded.update(|v| {
@@ -86,15 +88,20 @@ fn PrintView() -> impl IntoView {
         })
     });
 
+    let on_print = move |_| {
+        let win = window();
+        _ = win.print();
+        if let Some(id) = session_id.0.get() {
+            complete_download.dispatch(id);
+        }
+    };
+
     view! {
         <Title text={move || format!("{}_{}_{}", iteration_title(), t!("about.title"), t!("name")).replace(&['.', '|', '/', '\\', '>', '<', '!', '?', '*'], "-")}/>
         <ButtonView
             cta=2
-            on:click={move |_| {
-                let win = window();
-                _ = win.print();
-            }}
-            disabled={Signal::derive(move || !rv_loaded.get().is_empty())}
+            on:click={on_print}
+            disabled={print_not_ready}
             attr:class="z-10 fixed print:hidden top-10 right-10"
         >
             {t!("util.print")}
