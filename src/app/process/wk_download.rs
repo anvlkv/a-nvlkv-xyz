@@ -60,7 +60,7 @@ fn PrintView() -> impl IntoView {
     let now = move || data.get().implement.now;
     let best = move || data.get().implement.best;
     let session_id = use_context::<SessionId>().unwrap();
-    let complete_download = create_action(|id: &String| {
+    let complete_download = create_action(|id: &uuid::Uuid| {
         let id = id.clone();
         async move {
             _ = complete_wk_download(id).await;

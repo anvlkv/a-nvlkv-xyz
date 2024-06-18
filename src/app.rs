@@ -70,6 +70,9 @@ pub fn App() -> impl IntoView {
                         <Route path=":lang" view=LocalizedRootView>
                             <Route path="" view=LandingView/>
                             <Route path="process" view=ProcessView ssr=SsrMode::PartiallyBlocked>
+                                <Route path="" view=|| view!{
+                                    <Redirect path="0" />
+                                }/>
                                 <Route path=":step/:example?" view=process::ProcessSwitchView/>
                             </Route>
                             <Route path="projects" view=ProjectsView>

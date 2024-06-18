@@ -27,13 +27,15 @@ One event is tracked and linked to submitted data:
 
 Worksheets data is stored in **user's browser** and only if they didn't opt out. Depending on user's choice `LocalStorage` or `SessionStorage` is used. The setting can be changed at [the about page of the worksheets](https://a.nvlkv.xyz/process/0).
 
-Worksheets data is only stored in the remote data base **only** if the user chooses to receive **personalized feedback**.
+Worksheets data is stored in the remote data base **only** if the user chooses to receive **personalized feedback**.
 
 #### Remote storage and processing
 
-Data is stored in [Xata](https://xata.io/) data base, region `eu-west-1` aka Ireland
+App data is stored in [Xata](https://xata.io/) data base, region `eu-west-1` aka Ireland.
 
-Data is processed in [Fermyon cloud](https://developer.fermyon.com/cloud/fermyon-cloud)
+App data is processed in [Fermyon cloud](https://developer.fermyon.com/cloud/fermyon-cloud).
+
+Tracking data is stored in [Fermyon cloud](https://developer.fermyon.com/cloud/fermyon-cloud).
 
 ### Transfer
 
@@ -77,4 +79,4 @@ This project is licensed under CC-BY-SA 4.0 (Attribution-ShareAlike 4.0 Internat
 
 You're welcome to create derivatives of this work or any part of it as long as you share it with necessary attributions and under the same license.
 
-Being a project in itself this app welcomes contributions via pull requests. And I would be really happy to meet those who find it beneficial.
+Being a project in itself this app welcomes contributions via pull requests. I would be really happy to meet those who find it beneficial and willing to develop the methodology and tools.

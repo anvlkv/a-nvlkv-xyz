@@ -1,6 +1,7 @@
 use leptos::*;
 use leptos_meta::*;
 use strum::VariantArray;
+use uuid::Uuid;
 
 use crate::app::{
     components::{
@@ -23,7 +24,7 @@ pub fn InquireView() -> impl IntoView {
     let wk_ctx = use_wk_ctx();
     let session_id = use_context::<SessionId>().unwrap();
 
-    let inquire_action = create_action(|data: &(WorkSheets, Option<String>)| {
+    let inquire_action = create_action(|data: &(WorkSheets, Option<Uuid>)| {
         let (wk, session_id) = data.clone();
         async move {
             inquire_inferrence(wk, session_id)
@@ -31,7 +32,7 @@ pub fn InquireView() -> impl IntoView {
                 .map_err(|e| ServerFnErrorErr::from(e))
         }
     });
-    let inquire_personal_action = create_action(|data: &(WorkSheets, Option<String>)| {
+    let inquire_personal_action = create_action(|data: &(WorkSheets, Option<Uuid>)| {
         let (wk, session_id) = data.clone();
         let contact = wk.inquire.contact.clone();
         async move {
@@ -171,9 +172,9 @@ pub fn InquireView() -> impl IntoView {
 
 #[component]
 fn InquireResult(
-    inquire_action: Action<(WorkSheets, Option<String>), Result<String, ServerFnErrorErr<String>>>,
+    inquire_action: Action<(WorkSheets, Option<Uuid>), Result<String, ServerFnErrorErr<String>>>,
     inquire_personal_action: Action<
-        (WorkSheets, Option<String>),
+        (WorkSheets, Option<Uuid>),
         Result<(), ServerFnErrorErr<String>>,
     >,
 ) -> impl IntoView {

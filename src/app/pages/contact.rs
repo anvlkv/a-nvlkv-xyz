@@ -35,7 +35,7 @@ pub fn ContactView() -> impl IntoView {
             <input
                 attr:type="hidden"
                 name="session_id"
-                value={move || session_id.0.get()}
+                value={move || session_id.0.get().map(|id| id.to_string())}
             />
 
             <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>

@@ -3,6 +3,7 @@
 use std::str::FromStr;
 
 use leptos::*;
+use uuid::Uuid;
 
 use crate::app::state::{Contact, InqueryOption, WorkSheets};
 
@@ -20,7 +21,7 @@ fn sanitize_input(value: String) -> String {
 #[server(InquireInferrence, "/api")]
 pub async fn inquire_inferrence(
     wk: WorkSheets,
-    tracking_id: Option<String>,
+    tracking_id: Option<Uuid>,
 ) -> Result<String, ServerFnError<String>> {
     println!("inquire inferrence");
 
@@ -135,7 +136,7 @@ pub async fn inquire_inferrence(
     .map_err(safe_error)?;
 
     if let Some(tracking_id) = tracking_id {
-        _ = complete_inferrence(tracking_id);
+        _ = complete_inferrence(tracking_id, response.text.clone());
     }
 
     Ok(response.text)
@@ -145,7 +146,7 @@ pub async fn inquire_inferrence(
 pub async fn inquire_personal(
     wk: Option<WorkSheets>,
     contact: Contact,
-    tracking_id: Option<String>,
+    tracking_id: Option<Uuid>,
 ) -> Result<(), ServerFnError<String>> {
     println!("inquire personal");
 
@@ -192,7 +193,7 @@ pub async fn inquire_contact(
     name: String,
     email: String,
     message: String,
-    session_id: Option<String>,
+    session_id: Option<Uuid>,
 ) -> Result<String, ServerFnError<String>> {
     inquire_personal(
         None,

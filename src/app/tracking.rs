@@ -6,48 +6,59 @@ use leptos_use::{
 };
 
 #[cfg(feature = "ssr")]
-use spin_sdk::pg::{Decode, ParameterValue};
+use spin_sdk::sqlite::{Connection, Value};
+use uuid::Uuid;
 
 #[cfg(feature = "ssr")]
-use crate::server::{get_db_conn, safe_error};
+use crate::server::safe_error;
 
 use super::state::{use_store, StorageMode};
 
 #[server(NewSession, "/api")]
-pub async fn new_tracking_session() -> Result<String, ServerFnError<String>> {
-    let conn = get_db_conn().map_err(safe_error)?;
+pub async fn new_tracking_session(ua: Option<String>) -> Result<Uuid, ServerFnError<String>> {
+    if let Some(ua) = ua {
+        let new_id = Uuid::new_v4();
+        let conn = Connection::open("default").map_err(safe_error)?;
 
-    let sql = r#"
-        INSERT INTO "tracking" (xata_id) VALUES (DEFAULT)
-            RETURNING xata_id;
-"#;
-    let data = conn.query(sql, &[]).map_err(safe_error)?;
+        let sql = r#"
+            INSERT INTO tracking
+            (id, user_agent,
+            restored_session, inferrence, personal_inquery, wk_download)
+            VALUES (?, ?, NULL, NULL, NULL, NULL)
+    "#;
+        _ = conn
+            .execute(
+                sql,
+                &[Value::Blob(Vec::from(new_id.as_bytes())), Value::Text(ua)],
+            )
+            .map_err(safe_error)?;
 
-    let id = String::decode(&data.rows[0][0]).map_err(safe_error)?;
+        println!("started session {new_id}");
 
-    println!("started session {id}");
-
-    Ok(id)
+        Ok(new_id)
+    } else {
+        Err(ServerFnError::MissingArg("No user agent".to_string()))
+    }
 }
 
 #[server(RestoreSession, "/api")]
 pub async fn restore_tracking_session(
-    init_id: String,
-    restore_id: String,
+    init_id: Uuid,
+    restore_id: Uuid,
 ) -> Result<(), ServerFnError<String>> {
-    let conn = get_db_conn().map_err(safe_error)?;
+    let conn = Connection::open("default").map_err(safe_error)?;
 
     let sql = r#"
-        UPDATE "tracking"
-        SET restored_session = $2
-        WHERE xata_id = $1;
+        UPDATE tracking
+        SET restored_session = ?
+        WHERE id = ?;
 "#;
     _ = conn
         .execute(
             sql,
             &[
-                ParameterValue::Str(init_id),
-                ParameterValue::Str(restore_id),
+                Value::Blob(Vec::from(restore_id.as_bytes())),
+                Value::Blob(Vec::from(init_id.as_bytes())),
             ],
         )
         .map_err(safe_error)?;
@@ -56,34 +67,37 @@ pub async fn restore_tracking_session(
 }
 
 #[cfg(feature = "ssr")]
-pub fn complete_inferrence(id: String) -> Result<(), ServerFnError<String>> {
-    let conn = get_db_conn().map_err(safe_error)?;
+pub fn complete_inferrence(id: Uuid, result: String) -> Result<(), ServerFnError<String>> {
+    let conn = Connection::open("default").map_err(safe_error)?;
 
     let sql = r#"
-        UPDATE "tracking"
-        SET inferrence = true
-        WHERE xata_id = $1;
+        UPDATE tracking
+        SET inferrence = ?
+        WHERE id = ?;
 "#;
     _ = conn
-        .execute(sql, &[ParameterValue::Str(id)])
+        .execute(
+            sql,
+            &[Value::Text(result), Value::Blob(Vec::from(id.as_bytes()))],
+        )
         .map_err(safe_error)?;
 
     Ok(())
 }
 
 #[cfg(feature = "ssr")]
-pub fn complete_personal(id: String, data_id: String) -> Result<(), ServerFnError<String>> {
-    let conn = get_db_conn().map_err(safe_error)?;
+pub fn complete_personal(id: Uuid, data_id: String) -> Result<(), ServerFnError<String>> {
+    let conn = Connection::open("default").map_err(safe_error)?;
 
     let sql = r#"
-        UPDATE "tracking"
-        SET personal_inquery = $2
-        WHERE xata_id = $1;
+        UPDATE tracking
+        SET personal_inquery = ?
+        WHERE id = ?;
 "#;
     _ = conn
         .execute(
             sql,
-            &[ParameterValue::Str(id), ParameterValue::Str(data_id)],
+            &[Value::Text(data_id), Value::Blob(Vec::from(id.as_bytes()))],
         )
         .map_err(safe_error)?;
 
@@ -91,38 +105,75 @@ pub fn complete_personal(id: String, data_id: String) -> Result<(), ServerFnErro
 }
 
 #[server(WkDownloadSession, "/api")]
-pub async fn complete_wk_download(id: String) -> Result<(), ServerFnError<String>> {
-    let conn = get_db_conn().map_err(safe_error)?;
+pub async fn complete_wk_download(id: Uuid) -> Result<(), ServerFnError<String>> {
+    let conn = Connection::open("default").map_err(safe_error)?;
 
     let sql = r#"
-        UPDATE "tracking"
-        SET wk_download = true
-        WHERE xata_id = $1;
+        UPDATE tracking
+        SET wk_download = 1
+        WHERE id = ?;
 "#;
     _ = conn
-        .execute(sql, &[ParameterValue::Str(id)])
+        .execute(sql, &[Value::Blob(Vec::from(id.as_bytes()))])
         .map_err(safe_error)?;
 
     Ok(())
 }
 
 #[derive(Clone, PartialEq, Eq)]
-pub struct SessionId(pub ReadSignal<Option<String>>);
+pub struct SessionId(pub ReadSignal<Option<Uuid>>);
+
+pub fn session_id_resource() -> Resource<Option<String>, Option<Uuid>> {
+    #[cfg(feature = "ssr")]
+    let req = use_context::<leptos_spin::RequestParts>();
+
+    create_resource(
+        move || {
+            cfg_if::cfg_if! {
+                if #[cfg(feature = "ssr")] {
+                    req.as_ref().map(|r| {
+                        r.headers()
+                            .iter()
+                            .find_map(|(name, ua)| {
+                                if &http::header::USER_AGENT.to_string() == name {
+                                    std::str::from_utf8(ua.as_slice()).ok().map(|d| d.to_string())
+                                } else {
+                                    None
+                                }
+                            })
+                    }).flatten()
+                }
+                else {
+                    Option::<String>::None
+                }
+            }
+        },
+        |ua: Option<String>| async move {
+            match new_tracking_session(ua).await {
+                Ok(id) => Some(id),
+                Err(e) => {
+                    eprintln!("{e}");
+                    None
+                }
+            }
+        },
+    )
+}
 
 #[component]
 pub fn SessionIdProvider(
-    #[prop(into)] init_id: Resource<(), Option<String>>,
+    #[prop(into)] init_id: Resource<Option<String>, Option<Uuid>>,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let id_rw = create_rw_signal::<Option<String>>(None);
+    let id_rw = create_rw_signal::<Option<Uuid>>(None);
     let (remembered_session_id, set_remembered_session_id, del_session_id) =
-        use_local_storage_with_options::<Option<String>, JsonCodec>(
+        use_local_storage_with_options::<Option<Uuid>, JsonCodec>(
             "session_id",
             UseStorageOptions::default().listen_to_storage_changes(false),
         );
     let store = use_store();
 
-    let restore_session_id = create_action(|ids: &(String, String)| {
+    let restore_session_id = create_action(|ids: &(Uuid, Uuid)| {
         let (init_id, restore_id) = ids.clone();
         async move { restore_tracking_session(init_id, restore_id).await }
     });

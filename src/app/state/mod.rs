@@ -15,27 +15,16 @@ use leptos_use::{
     utils::JsonCodec,
 };
 
-use crate::app::tracking::SessionIdProvider;
+use crate::app::tracking::{session_id_resource, SessionIdProvider};
 
-use super::{components::WK_STORAGE, tracking::new_tracking_session};
+use super::components::WK_STORAGE;
 
 #[derive(Clone)]
 struct Store(RwSignal<AppState>);
 
 #[component]
 pub fn StoreProvider() -> impl IntoView {
-    let session_id = create_resource(
-        || (),
-        |_| async move {
-            match new_tracking_session().await {
-                Ok(id) => Some(id),
-                Err(e) => {
-                    eprintln!("{e}");
-                    None
-                }
-            }
-        },
-    );
+    let session_id = session_id_resource();
 
     let (remembered_storage_preference, set_remembered_storage_preference, del_storage_preference) =
         use_local_storage::<Option<StorageMode>, JsonCodec>("storage_preference");
@@ -60,6 +49,7 @@ pub fn StoreProvider() -> impl IntoView {
 
         state
     });
+
     provide_context(Store(state));
 
     create_effect(move |_| {
