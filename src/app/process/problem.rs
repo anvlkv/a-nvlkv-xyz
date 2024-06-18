@@ -11,8 +11,8 @@ use form_signal::FormState;
 use crate::app::{
     components::{
         use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
-        HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, StringInputView, UndoRemove,
-        WorksheetHeader,
+        DragListCtx, HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, StringInputView,
+        UndoRemove, WorksheetHeader,
     },
     state::{Completenes, ProcessStep},
     tabs_signal, use_lang,
@@ -136,6 +136,48 @@ pub fn ProblemView() -> impl IntoView {
 
     let disable_cta = Signal::derive(move || !wk_state.get().problem.get().get().is_complete());
 
+    DragListCtx::provide(Callback::new(
+        move |(entry, list_name, insert_after): (FormState<String>, String, Uuid)| {
+            let wk = wk_state.get().problem;
+            log::debug!(
+                "dropped {} on {list_name} to insert after {insert_after}",
+                entry.id
+            );
+
+            wk.update(|wk| {
+                match list_name.as_str() {
+                    "problems" => {
+                        let old_pos = wk.problems.iter().position(|f| f.id == entry.id);
+                        wk.problems.retain(|f| f.id != entry.id);
+                        wk.stakeholders.retain(|f| f.id != entry.id);
+                        let new_pos = wk.problems.iter().position(|f| f.id == insert_after);
+
+                        if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
+                            wk.problems.insert(pos, entry);
+                        } else {
+                            wk.problems.push(entry);
+                        }
+                    }
+                    "stakeholders" => {
+                        let old_pos = wk.stakeholders.iter().position(|f| f.id == entry.id);
+                        wk.problems.retain(|f| f.id != entry.id);
+                        wk.stakeholders.retain(|f| f.id != entry.id);
+                        let new_pos = wk.stakeholders.iter().position(|f| f.id == insert_after);
+
+                        if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
+                            wk.stakeholders.insert(pos, entry);
+                        } else {
+                            wk.stakeholders.push(entry);
+                        }
+                    }
+                    _ => {
+                        log::warn!("unknown list name");
+                    }
+                };
+            });
+        },
+    ));
+
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.problem.title"), t!("process.title"), t!("name"))}/>
         <WorksheetHeader
@@ -168,6 +210,7 @@ pub fn ProblemView() -> impl IntoView {
                             remove_value=problems_value_remove
                             add_entry_text={t!("worksheets.problem.add_problem").to_string()}
                             placeholder={t!("worksheets.problem.placeholder_problem").to_string()}
+                            drop_target_name="problems"
                     />
                     </div>
                     <div>
@@ -182,6 +225,7 @@ pub fn ProblemView() -> impl IntoView {
                             add_entry_text={t!("worksheets.problem.add_stakeholder").to_string()}
                             placeholder={t!("worksheets.problem.placeholder_stakeholders").to_string()}
                             autocomplete=stakeholders_autocomplete
+                            drop_target_name="stakeholders"
                         />
                     </div>
                 </div>

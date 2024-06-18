@@ -35,6 +35,11 @@ util:
     ru: Удалить
     nl: Verwijder
     ja: 削除
+  reorder:
+    en: Drag to reorder
+    nl: Sleep om de volgorde te wijzigen
+    ru: Перетащите, чтобы упорядочить
+    ja: 再注文のためにドラッグする
   undo_delete:
     en: Restore
     ru: Восстановить

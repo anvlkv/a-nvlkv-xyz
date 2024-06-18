@@ -97,6 +97,15 @@ pub fn AboutView() -> impl IntoView {
                     </ButtonView>
                 </div>
                 <div class="max-w-prose col-start-1 flex justify-between items-stretch gap-4">
+                    <Show when=move || has_data.get()>
+                        <ButtonView
+                            on:click={clear_wk}
+                            cta=-1
+                        >
+                            <IconView icon="Restart"/>
+                            {t!("worksheets.inquire.cta_2")}
+                        </ButtonView>
+                    </Show>
                     <Show when=move || show_privacy_choice.get()>
                         <ButtonView
                             on:click={move |_| state.get().show_privacy_prompt.set(true)}
@@ -107,15 +116,6 @@ pub fn AboutView() -> impl IntoView {
                                 name="Privacy"
                             />
                             {t!("privacy.short")}
-                        </ButtonView>
-                    </Show>
-                    <Show when=move || has_data.get()>
-                        <ButtonView
-                            on:click={clear_wk}
-                            cta=-1
-                        >
-                            <IconView icon="Restart"/>
-                            {t!("worksheets.inquire.cta_2")}
                         </ButtonView>
                     </Show>
                 </div>

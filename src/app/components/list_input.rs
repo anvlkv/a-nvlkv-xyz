@@ -1,6 +1,9 @@
 use form_signal::FormState;
 use leptos::*;
-use leptos_use::use_event_listener;
+use leptos_use::{
+    use_draggable_with_options, use_event_listener, use_mouse_in_element_with_options,
+    UseDraggableOptions, UseDraggableReturn, UseMouseInElementOptions, UseMouseInElementReturn,
+};
 use uuid::Uuid;
 
 use crate::app::components::{ButtonView, IconView, StringInputView};
@@ -11,6 +14,7 @@ pub fn ListInputView(
     #[prop(into)] data: Signal<Vec<FormState<String>>>,
     #[prop(into)] add_value: Callback<(String, Option<usize>), Uuid>,
     #[prop(into)] remove_value: Callback<Uuid>,
+    #[prop(into, optional)] drop_target_name: MaybeSignal<String>,
     #[prop(into, optional)] placeholder: MaybeSignal<String>,
     #[prop(into, optional)] add_entry_text: MaybeSignal<String>,
     #[prop(into, optional)] autocomplete: MaybeSignal<Vec<String>>,
@@ -89,13 +93,14 @@ pub fn ListInputView(
     });
 
     let add_entry_text = Signal::derive(move || add_entry_text.get());
+    let drop_target_name = Signal::derive(move || drop_target_name.get());
 
     view! {
-        <div class="flex flex-col" node_ref=element>
+        <div class="flex flex-col items-stretch" node_ref=element>
             <ol class="contents">
                 <For
-                    each=move || data.try_get().unwrap_or_default()
-                    key=|state| state.id
+                    each=move || data.try_get().unwrap_or_default().into_iter().enumerate()
+                    key=|(index, state)| (state.id, *index)
                     let:child
                 >
                     <ListItemView
@@ -105,9 +110,13 @@ pub fn ListInputView(
                         with_placeholder_id
                         focused_id=focused_id
                         on_blur=on_blur_item
-                        on_focus={move |_| focused_id.set(Some(child.id))}
-                        item=child
+                        on_focus={move |_| focused_id.set(Some(child.1.id))}
+                        item=child.1.clone()
                         remove_value
+                    />
+                    <ListDropTarget
+                        item_after=child.1.clone()
+                        drop_target_name=drop_target_name
                     />
                 </For>
             </ol>
@@ -171,10 +180,91 @@ fn ListItemView(
         }
     });
 
+    let dragable_ref = create_node_ref::<html::Div>();
+    let drag_ctx = use_context::<DragListCtx>();
+
+    let has_drag_ctx = Signal::derive({
+        let drag_ctx = drag_ctx.clone();
+        move || drag_ctx.is_some()
+    });
+
+    let UseDraggableReturn {
+        is_dragging, style, ..
+    } = use_draggable_with_options(
+        dragable_ref,
+        UseDraggableOptions::default()
+            .on_start({
+                let drag_ctx = drag_ctx.clone();
+                move |_| {
+                    if let Some(ctx) = drag_ctx.as_ref() {
+                        let value = value.get();
+                        ctx.0.set(Some(value));
+                        true
+                    } else {
+                        false
+                    }
+                }
+            })
+            .on_end({
+                let drag_ctx = drag_ctx.clone();
+                move |_| {
+                    if let Some(ctx) = drag_ctx.as_ref() {
+                        if let Some((insert_after, drop_target)) = ctx.1.get() {
+                            ctx.2.call((value.get(), drop_target, insert_after));
+                        } else {
+                            log::debug!("drop restore position")
+                        }
+                        ctx.0.set(None);
+                    }
+                }
+            }),
+    );
+
+    let style = Signal::derive(move || {
+        let style = style.get();
+        if is_dragging.get() {
+            Some(format!("position: fixed; {style}"))
+        } else {
+            None
+        }
+    });
+
+    let class = Signal::derive(move || {
+        format!(
+            "flex mb-4 rounded-full {}",
+            if is_dragging.get() {
+                "shadow-lg scale-110"
+            } else {
+                ""
+            }
+        )
+    });
+
+    let input_class = Signal::derive(move || {
+        format!(
+            "{} focus:z-10",
+            if has_drag_ctx.get() {
+                "rounded-none"
+            } else {
+                "rounded-r-none"
+            }
+        )
+    });
+
     view! {
-        <li class="flex mb-4">
+        <li class={class} style={style}>
+            <Show when=move || has_drag_ctx.get()>
+                <div
+                    class="grow-0 shrink-0 pl-4 pr-2 pb-0.5 flex items-center border border-r-0 border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 hover:text-purple-600 dark:hover:text-purple-600 text-xs focus:outline-purple-400 hover:outline active:outline rounded-l-full"
+                    title={t!("util.reorder")}
+                    node_ref={dragable_ref}
+                    dragable=true
+                >
+                    <IconView icon="Drag"/>
+                </div>
+            </Show>
             <StringInputView
-                class="rounded-r-none focus:z-10"
+                class=input_class
                 autocomplete
                 auto_focus
                 on_blur=on_blur_item
@@ -191,5 +281,80 @@ fn ListItemView(
                 <IconView icon="Delete"/>
             </button>
         </li>
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct DragListCtx(
+    RwSignal<Option<FormState<String>>>,
+    RwSignal<Option<(Uuid, String)>>,
+    Callback<(FormState<String>, String, Uuid)>,
+);
+
+impl DragListCtx {
+    pub fn provide(cb: Callback<(FormState<String>, String, Uuid)>) {
+        let origin = create_rw_signal(None);
+        let target = create_rw_signal(None);
+        provide_context(DragListCtx(origin, target, cb));
+    }
+}
+
+#[component]
+fn ListDropTarget(
+    #[prop(into)] item_after: FormState<String>,
+    #[prop(into)] drop_target_name: Signal<String>,
+) -> impl IntoView {
+    let drag_ctx = use_context::<DragListCtx>();
+
+    if let Some(ctx) = drag_ctx {
+        let el = create_node_ref::<html::Li>();
+        let id_after = item_after.id.clone();
+
+        let UseMouseInElementReturn { is_outside, .. } = use_mouse_in_element_with_options(
+            el,
+            UseMouseInElementOptions::default().handle_outside(false),
+        );
+
+        let class = Signal::derive(move || {
+            format!(
+                "transition-all duration-100 mx-4 mb-4 rounded {}",
+                if !is_outside.get() {
+                    "h-8 bg-purple-400 dark:bg-purple-600"
+                } else {
+                    "h-2 bg-purple-200 dark:bg-purple-900"
+                }
+            )
+        });
+
+        create_render_effect(move |_| {
+            let drop_target = drop_target_name.get();
+            if !is_outside.get() {
+                ctx.1.set(Some((id_after, drop_target)))
+            } else {
+                ctx.1.update(|d| match d.as_ref() {
+                    Some(id) => {
+                        if id == &(id_after, drop_target) {
+                            *d = None
+                        }
+                    }
+                    _ => {}
+                })
+            }
+        });
+
+        view! {
+            <Show
+                when=move || ctx.0.get().filter(|f| f.id != id_after).is_some()
+            >
+                <li
+                    id={format!("drop-target-{id_after}")}
+                    class=class
+                    node_ref={el}
+                />
+            </Show>
+        }
+        .into_view()
+    } else {
+        ().into_view()
     }
 }
