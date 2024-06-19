@@ -94,10 +94,17 @@ pub fn ListInputView(
 
     let add_entry_text = Signal::derive(move || add_entry_text.get());
     let drop_target_name = Signal::derive(move || drop_target_name.get());
+    let delete_allowed = Signal::derive(move || data.try_get().unwrap_or_default().len() > 1);
 
     view! {
         <div class="flex flex-col items-stretch" node_ref=element>
             <ol class="contents">
+                <Show when=move || data.try_get().unwrap_or_default().is_empty()>
+                    <ListDropTarget
+                        item_after=FormState::new(Default::default())
+                        drop_target_name=drop_target_name
+                    />
+                </Show>
                 <For
                     each=move || data.try_get().unwrap_or_default().into_iter().enumerate()
                     key=|(index, state)| (state.id, *index)
@@ -113,6 +120,7 @@ pub fn ListInputView(
                         on_focus={move |_| focused_id.set(Some(child.1.id))}
                         item=child.1.clone()
                         remove_value
+                        delete_allowed
                     />
                     <ListDropTarget
                         item_after=child.1.clone()
@@ -148,7 +156,8 @@ fn ListItemView(
     #[prop(into)] remove_value: Callback<Uuid>,
     #[prop(into)] on_blur: Callback<ev::FocusEvent>,
     #[prop(into)] on_focus: Callback<ev::FocusEvent>,
-    item: FormState<String>,
+    #[prop(into)] item: FormState<String>,
+    #[prop(into)] delete_allowed: Signal<bool>,
 ) -> impl IntoView {
     let value = Signal::derive(move || item.clone());
 
@@ -231,7 +240,13 @@ fn ListItemView(
 
     let class = Signal::derive(move || {
         format!(
-            "flex mb-4 rounded-full {}",
+            "flex mb-4 {} {}",
+            match (has_drag_ctx.get(), delete_allowed.get()) {
+                (true, true) => "rounded-full",
+                (true, false) => "rounded-l-full rounded-r",
+                (false, true) => "rounded-l rounded-r-full",
+                (false, false) => "rounded",
+            },
             if is_dragging.get() {
                 "shadow-lg scale-110"
             } else {
@@ -243,10 +258,11 @@ fn ListItemView(
     let input_class = Signal::derive(move || {
         format!(
             "{} focus:z-10",
-            if has_drag_ctx.get() {
-                "rounded-none"
-            } else {
-                "rounded-r-none"
+            match (has_drag_ctx.get(), delete_allowed.get()) {
+                (true, true) => "rounded-none",
+                (true, false) => "rounded-l-none rounded-r",
+                (false, true) => "rounded-l rounded-r-none",
+                (false, false) => "rounded",
             }
         )
     });
@@ -255,7 +271,7 @@ fn ListItemView(
         <li class={class} style={style}>
             <Show when=move || has_drag_ctx.get()>
                 <div
-                    class="grow-0 shrink-0 pl-4 pr-2 pb-0.5 flex items-center border border-r-0 border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 hover:text-purple-600 dark:hover:text-purple-600 text-xs focus:outline-purple-400 hover:outline active:outline rounded-l-full"
+                    class="grow-0 shrink-0 pl-4 pr-2 pb-0.5 flex items-center border border-r-0 border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 hover:text-purple-600 dark:hover:text-purple-600 text-xs focus:outline-purple-400 hover:outline active:outline rounded-l-full cursor-move"
                     title={t!("util.reorder")}
                     node_ref={dragable_ref}
                     dragable=true
@@ -272,14 +288,16 @@ fn ListItemView(
                 input_type
                 value
                 placeholder />
-            <button
-                tabindex="2"
-                on:click={on_remove}
-                title=t!("util.delete")
-                class="grow-0 shrink-0 px-4 pb-0.5 border border-l-0 border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 hover:text-red-600 dark:hover:text-red-600 text-xs focus:outline-purple-400 focus:outline rounded-r-full"
-            >
-                <IconView icon="Delete"/>
-            </button>
+            <Show when=move || delete_allowed.get()>
+                <button
+                    tabindex="2"
+                    on:click={on_remove}
+                    title=t!("util.delete")
+                    class="grow-0 shrink-0 px-4 pb-0.5 border border-l-0 border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 hover:text-red-600 dark:hover:text-red-600 text-xs focus:outline-purple-400 focus:outline rounded-r-full"
+                >
+                    <IconView icon="Delete"/>
+                </button>
+            </Show>
         </li>
     }
 }
@@ -299,6 +317,8 @@ impl DragListCtx {
     }
 }
 
+const TOLLERANCE: f64 = 15_f64;
+
 #[component]
 fn ListDropTarget(
     #[prop(into)] item_after: FormState<String>,
@@ -310,15 +330,28 @@ fn ListDropTarget(
         let el = create_node_ref::<html::Li>();
         let id_after = item_after.id.clone();
 
-        let UseMouseInElementReturn { is_outside, .. } = use_mouse_in_element_with_options(
+        let UseMouseInElementReturn {
+            is_outside,
+            element_x,
+            element_y,
+            element_width,
+            element_height,
+            ..
+        } = use_mouse_in_element_with_options(
             el,
-            UseMouseInElementOptions::default().handle_outside(false),
+            UseMouseInElementOptions::default().handle_outside(true),
         );
+
+        let is_in_tolerance_bounds = Signal::derive(move || {
+            (element_x.get() >= -TOLLERANCE && element_y.get() >= -TOLLERANCE)
+                && (element_x.get() - element_width.get() <= TOLLERANCE
+                    && element_y.get() - element_height.get() <= TOLLERANCE)
+        });
 
         let class = Signal::derive(move || {
             format!(
                 "transition-all duration-100 mx-4 mb-4 rounded {}",
-                if !is_outside.get() {
+                if !is_outside.get() || is_in_tolerance_bounds.get() {
                     "h-8 bg-purple-400 dark:bg-purple-600"
                 } else {
                     "h-2 bg-purple-200 dark:bg-purple-900"
@@ -328,7 +361,7 @@ fn ListDropTarget(
 
         create_render_effect(move |_| {
             let drop_target = drop_target_name.get();
-            if !is_outside.get() {
+            if !is_outside.get() || is_in_tolerance_bounds.get() {
                 ctx.1.set(Some((id_after, drop_target)))
             } else {
                 ctx.1.update(|d| match d.as_ref() {

@@ -8,7 +8,8 @@ use web_time::Instant;
 use crate::app::{
     components::{
         use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
-        HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
+        DragListCtx, HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, UndoRemove,
+        WorksheetHeader,
     },
     process::{
         FixedProblemStatement, FixedQuestionStatement, FixedSolutionsChoice,
@@ -21,14 +22,14 @@ use crate::app::{
 /// step 5
 #[component]
 pub fn ImplementView() -> impl IntoView {
-    let state = use_wk_state();
+    let wk_state = use_wk_state();
     let wk_ctx = use_wk_ctx();
     let lang = use_lang();
     let link = Signal::derive(move || format!("/{}/process/5", lang.get()));
 
     let now_delete_history = create_rw_signal(vec![]);
     let nows_data = Signal::derive(move || {
-        state
+        wk_state
             .get()
             .implement
             .try_get()
@@ -38,20 +39,20 @@ pub fn ImplementView() -> impl IntoView {
     let nows_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
-        state.get().implement.update(move |p| {
+        wk_state.get().implement.update(move |p| {
             p.now.insert(index.unwrap_or(p.now.len()), next);
         });
         id
     };
     let nows_value_remove = move |id: Uuid| {
-        state.get().implement.update(move |p| {
+        wk_state.get().implement.update(move |p| {
             let i = p.now.iter().position(|v| v.id == id).unwrap();
             let removed = p.now.remove(i).get_untracked();
             now_delete_history.update(|h| h.push((removed, i, Instant::now())));
         })
     };
     let now_restore = move |(val, at, _): HistoryEntry<String>| {
-        state.get().implement.update(move |p| {
+        wk_state.get().implement.update(move |p| {
             if p.now.len() >= at {
                 p.now.insert(at, FormState::new(val));
             } else {
@@ -62,7 +63,7 @@ pub fn ImplementView() -> impl IntoView {
 
     let best_delete_history = create_rw_signal(vec![]);
     let bests_data = Signal::derive(move || {
-        state
+        wk_state
             .get()
             .implement
             .try_get()
@@ -72,20 +73,20 @@ pub fn ImplementView() -> impl IntoView {
     let bests_value_add = move |(next, index): (String, Option<usize>)| {
         let next = FormState::new(next);
         let id = next.id;
-        state.get().implement.update(move |p| {
+        wk_state.get().implement.update(move |p| {
             p.best.insert(index.unwrap_or(p.best.len()), next);
         });
         id
     };
     let bests_value_remove = move |id: Uuid| {
-        state.get().implement.update(move |p| {
+        wk_state.get().implement.update(move |p| {
             let i = p.best.iter().position(|v| v.id == id).unwrap();
             let removed = p.best.remove(i).get_untracked();
             now_delete_history.update(|h| h.push((removed, i, Instant::now())));
         })
     };
     let best_restore = move |(val, at, _): HistoryEntry<String>| {
-        state.get().implement.update(move |p| {
+        wk_state.get().implement.update(move |p| {
             if p.best.len() >= at {
                 p.best.insert(at, FormState::new(val));
             } else {
@@ -96,7 +97,45 @@ pub fn ImplementView() -> impl IntoView {
 
     let tabs = tabs_signal(ProcessStep::Implement);
 
-    let disable_cta = Signal::derive(move || !state.get().implement.get().get().is_complete());
+    let disable_cta = Signal::derive(move || !wk_state.get().implement.get().get().is_complete());
+
+    DragListCtx::provide(Callback::new(
+        move |(entry, list_name, insert_after): (FormState<String>, String, Uuid)| {
+            let wk = wk_state.get().implement;
+
+            wk.update(|wk| {
+                match list_name.as_str() {
+                    "now" => {
+                        let old_pos = wk.now.iter().position(|f| f.id == entry.id);
+                        wk.now.retain(|f| f.id != entry.id);
+                        wk.best.retain(|f| f.id != entry.id);
+                        let new_pos = wk.now.iter().position(|f| f.id == insert_after);
+
+                        if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
+                            wk.now.insert(pos, entry);
+                        } else {
+                            wk.now.push(entry);
+                        }
+                    }
+                    "best" => {
+                        let old_pos = wk.best.iter().position(|f| f.id == entry.id);
+                        wk.now.retain(|f| f.id != entry.id);
+                        wk.best.retain(|f| f.id != entry.id);
+                        let new_pos = wk.best.iter().position(|f| f.id == insert_after);
+
+                        if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
+                            wk.best.insert(pos, entry);
+                        } else {
+                            wk.best.push(entry);
+                        }
+                    }
+                    _ => {
+                        log::warn!("unknown list name");
+                    }
+                };
+            });
+        },
+    ));
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.implement.title"), t!("process.title"), t!("name"))}/>
@@ -138,6 +177,7 @@ pub fn ImplementView() -> impl IntoView {
                             remove_value=nows_value_remove
                             add_entry_text={t!("worksheets.implement.add_now").to_string()}
                             placeholder={t!("worksheets.implement.placeholder_now").to_string()}
+                            drop_target_name="now"
                         />
                     </div>
                     <div>
@@ -152,6 +192,7 @@ pub fn ImplementView() -> impl IntoView {
                             remove_value=bests_value_remove
                             add_entry_text={t!("worksheets.implement.add_best").to_string()}
                             placeholder={t!("worksheets.implement.placeholder_best").to_string()}
+                            drop_target_name="best"
                         />
                     </div>
                 </div>

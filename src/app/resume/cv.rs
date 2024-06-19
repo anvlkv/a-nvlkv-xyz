@@ -212,7 +212,7 @@ pub fn CvView(#[prop(into)] data: Vec<CvEntry>) -> impl IntoView {
 #[component]
 pub fn CvDummyView() -> impl IntoView {
     view! {
-        <section class="sheet padding-10mm font-serif bg-gray-100 dark:bg-gray-800 grid items-baseline grid-cols-4 auto-rows-min gap-2 rounded-lg">
+        <section class="p-8 font-serif bg-gray-100 dark:bg-gray-800 grid items-baseline grid-cols-4 auto-rows-min gap-2 rounded-lg">
             <header class="col-span-full flex max-md:flex-col gap-2 flex-wrap items-baseline border-b border-gray-500">
                 <div class="shrink">
                     <div class="dummy-line rounded-sm w-64 bg-stone-300 dark:bg-stone-700 h-5 md:h-7 mb-2 after:content-[' ']"></div>
