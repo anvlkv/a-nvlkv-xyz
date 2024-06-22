@@ -99,7 +99,9 @@ pub fn ListInputView(
     view! {
         <div class="flex flex-col items-stretch" node_ref=element>
             <ol class="contents">
-                <Show when=move || data.try_get().unwrap_or_default().is_empty()>
+                <Show
+                    when={move || data.try_get().unwrap_or_default().len() <= 1}
+                >
                     <ListDropTarget
                         item_after=FormState::new(Default::default())
                         drop_target_name=drop_target_name
