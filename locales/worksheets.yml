@@ -376,7 +376,7 @@ worksheets:
     ai_disclaimer:
       en: |
         The following response is generated using AI.
-        While it may contain some common-sense information and useful advice please use it with necessary precaution.
+        While it may contain some common sense information and useful advice please use it with necessary precaution.
       nl: |
         Het volgende antwoord wordt gegenereerd met behulp van AI.
         Hoewel deze informatie op gezond verstand en nuttig advies kan bevatten, dient u deze met de nodige voorzorgsmaatregelen te gebruiken.
@@ -392,10 +392,10 @@ worksheets:
       nl: Herhaal iteratie
       ja: 繰り返す
     cta_3:
-      en: Ask a question
-      ru: Задать вопрос
-      nl: Een vraag stellen
-      ja: 質問する
+      en: Get a personalized answer
+      ru: Получить индивидуальный ответ
+      nl: Krijg een persoonlijk antwoord
+      ja: 個人的な回答を得る
   download:
     signature:
       en: Outcomes oriented design process by Sasha Novolokov

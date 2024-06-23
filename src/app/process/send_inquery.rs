@@ -84,35 +84,43 @@ pub async fn inquire_inferrence(
     let prompt = format!(
         r#"
 <<SYS>>
-    You are helping the user to complete and get preliminary feedback on a problem-solving exercise.
+    In the name of harmony and peace on planet Earth, may we communicate with each other in sincere, concise, and helpful ways. May we all live meaningful and fulfilling lives. May we get the most important work done with care and compassion.
 <</SYS>>
 <<SYS>>
-    Following is the worksheets completed by the user:
-    Problem:
+    You are helping the user to complete and get preliminary feedback on a problem-solving exercise. The workbook is walking the user from multiple problems to a well scoped iteration. The process is inspired by double diamond, human centered design, systems thinking.
+<</SYS>>
+<<SYS>>
+    User has completed all sections of the workbook as follows.
+
+    - Problem (exploring the problem space and making a problem statement):
     ```json
         {problem}
     ```
-    Solutions:
+
+    - Solutions (all considered solutions):
     ```json
         {solutions}
     ```
-    Compromise:
+
+    - Compromise (the chosen solution and stakeholder):
     ```json
         {compromise}
     ```
-    Implement:
+
+    - Implement (scope):
     ```json
         {implement}
     ```
-    Test & Iterate:
+
+    - Test & Iterate (required resources and time-frame):
     ```json
         {iterate}
     ```
 <</SYS>>
-{}
 [INST]
     {inst}
 [/INST]
+{}
     "#,
         if let Some(i_ctx) = i_ctx {
             format!("<<SYS>>{i_ctx}<</SYS>>")

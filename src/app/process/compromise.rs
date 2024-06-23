@@ -50,9 +50,8 @@ pub fn CompromiseView() -> impl IntoView {
     let stakeholders_list = Signal::derive(move || {
         let wk_data: ProblemWK = (&wk_state.get().problem.get()).into();
         wk_data
-            .stakeholders
+            .unique_stakeholders()
             .into_iter()
-            .filter(|s| !s.is_empty())
             .map(|s| CheckedOption {
                 value: s.clone(),
                 label: view! {

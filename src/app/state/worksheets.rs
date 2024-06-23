@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{collections::HashSet, str::FromStr};
 
 use leptos::SignalSet;
 use serde::{Deserialize, Serialize};
@@ -128,6 +128,26 @@ impl Completenes for ProblemWK {
                 .filter(|r| !r.is_empty())
                 .next()
                 .is_none()
+    }
+}
+
+impl ProblemWK {
+    pub fn unique_stakeholders(&self) -> Vec<String> {
+        let all_unique = HashSet::<String>::from_iter(self.stakeholders.iter().filter_map(|s| {
+            if !s.is_empty() {
+                Some(s.clone())
+            } else {
+                None
+            }
+        }));
+        let mut entries = Vec::from_iter(all_unique);
+        entries.sort_by(|a, b| {
+            let a_w = self.stakeholders.iter().filter(|s| s == &a).count();
+            let b_w = self.stakeholders.iter().filter(|s| s == &b).count();
+            b_w.cmp(&a_w)
+        });
+
+        entries
     }
 }
 

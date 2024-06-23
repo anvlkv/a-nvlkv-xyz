@@ -6,8 +6,8 @@ use uuid::Uuid;
 use crate::app::{
     components::{
         use_wk_ctx, use_wk_state, ButtonSize, ButtonView, CheckboxInputView, CheckedOption,
-        ContactForm, DescriptionView, ErrorView, IconView, RadioInputView, ReadOnlyView,
-        StringInputView, WorksheetHeader,
+        ContactForm, DescriptionView, ErrorView, IconView, RadioInputView, ReadOnlyView, Status,
+        StatusView, StringInputView, WorksheetHeader,
     },
     process::inquire_personal,
     state::{Completenes, InqueryOption, InquireWK, WorkSheets},
@@ -207,16 +207,18 @@ fn InquireResult(
         <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
             {move || if pending.get() {
                 view!{
-                    <p class="text-lg">
-                        <IconView attr:class="animate__animated animate__infinite animate__rotateIn" icon="Wait"/>
-                        <span>{t!("util.pending")}</span>
-                    </p>
+                    <StatusView
+                        status=Status::Pending
+                        attr:class="mb-4 mx-auto"
+                    />
                 }.into_view()
             } else if let Some(r) = response.get() {
                 view!{
-                    <p class="max-w-prose my-4 text-sm whitespace-pre-line">
-                        {t!("worksheets.inquire.ai_disclaimer")}
-                    </p>
+                    <StatusView
+                        status=Status::Success
+                        message={t!("worksheets.inquire.ai_disclaimer").to_string()}
+                        attr:class="mb-4 mx-auto"
+                    />
                     <ReadOnlyView>
                         {r.clone()}
                     </ReadOnlyView>
@@ -227,18 +229,19 @@ fn InquireResult(
             }}
             {move || if pending_personal.get() {
                 view!{
-                    <p class="text-lg mb-4">
-                        <IconView attr:class="animate__animated  animate__infinite animate__rotateIn" icon="Wait"/>
-                        <span>{t!("util.pending")}</span>
-                    </p>
+                    <StatusView
+                        status=Status::Pending
+                        attr:class="mb-4 mx-auto"
+                    />
                 }.into_view()
             } else if let Some(r) = done_personal.get() {
                 view!{
-                    <p class="text-lg">
-                        <IconView attr:class="dark:text-emerald-400 text-emerald-600" icon="Done"/>
-                        <span>{t!("contact.success.title")}</span>
-                        <span class="hidden">{r}</span>
-                    </p>
+                    <StatusView
+                        status=Status::Success
+                        message={t!("contact.success.title").to_string()}
+                        attr:class="mb-4 mx-auto"
+                    />
+                    <span class="hidden">{r}</span>
                     <p class="max-w-prose mt-4">
                         {t!("contact.success.description")}
                     </p>

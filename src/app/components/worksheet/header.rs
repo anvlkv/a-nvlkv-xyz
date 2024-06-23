@@ -47,7 +47,7 @@ pub fn WorksheetHeader(
                 {title}
             </h2>
             <div class="flex flex-wrap justify-end grow items-end h-full">
-                <div class="flex gap-1 border-b-2 px-2 border-slate-400 grow rounded-t-lg after:content-[' ']">
+                <div class="flex gap-1 border-b-2 px-2 border-slate-400 grow rounded-t-lg text-sm after:content-[' ']">
                     <Show when={move || description_hidden.get()}>
                         <button
                             on:click={move |_| toggle_description_hidden.call(())}

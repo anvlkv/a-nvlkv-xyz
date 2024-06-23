@@ -3,7 +3,7 @@ use leptos_meta::Title;
 use leptos_router::ActionForm;
 
 use crate::app::{
-    components::{ButtonSize, ButtonView, ContactForm, ErrorView, IconView},
+    components::{ButtonSize, ButtonView, ContactForm, ErrorView, IconView, Status, StatusView},
     process::InquireContact,
     state::{Completenes, ContactFormState},
     tracking::SessionId,
@@ -77,20 +77,21 @@ fn ContactResult(
     view! {
         {move || if pending.get() {
             view!{
-                <p class="text-lg">
-                    <IconView attr:class="animate__animated animate__infinite animate__rotateIn" icon="Wait"/>
-                    <span>{t!("util.pending")}</span>
-                </p>
+                <StatusView
+                    status=Status::Pending
+                    attr:class="mb-4 mx-auto"
+                />
             }.into_view()
         } else if let Some(r) = done.get() {
             view!{
-                <p class="text-lg">
-                    <IconView attr:class="dark:text-emerald-400 text-emerald-600" icon="Done"/>
-                    <span>{t!("contact.success.title")}</span>
-                    <span class="hidden">
-                        {r.map_err(|e| ServerFnErrorErr::from(e))}
-                    </span>
-                </p>
+                <StatusView
+                    status=Status::Success
+                    message={t!("contact.success.title").to_string()}
+                    attr:class="mb-4 mx-auto"
+                />
+                <span class="hidden">
+                    {r.map_err(|e| ServerFnErrorErr::from(e))}
+                </span>
                 <p class="max-w-prose mt-4 whitespace-pre-line">
                     {t!("contact.success.description")}
                 </p>
