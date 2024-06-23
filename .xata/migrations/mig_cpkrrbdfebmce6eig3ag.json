@@ -1,0 +1,19 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cpkrrbdfebmce6eig3ag",
+    "operations": [
+      {
+        "drop_column": {
+          "down": "null",
+          "table": "links",
+          "column": "title"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cpkrrbdfebmce6eig3ag",
+  "parent": "mig_cpkrkmjs759fnduvettg",
+  "startedAt": "2024-06-12T15:24:30.627145Z"
+}

@@ -1,0 +1,31 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cp56vrmdf6rflokfdba0",
+    "operations": [
+      {
+        "add_column": {
+          "table": "projects",
+          "column": {
+            "pk": false,
+            "name": "description_2",
+            "type": "text",
+            "unique": true,
+            "comment": "{\"xata.link\":\"localized_text\"}",
+            "nullable": true,
+            "references": {
+              "name": "description_2_link",
+              "table": "localized_text",
+              "column": "xata_id",
+              "on_delete": "SET NULL"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cp56vrmdf6rflokfdba0",
+  "parent": "mig_cp1ibh0jss4ru94fhaeg",
+  "startedAt": "2024-05-19T21:32:31.570718Z"
+}

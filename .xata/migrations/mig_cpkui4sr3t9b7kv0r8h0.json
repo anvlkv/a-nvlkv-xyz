@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cpkui4sr3t9b7kv0r8h0",
+    "operations": [
+      {
+        "add_column": {
+          "table": "tracking",
+          "column": {
+            "pk": false,
+            "name": "inferrence",
+            "type": "boolean",
+            "unique": false,
+            "nullable": true
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cpkui4sr3t9b7kv0r8h0",
+  "parent": "mig_cpkuh3dfebmce6eig4mg",
+  "startedAt": "2024-06-12T18:29:40.298341Z"
+}

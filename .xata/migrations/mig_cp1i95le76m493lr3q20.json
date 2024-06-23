@@ -1,0 +1,25 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cp1i95le76m493lr3q20",
+    "operations": [
+      {
+        "add_column": {
+          "table": "projects",
+          "column": {
+            "pk": false,
+            "name": "main_image",
+            "type": "xata.xata_file",
+            "unique": false,
+            "comment": "{\"xata.file.dpa\":true}",
+            "nullable": true
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cp1i95le76m493lr3q20",
+  "parent": "mig_cp1i8sojss4ru94fhadg",
+  "startedAt": "2024-05-14T08:45:10.909518Z"
+}

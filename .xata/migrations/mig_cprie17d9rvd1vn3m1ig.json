@@ -1,0 +1,17 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cprie17d9rvd1vn3m1ig",
+    "operations": [
+      {
+        "drop_table": {
+          "name": "tracking"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cprie17d9rvd1vn3m1ig",
+  "parent": "mig_cpkuj7kr3t9b7kv0r8j0",
+  "startedAt": "2024-06-22T19:33:24.170258Z"
+}

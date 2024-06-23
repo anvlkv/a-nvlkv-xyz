@@ -1,0 +1,31 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cpkuh3dfebmce6eig4mg",
+    "operations": [
+      {
+        "add_column": {
+          "table": "tracking",
+          "column": {
+            "pk": false,
+            "name": "restored_session",
+            "type": "text",
+            "unique": false,
+            "comment": "{\"xata.link\":\"tracking\"}",
+            "nullable": true,
+            "references": {
+              "name": "restored_session_link",
+              "table": "tracking",
+              "column": "xata_id",
+              "on_delete": "SET NULL"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cpkuh3dfebmce6eig4mg",
+  "parent": "mig_cpkugidfebmce6eig4lg",
+  "startedAt": "2024-06-12T18:27:26.474037Z"
+}

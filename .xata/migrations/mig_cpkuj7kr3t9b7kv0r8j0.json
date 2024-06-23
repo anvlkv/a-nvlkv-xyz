@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cpkuj7kr3t9b7kv0r8j0",
+    "operations": [
+      {
+        "add_column": {
+          "table": "tracking",
+          "column": {
+            "pk": false,
+            "name": "wk_download",
+            "type": "boolean",
+            "unique": false,
+            "nullable": true
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cpkuj7kr3t9b7kv0r8j0",
+  "parent": "mig_cpkuibsr3t9b7kv0r8i0",
+  "startedAt": "2024-06-12T18:31:59.201621Z"
+}

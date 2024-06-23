@@ -1,0 +1,29 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cp1i6jgjss4ru94fha7g",
+    "operations": [
+      {
+        "add_column": {
+          "table": "localized_text",
+          "column": {
+            "pk": false,
+            "name": "ja",
+            "type": "text",
+            "check": {
+              "name": "localized_text_xata_text_length_ja",
+              "constraint": "OCTET_LENGTH(\"ja\") <= 204800"
+            },
+            "unique": false,
+            "comment": "{\"xata.type\":\"text\"}",
+            "nullable": true
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cp1i6jgjss4ru94fha7g",
+  "parent": "mig_cp1i6h0jss4ru94fha6g",
+  "startedAt": "2024-05-14T08:39:42.894206Z"
+}

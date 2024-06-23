@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cp1i8e0jss4ru94fhabg",
+    "operations": [
+      {
+        "add_column": {
+          "table": "localized_json",
+          "column": {
+            "pk": false,
+            "name": "en",
+            "type": "jsonb",
+            "unique": false,
+            "nullable": true
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cp1i8e0jss4ru94fhabg",
+  "parent": "mig_cp1i8agjss4ru94fhaag",
+  "startedAt": "2024-05-14T08:43:36.633005Z"
+}

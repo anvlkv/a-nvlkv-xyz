@@ -1,0 +1,25 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cpkrkmjs759fnduvettg",
+    "operations": [
+      {
+        "add_column": {
+          "table": "links",
+          "column": {
+            "pk": false,
+            "name": "weight",
+            "type": "double precision",
+            "unique": false,
+            "default": "'0.0'",
+            "nullable": false
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cpkrkmjs759fnduvettg",
+  "parent": "mig_cpkrhnjs759fnduvetsg",
+  "startedAt": "2024-06-12T15:10:19.382864Z"
+}

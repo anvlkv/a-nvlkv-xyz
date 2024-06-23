@@ -1,0 +1,31 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cpklns3s759fnduvep60",
+    "operations": [
+      {
+        "add_column": {
+          "table": "cv",
+          "column": {
+            "pk": false,
+            "name": "description",
+            "type": "text",
+            "unique": true,
+            "comment": "{\"xata.link\":\"localized_text\"}",
+            "nullable": true,
+            "references": {
+              "name": "description_link",
+              "table": "localized_text",
+              "column": "xata_id",
+              "on_delete": "SET NULL"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cpklns3s759fnduvep60",
+  "parent": "mig_cpklnflfebmce6eifls0",
+  "startedAt": "2024-06-12T08:27:28.725896Z"
+}

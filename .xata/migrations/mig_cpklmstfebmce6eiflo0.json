@@ -1,0 +1,24 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cpklmstfebmce6eiflo0",
+    "operations": [
+      {
+        "add_column": {
+          "table": "cv",
+          "column": {
+            "pk": false,
+            "name": "start_date",
+            "type": "timestamptz",
+            "unique": false,
+            "nullable": true
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cpklmstfebmce6eiflo0",
+  "parent": "mig_cpklmhtfebmce6eifln0",
+  "startedAt": "2024-06-12T08:25:23.918585Z"
+}
