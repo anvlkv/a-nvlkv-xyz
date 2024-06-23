@@ -1,0 +1,53 @@
+spin_manifest_version = 2
+
+[application]
+name = "a-nvlkv-xyz"
+version = "0.1.0"
+authors = ["a.nvlkv <2813794+anvlkv@users.noreply.github.com>"]
+description = ""
+
+[[trigger.http]]
+route = "/..."
+component = "a-nvlkv-xyz"
+
+[variables]
+xata_key = { required = true }
+xata_workspace = { required = true }
+xata_region = { required = true }
+db_name = { required = true }
+db_branch = { required = true }
+
+
+[component.a-nvlkv-xyz.variables]
+xata_pg_url = "postgresql://{{ xata_workspace }}:{{ xata_key }}@{{ xata_region }}.sql.xata.sh:5432/{{ db_name }}:{{ db_branch }}?sslmode=require"
+xata_rest_url = "https://{{ xata_workspace }}.{{ xata_region }}.xata.sh"
+xata_key = "{{ xata_key }}"
+db_name = "{{ db_name }}"
+db_branch = "{{ db_branch }}"
+[component.a-nvlkv-xyz]
+# # release
+source = "target/wasm32-wasi/release/a_nvlkv_xyz.wasm"
+environment = { RUST_LOG = "spin=info,a-nvlkv-xyz=info" }
+# # debug
+# environment = { RUST_LOG = "spin=trace,a-nvlkv-xyz=trace", WASMTIME_BACKTRACE_DETAILS = "1" }
+# source = "target/wasm32-wasi/debug/a_nvlkv_xyz.wasm"
+allowed_outbound_hosts = ["*://*.xata.sh:*"]
+ai_models = ["llama2-chat"]
+sqlite_databases = ["default"]
+[component.a-nvlkv-xyz.build]
+# # release
+command = "LEPTOS_TAILWIND_VERSION=v3.4.4 LEPTOS_SASS_VERSION=1.77.2 cargo leptos build --release && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --release --no-default-features --features ssr"
+# # debug
+# command = "LEPTOS_TAILWIND_VERSION=v3.4.4 LEPTOS_SASS_VERSION=1.77.2 cargo leptos build && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --no-default-features --features ssr"
+watch = ["src/**/*.rs", "src/**/*.mjs", "Cargo.toml", "style/*"]
+
+[[trigger.http]]
+route = "/pkg/..."
+component = "pkg"
+
+[component.pkg]
+source = { url = "https://github.com/fermyon/spin-fileserver/releases/download/v0.1.0/spin_static_fs.wasm", digest = "sha256:96c76d9af86420b39eb6cd7be5550e3cb5d4cc4de572ce0fd1f6a29471536cb4" }
+files = [
+    { source = "target/site/pkg", destination = "/" },
+    { source = "target/site/", destination = "/" },
+]

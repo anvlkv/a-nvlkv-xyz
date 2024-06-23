@@ -1,0 +1,191 @@
+_version: 2
+
+util:
+  alt_fallback:
+    en: |
+      Image of %{title}
+    nl: |
+      Afbeelding van %{title}
+    ru: |
+      Изображение %{title}
+    ja: |
+      %{title}のイメージ
+  on:
+    en: On
+    nl: Aan
+    ru: Включить
+    ja: オン
+  off:
+    en: Off
+    nl: Uit
+    ru: Выключить
+    ja: オフ
+  dark:
+    en: "Dark mode: %{state}"
+    nl: "Donkere modus: %{state}"
+    ru: "Тёмный режим: %{state}"
+    ja: "ダークモード: %{state}"
+  close:
+    en: Close
+    ru: Закрыть
+    nl: Sluiten
+    ja: 閉じる
+  delete:
+    en: Delete
+    ru: Удалить
+    nl: Verwijder
+    ja: 削除
+  reorder:
+    en: Drag to reorder
+    nl: Sleep om de volgorde te wijzigen
+    ru: Перетащите, чтобы упорядочить
+    ja: 再注文のためにドラッグする
+  undo_delete:
+    en: Restore
+    ru: Восстановить
+  time_left:
+    en: "%{seconds}s"
+    nl: "%{seconds}s"
+    ru: "%{seconds}с"
+    ja: "%{seconds}秒"
+  info:
+    en: Description
+    ru: Описание
+    nl: Omschrijving
+    ja: 説明
+  js:
+    en: Please enable JavaScript in your browser and reload this page to use the app.
+    nl: Schakel JavaScript in uw browser in en laad de pagina opnieuw om de applicatie te gebruiken.
+    ru: Пожалуйста, включите JavaScript в вашем браузере и перезагрузите страницу, чтобы пользоваться приложением.
+    ja: アプリを使用するには、ブラウザの JavaScript を有効にしてこのページを再読み込みしてください。
+  browser_pdf:
+    en: Please select save to PDF as a destination in the browser's print dialog
+    ru: Пожалуйста, выберите сохранить в PDF в качестве назначения в диалоге печати браузера
+    nl: Selecteer opslaan in PDF als bestemming in het afdrukvenster van uw browser
+    ja: ブラウザの印刷ダイアログで保存先として PDF に保存を選択してください
+  print:
+    en: Print
+    nl: Afdrukken
+    ja: 印刷する
+    ru: Печать
+  empty:
+    en: Nothing here...
+    nl: Niks hier...
+    ru: Здесь ничего нет...
+    ja: ここには何もない...
+  ok:
+    en: Ok
+    nl: Oké
+    ja: オーケー
+    ru: Ок
+  cancel:
+    en: Cancel
+    nl: Annuleren
+    ja: キャンセル
+    ru: Отмена
+  pending:
+    en: Working on it...
+    nl: Wordt verwekt...
+    ru: Запрос обрабатывается...
+    ja: 処理...
+  err:
+    en: |
+      Sorry, something went wrong...
+      Try reloading the page now or after a while
+    ru: |
+      К сожалению, что-то пошло не так...
+      Попробуйте перезагрузить страницу сейчас или через некоторое время
+    nl: |
+      Sorry, er is iets misgegaan...
+      Probeer de pagina nu of over een tijdje opnieuw te laden
+    ja: |
+      申し訳ありませんが、問題が発生しました...
+      今すぐ、または後でページをリロードしてください。
+  fullscreen:
+    en: Fullscreen
+    ru: Полноэкранный режим
+    nl: Volledig schermmodus
+    ja: 全画面
+privacy:
+  short:
+    en: Privacy
+    nl: Privacy
+    ru: Конфиденциальность
+    ja: プライバシー
+  notice:
+    en: Your privacy matters. This app won't store or send any data unless you  explicitly choose to share it.
+    ru: Ваша конфиденциальность имеет значение. Это приложение не будет сохранять или отправлять данные, если вы не решите поделиться ими.
+    nl: Uw privacy is van belang. Deze app slaat geen gegevens op of verzendt deze niet, tenzij u er expliciet voor kiest deze te delen.
+    ja: あなたのプライバシーは重要です。 このアプリは、明示的に共有を選択しない限り、データを保存または送信しません。
+  prompt:
+    en: Select a storage option. You can change your choice later.
+    ru: Выберите вариант хранения. Вы можете изменить ваш выбор позже.
+    nl: Selecteer een opslagoptie. U kunt uw keuze later wijzigen.
+    ja: ストレージ オプションを選択します。 選択は後で変更できます。
+  local:
+    en: Local storage
+    nl: Lokale opslag
+    ru: Локальное хранилище
+    ja: ローカルストレージ
+  local_description:
+    en: Store data in your browser local storage. Stored data will be available when you use this app again.
+    ru: Данные будут сохранены в локальном хранилище вашего браузера. Сохраненные данные будут доступны вам, когда вы решите вновь воспользоваться приложением.
+    nl: Bewaar gegevens in de lokale opslag van uw browser. Opgeslagen gegevens zijn beschikbaar wanneer u deze app opnieuw gebruikt.
+    ja: データをブラウザのローカル ストレージに保存します。 保存されたデータは、このアプリを再度使用するときに利用できます。
+  no_storage:
+    en: No storage
+    ru: Не сохранять
+    nl: Geen opslag
+    ja: ストレージなし
+  no_storage_description:
+    en: All data is cleared once you close or reload this page.
+    nl: Alle gegevens worden gewist zodra u deze pagina sluit of opnieuw laadt.
+    ru: Все данные будут удалены как только вы закроете или презагрузите эту страницу.
+    ja: このページを閉じるかリロードすると、すべてのデータがクリアされます。
+  link_before:
+    en: "May you have any additional concerns, please check "
+    ru: "В случае сомнений, пожалуйста ознакомьтесь с "
+    nl: "Als u nog vragen heeft, raadpleeg dan het "
+    ja: 他にご不明な点がございましたら、
+  link_after:
+    en: " of the repo."
+    ru: " в репозитории."
+    nl: " van de repository."
+    ja: をご確認ください。
+  link:
+    en: the privacy section
+    ru: секцией о конфиденциальности
+    nl: privacygedeelte
+    ja: プライバシーセクション
+lang_en:
+  long:
+    en: English
+    ru: Английский
+    ja: 英語
+    nl: Engels
+  short:
+    en: EN
+lang_ru:
+  long:
+    en: Russian
+    ru: Русский
+    ja: ロシア語
+    nl: Russisch
+  short:
+    en: RU
+lang_ja:
+  long:
+    en: Japanese
+    ru: Японский
+    ja: 日本語
+    nl: Japans
+  short:
+    en: JA
+lang_nl:
+  long:
+    en: Dutch
+    ru: Нидерландский
+    ja: オランダ語
+    nl: Nederlands
+  short:
+    en: NL

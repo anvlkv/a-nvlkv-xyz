@@ -1,0 +1,18 @@
+@mixin dark-mode {
+    @media screen and (prefers-color-scheme: dark) {
+        &:not(.theme-light *) {
+            @content;
+        }
+    }
+    @media screen {
+        &:is(.theme-dark *) {
+            @content;
+        }
+    }
+}
+
+@mixin safe-animation {
+    @media (prefers-reduced-motion: no-preference) {
+        @content;
+    }
+}
