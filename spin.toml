@@ -51,3 +51,6 @@ files = [
     { source = "target/site/pkg", destination = "/" },
     { source = "target/site/", destination = "/" },
 ]
+[component.pkg.build]
+command = "npx svgtofont --sources ./assets/icons/svg --output ./assets/icons/font"
+watch = ["assets/icons/svg/*"]
