@@ -107,7 +107,7 @@ fn PrintView() -> impl IntoView {
             {t!("util.print")}
         </ButtonView>
         <div
-        class="font-sans text-black -mt-40 -ml-40  print:mt-0 print:ml-0 scale-50 print:scale-100"
+        class="font-sans text-black -mt-40 -ml-40 print:mt-0 print:ml-0"
         >
             <div class="sheet padding-10mm">
                 <header class="flex gap-2 w-full justify-start items-center border-b border-gray-500">
