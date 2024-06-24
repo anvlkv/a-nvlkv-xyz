@@ -1,3 +1,18 @@
+const fetched = {};
+
+const loadRiveFile = async (src) => {
+  const cached = fetched[src];
+  if (cached) {
+    return cached;
+  } else {
+    const req = new Request(src);
+    const res = await fetch(req);
+    const buffer = await res.arrayBuffer();
+    fetched[src] = buffer;
+    return buffer;
+  }
+};
+
 /**
  *     Binding to RiveJs
  *      @class RvJS
@@ -44,9 +59,10 @@ export class RvJs {
    */
 
   async mountAnimation(file, name, stateMachine, el, fit, alignment) {
+    const buffer = await loadRiveFile(file);
     await new Promise((resolve) => {
       this.rv = new window.rive.Rive({
-        src: file,
+        buffer,
         canvas: el,
         autoplay: true,
         stateMachines: stateMachine,
