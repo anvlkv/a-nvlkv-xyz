@@ -8,7 +8,7 @@ use web_time::Instant;
 use crate::app::{
     components::{
         use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView, HistoryEntry, IconView,
-        ListInputView, ModalView, StringInputView, UndoRemove, WorksheetHeader,
+        ListInputView, ModalView, Status, StatusView, StringInputView, UndoRemove, WorksheetHeader,
     },
     process::{
         FixedBestList, FixedNowList, FixedProblemStatement, FixedQuestionStatement,
@@ -113,6 +113,8 @@ pub fn IterateView() -> impl IntoView {
         let link = format!("/{}/process/6", lang.get());
         navigate(link.as_str(), Default::default());
     });
+
+    let (frame_loaded, set_frame_loaded) = create_signal(false);
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.iterate.title"), t!("process.title"), t!("name"))}/>
@@ -226,7 +228,12 @@ pub fn IterateView() -> impl IntoView {
                     {t!("util.browser_pdf")}
                 </p>
             </DescriptionView>
-            <iframe src={download_link} class="w-[50vw] rounded-lg aspect-video"/>
+            <div class="w-[50vw] relative rounded-lg aspect-video border border-purple-400">
+                <Show when=move || !frame_loaded.get()>
+                    <StatusView status=Status::Pending attr:class="absolute top-1/2"/>
+                </Show>
+                <iframe src={download_link} class="w-full h-full" on:load={move |_| set_frame_loaded.set(true)}/>
+            </div>
         </ModalView>
         <UndoRemove
             history=resources_delete_history
