@@ -125,11 +125,11 @@ pub fn xata_rest_builder(path: &str) -> anyhow::Result<spin_sdk::http::RequestBu
 }
 
 pub fn safe_error<T: Display>(err: T) -> String {
+    eprintln!("{}", err.to_string());
     cfg_if::cfg_if! {
         if #[cfg(debug_assertions)] {
             err.to_string()
         } else {
-            eprintln!("{}", err.to_string());
             format!("Server error")
         }
     }
