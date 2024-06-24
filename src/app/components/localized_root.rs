@@ -44,7 +44,6 @@ pub enum Language {
 
 #[component]
 pub fn LocalizedRootView() -> impl IntoView {
-    log::trace!("render localized root");
     view! {
         <div class="font-sans min-h-dvh w-screen overflow-auto md:overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50" id={STYLED_ROOT}>
             <Localized>
@@ -91,8 +90,6 @@ pub fn Localized(children: ChildrenFn) -> impl IntoView {
         children()
     };
 
-    log::trace!("render localized content");
-
     view! {
         <div class="contents">
             {localized}
@@ -104,13 +101,8 @@ pub fn Localized(children: ChildrenFn) -> impl IntoView {
 fn ThemedHtml() -> impl IntoView {
     let store = use_store();
 
-    let storage_type = Signal::derive(move || {
-        store
-            .try_get()
-            .map(|s| s.storage_preference.try_get())
-            .flatten()
-            .flatten()
-            .unwrap_or(StorageMode::None)
+    let storage_type = create_read_slice(store, |s| {
+        s.storage_preference.get().unwrap_or(StorageMode::None)
     });
 
     let themed = move || {

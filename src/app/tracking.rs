@@ -121,67 +121,6 @@ pub async fn complete_wk_download(id: Uuid) -> Result<(), ServerFnError<String>>
     Ok(())
 }
 
-#[server(GetStats, "/api")]
-pub async fn get_stats() -> Result<String, ServerFnError<String>> {
-    let conn = Connection::open("default").map_err(safe_error)?;
-
-    let sql = r#"
-CREATE VIEW summary AS
-    SELECT COUNT(id) AS total_entries
-        FROM tracking
-    UNION ALL
-    SELECT DATE(created_date, 'unixepoch') AS week_created,
-        COUNT(*) AS last_7_days_entries
-        FROM tracking
-        WHERE created_date >= DATE('now', '-7 days')
-    UNION ALL
-    SELECT DATE(updated_date, 'unixepoch') AS week_updated,
-        COUNT(*) AS last_7_days_returning
-        FROM tracking
-        WHERE updated_date >= DATE('now', '-7 days')
-            AND restored_session IS NOT NULL
-    UNION ALL
-    SELECT DATE(updated_date, 'unixepoch') AS week_updated,
-        COUNT(*) AS last_7_days_inferrence
-        FROM tracking
-        WHERE updated_date >= DATE('now', '-7 days')
-            AND inferrence IS NOT NULL
-    UNION ALL
-    SELECT DATE(updated_date, 'unixepoch') AS week_updated,
-        COUNT(*) AS last_7_days_wk_downloads
-        FROM tracking
-        WHERE updated_date >= DATE('now', '-7 days')
-            AND wk_download >= 1
-    UNION ALL
-    SELECT DATE(created_date, 'unixepoch') AS month_created,
-        COUNT(*) AS last_30_days_entries
-        FROM tracking
-        WHERE created_date >= DATE('now', '-30 days')
-    UNION ALL
-    SELECT DATE(updated_date, 'unixepoch') AS month_updated,
-        COUNT(*) AS last_30_days_returning
-        FROM tracking
-        WHERE updated_date >= DATE('now', '-30 days')
-            AND restored_session IS NOT NULL
-    UNION ALL
-    SELECT DATE(updated_date, 'unixepoch') AS month_updated,
-        COUNT(*) AS last_30_days_inferrence
-        FROM tracking
-        WHERE updated_date >= DATE('now', '-30 days')
-            AND inferrence IS NOT NULL
-    UNION ALL
-    SELECT DATE(updated_date, 'unixepoch') AS month_updated,
-        COUNT(*) AS last_30_days_wk_downloads
-        FROM tracking
-        WHERE updated_date >= DATE('now', '-30 days')
-            AND wk_download >= 1;
-        "#;
-
-    let data = conn.execute(sql, &[]).map_err(safe_error)?;
-
-    todo!();
-}
-
 #[derive(Clone, PartialEq, Eq)]
 pub struct SessionId(pub ReadSignal<Option<Uuid>>);
 
@@ -227,31 +166,25 @@ pub fn SessionIdProvider(
     #[prop(into)] init_id: Resource<Option<String>, Option<Uuid>>,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let store = use_store();
     let id_rw = create_rw_signal::<Option<Uuid>>(None);
-    let restore_session_id = create_action(|ids: &(Uuid, Uuid)| {
-        let (init_id, restore_id) = ids.clone();
-        async move { restore_tracking_session(init_id, restore_id).await }
-    });
-
     let (remembered_session_id, set_remembered_session_id, del_session_id) =
         use_local_storage_with_options::<Option<Uuid>, JsonCodec>(
             "session_id",
             UseStorageOptions::default().listen_to_storage_changes(false),
         );
+    let store = use_store();
 
-    let storage_preference = Signal::derive(move || {
-        store
-            .try_get()
-            .map(|s| s.storage_preference.try_get())
-            .flatten()
-            .flatten()
+    let restore_session_id = create_action(|ids: &(Uuid, Uuid)| {
+        let (init_id, restore_id) = ids.clone();
+        async move { restore_tracking_session(init_id, restore_id).await }
     });
 
+    let storage_preference = Signal::derive(move || store.get().storage_preference.get());
+
     create_isomorphic_effect(move |_| {
-        let init_id = init_id.try_get().flatten().flatten();
+        let init_id = init_id.get().flatten();
         // only happens on client if it has session id in LS
-        if let Some(old_id) = remembered_session_id.try_get().flatten() {
+        if let Some(old_id) = remembered_session_id.get() {
             id_rw.set(Some(old_id.clone()));
             // only happens if there's an id for current session
             if let Some(init_id) = init_id {
@@ -272,7 +205,7 @@ pub fn SessionIdProvider(
     create_render_effect(move |_| {
         // fallback to the new id if restore failed
         if let Some(Err(_)) = restore_success.get() {
-            if let Some(id) = init_id.try_get().flatten().flatten() {
+            if let Some(id) = init_id.get().flatten() {
                 id_rw.set(Some(id.clone()));
                 if Some(StorageMode::Local) == storage_preference.get() {
                     set_remembered_session_id.set(Some(id));
