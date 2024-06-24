@@ -29,10 +29,11 @@ pub fn StoreProvider() -> impl IntoView {
     let (remembered_storage_preference, set_remembered_storage_preference, del_storage_preference) =
         use_local_storage::<Option<StorageMode>, JsonCodec>("storage_preference");
 
-    let (_, _, del_wk_storage) = use_local_storage_with_options::<Option<WorkSheets>, JsonCodec>(
-        WK_STORAGE,
-        UseStorageOptions::default().listen_to_storage_changes(false),
-    );
+    let (wk_storage, _, del_wk_storage) =
+        use_local_storage_with_options::<Option<WorkSheets>, JsonCodec>(
+            WK_STORAGE,
+            UseStorageOptions::default().listen_to_storage_changes(false),
+        );
 
     let state = create_rw_signal({
         let mut state = AppState::default();
@@ -41,6 +42,11 @@ pub fn StoreProvider() -> impl IntoView {
         {
             state.storage_preference = FormState::new(Some(storage_prefernce));
             log::info!("restore storage preference");
+        }
+
+        if let Some(wk) = wk_storage.get_untracked() {
+            state.wk = WorkSheetsFormState::new(wk);
+            log::info!("restore worksheets");
         }
 
         state

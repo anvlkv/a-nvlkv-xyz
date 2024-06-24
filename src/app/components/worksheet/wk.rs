@@ -81,14 +81,14 @@ pub fn WorksheetView(
         750.0,
     );
 
-    create_render_effect(move |_| {
-        let data = wk_storage.get_untracked();
-        if let Some(wk) = data {
-            state.update(|s| {
-                s.wk = WorkSheetsFormState::new(wk);
-            });
-        }
-    });
+    // create_render_effect(move |_| {
+    //     let data = wk_storage.get_untracked();
+    //     if let Some(wk) = data {
+    //         state.update(|s| {
+    //             s.wk = WorkSheetsFormState::new(wk);
+    //         });
+    //     }
+    // });
 
     create_effect(move |_| {
         let wk = wk_data_throttled.get();
