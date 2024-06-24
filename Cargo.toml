@@ -1,0 +1,107 @@
+[package]
+name = "a-nvlkv-xyz"
+authors = ["anvlkv <2813794+anvlkv@users.noreply.github.com>"]
+description = ""
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+form-signal = { path = "./form-signal" }
+uuid = { version = "1.8.0", features = ["v5", "v4", "serde"] }
+rust-i18n = "3"
+log = "0.4"
+anyhow = "1"
+cfg-if = "1"
+console_error_panic_hook = "0.1"
+http = "1"
+leptos = "0.6.6"
+leptos_integration_utils = { version = "0.6.6", optional = true }
+leptos_meta = "0.6.6"
+leptos_router = "0.6.6"
+leptos-spin = { version = "=0.1", optional = true }
+leptos-use = { version = "0.10.10", features = ["serde_json", "serde"] }
+spin-sdk = { version = "=2", optional = true }
+serde = "1"
+wasm-bindgen = { version = "0.2", optional = true }
+env_logger = { version = "0.11.3", optional = true }
+console_log = { version = "1.0.0", features = [
+    "wasm-bindgen",
+], optional = true }
+accept-language = { version = "3.1.0", optional = true }
+js-sys = { version = "0.3.69", optional = true }
+strum = { version = "0.26", features = ["derive"] }
+form-signal-macro = { path = "./form-signal-macro" }
+web-time = "1.1.0"
+wasm-bindgen-futures = { version = "0.4.42", optional = true }
+serde_json = "1.0.117"
+jzon = "0.12.5"
+futures = "0.3.30"
+chrono = { version = "0.4.38", features = ["clock", "serde"] }
+
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+    "EventTarget",
+    "HtmlSelectElement",
+    "Element",
+    "ResizeObserver",
+    "ResizeObserverEntry",
+    "DomRectReadOnly",
+    "HtmlLiElement",
+    "DomTokenList",
+]
+
+[workspace]
+members = ["form-signal-macro", "form-signal"]
+
+[features]
+client = [
+    "dep:wasm-bindgen",
+    "dep:console_log",
+    "dep:js-sys",
+    "dep:wasm-bindgen-futures",
+]
+csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr", "client"]
+hydrate = [
+    "leptos/hydrate",
+    "leptos_meta/hydrate",
+    "leptos_router/hydrate",
+    "client",
+]
+ssr = [
+    "leptos/ssr",
+    "leptos_meta/ssr",
+    "leptos_router/ssr",
+    "leptos-use/ssr",
+    "leptos-use/wasm_ssr",
+    "leptos/spin",
+    "chrono/unstable-locales",
+    "dep:spin-sdk",
+    "dep:leptos-spin",
+    "dep:leptos_integration_utils",
+    "dep:env_logger",
+    "dep:accept-language",
+]
+
+[package.metadata.leptos]
+# The name used by wasm-bindgen/cargo-leptos for the JS/WASM bundle. Defaults to the crate name
+output-name = "a_nvlkv_xyz"
+style-file = "style/main.scss"
+tailwind-input-file = "style/tailwind.css"
+tailwind-config-file = "style/tailwind.config.js"
+bin-features = ["ssr"]
+bin-default-features = false
+lib-features = ["hydrate"]
+lib-default-features = false
+assets-dir = "assets"
+lib-profile-release = "wasm-release"
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = 'z'
+lto = true
+codegen-units = 1

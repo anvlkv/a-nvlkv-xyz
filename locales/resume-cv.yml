@@ -1,0 +1,37 @@
+_version: 2
+
+cv:
+  title:
+    en: Résumé
+    nl: Cv
+    ru: Резюме
+    ja: 履歴書
+  present:
+    en: present
+    ja: 現在
+    nl: heden
+    ru: по настоящее время
+  summary:
+    en: The primary focus of my work is the users' success. As a full-stack engineer I identify and address obstacles at various levels. Creating digital experiences I highly value time-relevance, continuity, and reliability.
+    nl: De primaire focus van mijn werk is het succes van de gebruikers. Als full-stack engineer identificeer en adresseer ik obstakels op verschillende niveaus. Het creëren van digitale ervaringen Ik hecht grote waarde aan tijdsrelevantie, continuïteit en betrouwbaarheid.
+    ru: Основным фокусом моей работы является пользовательский усппех. Как инженер полного цикла, я выявляю и устраняю препятствия на различных уровнях. Создавая цифровой опыт, я высоко ценю актуальность, непрерывность и надежность.
+    ja: 私の仕事の主な焦点は、ユーザーの成功です。フルスタック エンジニアとして、さまざまなレベルで障害を特定し、対処します。デジタル エクスペリエンスを作成する際には、時間的関連性、継続性、信頼性を非常に重視します。
+  experience:
+    en: Experience
+    ru: Опыт
+    nl: Ervaring
+  skills:
+    en: Skills
+    ru: Навыки
+    nl: Vaardigheden
+    ja: スキル
+  other_skills:
+    en: Other skills
+    ru: Прочие навыки
+    nl: Andere vaardigheden
+    ja: 他のスキル
+  hidden:
+    en: (%{count} hidden by skills filter)
+    ru: (%{count} скрыто фильтром навыков)
+    nl: (%{count} verborgen door vaardighedenfilter)
+    ja: (スキルフィルターにより%{count}が非表示)

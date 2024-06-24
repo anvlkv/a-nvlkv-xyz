@@ -1,7 +1,8 @@
-public/
-node_modules/
-.env
-.DS_Store
 target/
-logs/
-processed_images
+.spin/
+.DS_Store
+node_modules/
+assets/icons/font/
+
+
+.env

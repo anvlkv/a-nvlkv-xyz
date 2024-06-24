@@ -1,0 +1,72 @@
+$gradient: radial-gradient(ellipse 180% 10% at 50% 100%, #a855f7, transparent);
+
+#the-done-button {
+    background: $gradient, #581c87;
+
+    &,
+    & + div > span {
+        @include safe-animation {
+            transition-property: margin, backrgound, box-shadow;
+            transition-duration: $hover-duration;
+            transition-timing-function: ease-out;
+        }
+    }
+    & + div {
+        overflow: visible;
+    }
+    & + div > span {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    &:hover {
+        background: $gradient, #5b21b6;
+
+        @include dark-mode {
+            background: $gradient, #2e1065;
+        }
+
+        & + div > span {
+            margin-top: -$hover-offset;
+            margin-bottom: $hover-offset;
+        }
+    }
+
+    &:active {
+        background: $gradient, #5b21b6;
+
+        @include dark-mode {
+            background: $gradient, #2e1065;
+        }
+
+        box-shadow: inset 0 0.1em 1em rgba(black, 0.75);
+    }
+}
+
+div:has(#the-done-button) {
+    & + #process-intro {
+        overflow: visible;
+        & > p {
+            margin-top: 0;
+            @include safe-animation {
+                transition-property: margin;
+                transition-duration: $hover-duration;
+            }
+        }
+    }
+}
+
+div:has(#the-done-button:hover) {
+    & + #process-intro > p {
+        margin-top: 2 * $hover-offset;
+        margin-bottom: -2 * $hover-offset;
+        @include safe-animation {
+            transition-property: margin;
+            transition-duration: $hover-duration;
+        }
+    }
+}
+
+#process_animation {
+    aspect-ratio: 1522 / 496;
+}

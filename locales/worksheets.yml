@@ -1,0 +1,464 @@
+_version: 2
+
+about:
+  title:
+    en: Let's get things done.
+    nl: Laten wij de dingen maken. De dingen zijn klaar.
+    ru: Пусть всё будет готово.
+    ja: 目標を完了。
+  description_1:
+    en: |
+      Whenever we are doing our work we shape our future and that of others.
+      Whether we have such intention or even a particular outcome in mind the future never comes out exactly the way it was intended; reality takes place.
+      But as some wise people say “it's not the dots but the arrows that matter” therefore, may we look forward to the journey and not a destination.
+  description_2:
+    en: |
+      The app will guide you through a 5 step process of getting from problems to testable solutions.
+      Each step is an interactive worksheet with examples.
+      Complete the workbook on your own or in collaboration with others.
+  cta:
+    en: Get started
+    ru: Начать
+    nl: Aan de slag
+    ja: 始めましょう
+  cta_alt:
+    en: Continue
+    ru: Продолжить
+    nl: Doorgaan
+    ja: 続く
+  s_1:
+    title:
+      en: The problem
+      ja: 問題
+      nl: Het probleem
+      ru: Проблема
+    description:
+      en: Falling in love with the right problem for all the right reasons.
+      nl: Verliefd worden op het juiste probleem om de juiste redenen.
+
+  s_2:
+    title:
+      en: Solutions
+      ru: Решения
+      nl: Oplossingen
+      ja: 解決
+    description:
+      en: Dreaming big and quick.
+      nl: Dromen groot en snel.
+      ru: Мечтайте масштабно и быстро
+      ja: 夢は大きく、そして早く
+  s_3:
+    title:
+      en: Compromise
+      ru: Компромисc
+      nl: Compromis
+      ja: 折り合い
+    description:
+      en: The reality check. What We Must Do Now?
+      ja: 現実を直視。今私たちは何をしなければならないのか？
+      ru: Проверка реальности. Что Мы Должны Сделать Сейчас?
+      nl: De realitycheck. Wat Moeten We Nu Doen?
+  s_4:
+    title:
+      en: Implement
+      ja: 実装
+      nl: Implementatie
+      ru: Воплощение
+    description:
+      en: Lovingly crafting artifacts.
+      nl: Liefdevol artefacten maken.
+      ru: Создаем артефакты с любовью.
+      ja: 愛情を持って芸術品を作りする。
+  s_5:
+    title:
+      en: Test & Iterate
+      ru: Тестирование и Итерации
+      nl: Testen en Iteraties
+      ja: テストと反復
+    description:
+      en: Learn, celebrate, and fearlessly start over.
+      ru: Учитесь, празднуйте и бесстрашно начинайте все сначала.
+      nl: Leer, vier en begin onbevreesd opnieuw.
+      ja: 学び、祝い、そして恐れることなくやり直しましょう。
+worksheets:
+  example:
+    en: "Example: %{title}"
+    nl: "Voorbeeld: %{title}"
+    ru: "Пример: %{title}"
+    ja: "例: %{title}"
+  view_example:
+    en: "Learn more about the %{title}"
+    ru: "Узнайте больше о %{title}"
+    nl: "Meer informatie over de %{title}"
+    ja: "%{title} について詳しく知る"
+  wk:
+    en: Worksheet
+    nl: Werkblad
+    ru: Лист
+    ja: ワークシート
+  prev_wk:
+    en: Back to worksheet
+    ja: ワークシートに戻る
+    nl: Terug naar werkblad
+    ru: Вернуться к листу
+  prev_ex:
+    en: Back to example
+    nl: Terug naar voorbeeld
+    ja: 例に戻る
+    ru: Вернуться к примеру
+  next_wk:
+    en: Complete the worksheet
+    nl: Vul het werkblad in
+    ru: Заполните рабочий лист
+    ja: ワークシートを完成させる
+  next_ex:
+    en: View next example
+    ja: 次の例を見る
+    nl: Bekijk volgend voorbeeld
+    ru: Посмотреть следующий пример
+  problem:
+    example_title:
+      en: The problem of “%{title}”
+      ru: Проблема «%{title}»
+      nl: Het probleem van “%{title}”
+      ja: 「%{title}」の問題
+    title:
+      en: The problem
+      ja: 問題
+      nl: Het probleem
+      ru: Проблема
+    empty:
+      en: State the problem first
+      ru: Сначала сформулируйте проблему
+      nl: Geef eerst het probleem aan
+      ja: まず問題を述べる
+    description:
+      en: |
+        Finding the right problem means getting out of the comfort zone, accepting that different people may have different stakes in it, looking far out as well as deep within.
+    instruction_1:
+      en: |
+        List any problems that come to mind in one column.
+        List stakeholders affected by those problems in the second column.
+    label_problems:
+      en: Problem
+      ja: 問題
+      nl: Probleem
+      ru: Проблема
+    label_stakeholders:
+      en: Stakeholder
+      nl: Belanghebbende
+      ru: Заинтересованная сторона
+      ja: 当事者
+    placeholder_problem:
+      en: |
+        For example: Environmental pollution
+    placeholder_stakeholders:
+      en: |
+        For example: Ecosystems
+    add_problem:
+      en: Add a problem
+    add_stakeholder:
+      en: Add a stakeholder
+    instruction_2:
+      en: |
+        Make one problem statement.
+        It should describe the most important problem or a combination of problems from your list, which stakeholders it affects and how.
+    placeholder_2:
+      en: |
+        For example: Because of the "Problem A" the "Stakeholder B" experiences "Undesirable effects C"
+    label_statement:
+      en: Problem statement
+    cta:
+      en: Solve the problem
+  solutions:
+    example_title:
+      en: Solutions for “%{title}”
+    title:
+      en: Solutions
+      ru: Решения
+      nl: Oplossingen
+      ja: 解決
+    description:
+      en: |
+        What are possible solutions to the problem?
+        Avoid thinking of limitations, or whether you're going to implement it, whether it's even possible.
+        The only criteria for solutions at this step is it must solve the problem.
+    instruction:
+      en: |
+        Looking at your problem statement.
+        List all solutions that come to mind.
+        Go for quantity.
+        Dream.
+    label_solutions:
+      en: How might we solve the problem?
+      nl: Hoe kunnen we het probleem oplossen?
+      ru: Как мы можем решить проблему?
+      ja: どうすればその問題を解決できるでしょうか?
+    add_solution:
+      en: Add a solution
+    placeholder_solution:
+      en: |
+        For example: Incentivise positive impact over revenue by...
+    cta:
+      en: Turn a dream a reality
+  compromise:
+    example_title:
+      en: Compromise of “%{title}”
+    title:
+      en: Compromise
+      ru: Компромисc
+      nl: Compromis
+      ja: 折り合い
+    empty:
+      en: First, make a research design note
+    description:
+      en: |
+        Every solution comes to oneself and those around with costs and uncertainty.
+        Costs beyond monetary or time and effort.
+        Every path brings its learnings.
+    instruction_1:
+      en: |
+        Looking at each solution, ask yourself:
+        What can you learn from bringing this solution to life?
+        Does it benefit the stakeholders?
+        Does it place any burden on other stakeholders?
+        Select one or two that will get you the best insight at the smallest cost and uncertainty.
+    label_solutions:
+      en: Solutions
+      ru: Решения
+      nl: Oplossingen
+      ja: 解決
+    label_stakeholders:
+      en: Stakeholders
+      nl: Belanghebbende
+      ru: Заинтересованные стороны
+      ja: 当事者
+    placeholder:
+      en: |
+        For example: Compare metrics "X" and "Y", ask open-ended question "Z"
+    instruction_2:
+      en: |
+        Describe the research to be done on an implemented solution. Answer the questions:
+        How will you find out if the solution is not working?
+        How can you get insight from the stakeholders?
+        How can you keep your heart open to the new stakeholders?
+    label_question:
+      en: Research design note
+    cta:
+      en: Make it happen
+  implement:
+    example_title:
+      en: Implementation of “%{title}”
+    title:
+      en: Implement
+      ru: Воплощение
+      nl: Implementatie
+      ja: 実施形態
+    description_1:
+      en: |
+        Depending on the scale and your research question it is important to choose the right means and scope for delivering the solution.
+        The fidelity can be anything: paper prototype, service prototype, mockup, interactive prototype, a coded prototype, phone call or presentation, limited release of software, etc.
+    description_2:
+      en: |
+        May the outcome of this step guide your choice of tools, features, and approaches when crafting the solution.
+    instruction:
+      en: |
+        List the most important distinct features of your solution.
+        Place the features in two sections: “Now” and “Best”.
+    label_now:
+      en: Now
+      ja: 今
+    hint_now:
+      en: How does the solution solve the problem?
+      ja: 解決はどのようにして問題を解決しますか?
+    placeholder_now:
+      en: "For example: It computes the impact"
+      ja: "例: 影響を計算します"
+    add_now:
+      en: Add a critical feature
+    label_best:
+      en: Best
+    add_best:
+      en: Add an optimization
+    hint_best:
+      en: What makes it the most efficient?
+    placeholder_best:
+      en: "For example: It keeps history"
+    cta:
+      en: To the moment of truth
+  iterate:
+    example_title:
+      en: Tests & Iterations of “%{title}”
+    title:
+      en: Test & Iterate
+      ru: Тестирование и Итерации
+      nl: Testen en Iteraties
+      ja: テストと反復
+    description:
+      en: |
+        Keep your artifacts everevolving.
+        Aspire to bring the positive impact in a short iteration.
+        Remember that testing and learning also takes time.
+    cta:
+      en: Download summary PDF
+      ru: Скачайте краткое PDF
+      nl: Download samenvatting PDF
+      ja: 概要PDFをダウンロード
+    instruction_title:
+      en: Give this iteration a meaningful and inspiring title
+    label_title:
+      en: Iteration title
+    placeholder_title:
+      en: "For example: Mission possible"
+    instruction_dates:
+      en: Make commitment to a reasonable time frame
+    instruction_resources:
+      en: List all the necessary resources, epecially those you may need to prepare
+    label_date_1:
+      en: Start date
+    label_date_2:
+      en: Deadline
+    label_resources:
+      en: Resources
+    placeholder_resources:
+      en: "For example: Laptop"
+    add_resource:
+      en: Add resource
+    label_externals:
+      en: External resources
+    placeholder_external:
+      en: "For example: Design process consultant"
+    add_external:
+      en: Add external resource
+
+  inquire:
+    title:
+      en: Inquire
+      ru: Вопросы
+      nl: Vragen
+      ja: 問い合わせる
+    cta:
+      en: Inquire
+      ru: Задать вопрос
+      nl: Navragen
+      ja: 質問する
+    description:
+      en: |
+        Completed these worksheets I invite you to:
+        - Get preliminary evaluation with `llama2`, which may inspire a new iteration.
+        - Get me involved. Ask questions, share your thoughts, and workshets.
+    instruction_1:
+      en: Select one of the options to get an answer from `llama2`
+    inquery_FirstTime:
+      en: |
+        Following the process for the first time or using it on a new topic.
+        Find common mistakes, get feedback.
+    inquery_ScopeAndTime:
+      en: |
+        Concerned about the scope and timeframe of an iteration.
+        Find the right balance. Create contained but measurable impact.
+    inquery_EthicalDesign:
+      en: |
+        Intricate topic. Learn how to mitigate risks while still answering your research question.
+        Deliver ethical design.
+    inquery_Narrative:
+      en: |
+        Help communicating with a broader audience.
+        Create a narrative.
+    inquery_Custom:
+      en: Create your own prompt. Ask different.
+    placeholder:
+      en: "For example: How to improve the problem statement?"
+    instruction_2:
+      en: |
+        Receive personalized feedback. Ask any questions.
+        Share the worksheets along with any other background information you'd like me to know.
+    ai_disclaimer:
+      en: |
+        The following response is generated using AI.
+        While it may contain some common sense information and useful advice please use it with necessary precaution.
+      nl: |
+        Het volgende antwoord wordt gegenereerd met behulp van AI.
+        Hoewel deze informatie op gezond verstand en nuttig advies kan bevatten, dient u deze met de nodige voorzorgsmaatregelen te gebruiken.
+      ru: |
+        Следующий ответ сгенирирован с помощью ИИ.
+        Хотя он может содержать некоторую информацию и полезные советы, используйте его с осторожностью.
+      ja: |
+        以下の回答は AI を使用して生成されています。
+        常識的な情報や役立つアドバイスが含まれている場合もありますが、必要な注意を払ってご利用ください。
+    cta_2:
+      en: Reiterate
+      ru: Повторить итерацию
+      nl: Herhaal iteratie
+      ja: 繰り返す
+    cta_3:
+      en: Get a personalized answer
+      ru: Получить индивидуальный ответ
+      nl: Krijg een persoonlijk antwoord
+      ja: 個人的な回答を得る
+  download:
+    signature:
+      en: Outcomes oriented design process by Sasha Novolokov
+      nl: Resultaatgericht ontwerpproces door Sacha Nowolokov
+      ru: Процесс проектирования, ориентированный на результат, от Саши Новолокова
+      ja: ササ・ノボロコフによる成果重視の設計プロセス
+    iteration:
+      en: Iteration
+      nl: Iteratie
+      ja: 反復
+      ru: Итерация
+    problem:
+      en: The problem we aim to solve
+      ru: Мы намереваемся решить проблему
+      nl: Het probleem dat we willen oplossen
+      ja: 解決を目指す問題
+    compromise:
+      en: The choice we've made
+      ru: Мы сделали выбор
+      nl: De keuze die we hebben gemaakt
+      ja: 下した選択
+    research:
+      en: This iteration's research
+      ru: Исследование в этой итерации
+      nl: Het onderzoek van deze iteratie
+      ja: この反復の研究
+    instruction_3:
+      en: In a constructive way digest what you've learned.
+    instruction_4:
+      en: With all the new insight, fearlessly start over.
+stepper:
+  about:
+    en: About
+    ru: О процессе
+    nl: Omschrijving
+    ja: 説明
+  problem:
+    en: Problem
+    ru: Проблема
+    nl: Probleem
+    ja: 問題
+  solution:
+    en: Solutions
+    ru: Решения
+    nl: Oplossingen
+    ja: 解決
+  compromise:
+    en: Compromise
+    ru: Компромисc
+    nl: Compromis
+    ja: 折り合い
+  implement:
+    en: Implement
+    ru: Воплощение
+    nl: Implementatie
+    ja: 実施形態
+  iterate:
+    en: Test & Iterate
+    ru: Тестирование и Итерации
+    nl: Testen en Iteraties
+    ja: テストと反復
+  inquire:
+    en: Inquire
+    ru: Вопросы
+    nl: Vragen
+    ja: 問い合わせる

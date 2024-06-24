@@ -1,0 +1,110 @@
+_version: 2
+
+name:
+  en: Sasha Novolokov
+  nl: Sacha Nowolokov
+  ru: Саша Новолоков
+  ja: ササ・ノボロコフ
+specialty:
+  en: Full-stack User Experience Engineer
+  nl: Full-stack Gebruikerservaring Ingenieur
+  ru: Full-stack Инженер Пользовательского Опыта
+  ja: フルスタック ユーザー エクスペリエンス エンジニア
+menu:
+  resume:
+    en: CV
+    nl: Cv
+    ru: Резюме
+    ja: 履歴書
+  projects:
+    en: Projects
+    nl: Projecten
+    ru: Проекты
+    ja: プロジェクト
+  process:
+    en: Process
+    nl: Proces
+    ru: Процесс
+    ja: 手順
+  links:
+    en: Links
+    nl: Links
+    ru: Ссылки
+    ja: リンク
+  contact:
+    en: Contact
+    nl: Contact
+    ru: Связь
+    ja: お問い合わせ
+contact:
+  title:
+    en: Let's speak English
+    nl: Praten wij even Nederlands
+    ru: Поговорим по Русский
+    ja: 日本語を話しましょう
+  description:
+    en: Whether you like me involved or simply answer your questions about the process, don't hesitate to ask.
+  label_worksheets:
+    en: Send your completed worksheets along with your messagge
+  disabled_worksheets:
+    en: Complete the worksheets to enable this option
+  name:
+    label:
+      en: Name
+    placeholder:
+      en: Enter your name
+  email:
+    label:
+      en: Email
+    placeholder:
+      en: Enter your email
+  message:
+    label:
+      en: Message
+    placeholder:
+      en: Enter your message
+  send:
+    en: Send your message
+  success:
+    title:
+      en: Message sent
+      nl: Bericht verzonden
+      ru: Сообщение отправлено
+      ja: メッセージが送信されました
+    description:
+      en: Thank you for your interest! I'll be in touch with you shortly
+projects:
+  title:
+    en: Projects
+    nl: Projecten
+    ru: Проекты
+    ja: プロジェクト
+process:
+  title:
+    en: Process
+    nl: Proces
+    ru: Процесс
+    ja: 手順
+case:
+  title:
+    en: Case study
+    nl: Casestudy
+    ru: Kейс стади
+    ja: ケーススタディ
+links:
+  title:
+    en: Links
+    nl: Links
+    ru: Ссылки
+    ja: リンク
+not_found:
+  title:
+    en: Page not found
+    nl: Pagina niet gevonded
+    ru: Страница не найдена
+    ja: ページが見つかりません
+  cta:
+    en: Fearlessly start over
+    nl: Begin onbevreesd opnieuw
+    ru: Бесстрашно начните сначала
+    ja: 恐れずにやり直す
