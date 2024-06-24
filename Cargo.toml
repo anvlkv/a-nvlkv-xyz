@@ -21,9 +21,9 @@ leptos = "0.6.6"
 leptos_integration_utils = { version = "0.6.6", optional = true }
 leptos_meta = "0.6.6"
 leptos_router = "0.6.6"
-leptos-spin = { version = "0.1", optional = true }
+leptos-spin = { version = "=0.1", optional = true }
 leptos-use = { version = "0.10.10", features = ["serde_json", "serde"] }
-spin-sdk = { version = "2", optional = true }
+spin-sdk = { version = "=2", optional = true }
 serde = "1"
 wasm-bindgen = { version = "0.2", optional = true }
 env_logger = { version = "0.11.3", optional = true }
