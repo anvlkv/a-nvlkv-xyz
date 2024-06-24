@@ -42,16 +42,23 @@ pub async fn inquire_inferrence(
         inquire,
     } = wk;
 
-    let problem = sanitize_input(serde_json::to_string(&problem).map_err(safe_error)?);
-    let solutions = sanitize_input(serde_json::to_string(&solutions).map_err(safe_error)?);
-    let compromise = sanitize_input(serde_json::to_string(&compromise).map_err(safe_error)?);
-    let implement = sanitize_input(serde_json::to_string(&implement).map_err(safe_error)?);
-    let iterate = sanitize_input(serde_json::to_string(&iterate).map_err(safe_error)?);
+    let wk = WorkSheets {
+        problem,
+        solutions,
+        compromise,
+        implement,
+        iterate,
+        ..Default::default()
+    };
+
+    let workbook = sanitize_input(serde_json::to_string_pretty(&wk).map_err(safe_error)?);
+
+    let empty = serde_json::to_string_pretty(&WorkSheets::default()).map_err(safe_error)?;
 
     let (inst, i_ctx, max_tokens, temperature) = match InqueryOption::from_str(inquire.inquery_option.as_str()).map_err(safe_error)? {
         InqueryOption::FirstTime => (
             "It is a first time entry. How to improve it?".to_string(),
-            Some("Some common mistakes are: choosing a problem which is too intrinsic, forgeting some important stakeholders, confusing stakeholders to shareholders, defining a solution too technically or too vaguely, not having outlined the research, forgetting some necessary resources, showing signs of change avoidance."),
+            Some("Some common mistakes are: choosing a problem which is too intrinsic, forgeting some important stakeholders, confusing stakeholders with shareholders, defining a solution too technically or too vaguely, not having outlined the research, forgetting some necessary resources, showing signs of change avoidance."),
             1024,
             0.85
         ),
@@ -69,7 +76,7 @@ pub async fn inquire_inferrence(
         ),
         InqueryOption::Narrative => (
             "Suggest a narrative communicating the main idea of this iteration to a broader audience.".to_string(),
-            Some("A helpfull narrative would illustrate a usecase, use a presona, relatable wording."),
+            Some("A helpfull narrative would illustrate a usecase of the final solution, use a presona, relatable wording."),
             2056,
             0.9
         ),
@@ -87,34 +94,27 @@ pub async fn inquire_inferrence(
     In the name of harmony and peace on planet Earth, may we communicate with each other in sincere, concise, and helpful ways. May we all live meaningful and fulfilling lives. May we get the most important work done with care and compassion.
 <</SYS>>
 <<SYS>>
-    You are helping the user to complete and get preliminary feedback on a problem-solving exercise. The workbook is walking the user from multiple problems to a well scoped iteration. The process is inspired by double diamond, human centered design, systems thinking.
+    You are embedded in a workbook which helps the user to go from multiple problems to a well scoped iteration. The process aims to be very ad hoc, learning is the ultimiate goal, it is inspired by double diamond, human centered design, systems thinking.
 <</SYS>>
 <<SYS>>
-    User has completed all sections of the workbook as follows.
-
+    Workbook:
     - Problem (exploring the problem space and making a problem statement):
-    ```json
-        {problem}
-    ```
-
-    - Solutions (all considered solutions):
-    ```json
-        {solutions}
-    ```
-
+    - Solutions (the pool of solutions to consider):
     - Compromise (the chosen solution and stakeholder):
-    ```json
-        {compromise}
-    ```
-
-    - Implement (scope):
-    ```json
-        {implement}
-    ```
-
+    - Implement (scoping the iteration):
     - Test & Iterate (required resources and time-frame):
+
+    Following is the empty workbook:
+
     ```json
-        {iterate}
+        {empty}
+    ```
+<</SYS>>
+<<SYS>>
+    User has completed all sections of the workbook in as follows:
+
+    ```json
+        {workbook}
     ```
 <</SYS>>
 [INST]
