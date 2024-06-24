@@ -22,6 +22,14 @@ pub fn ModalView(
         }
     });
 
+    let cta_1 = Signal::derive(move || {
+        if cancel_btn.try_get().unwrap_or(false) {
+            2
+        } else {
+            1
+        }
+    });
+
     view! {
         <Show when=move || when.get()>
             <Portal mount={document().fullscreen_element().unwrap_or_else(|| document().body().unwrap().into())}>
@@ -36,7 +44,7 @@ pub fn ModalView(
                             <ButtonView
                                 attr:class="mr-4 min-w-20 md:min-w-28"
                                 on:click={move |_| on_resolve.call(true)}
-                                cta=2
+                                cta=cta_1
                             >
                                 {t!("util.ok")}
                             </ButtonView>
