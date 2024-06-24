@@ -260,10 +260,12 @@ pub fn SessionIdProvider(
         } else if let Some(id) = init_id {
             id_rw.set(Some(id.clone()));
             // only happens on client if LS is allowed
-            if Some(StorageMode::Local) == storage_preference.get() {
-                set_remembered_session_id.set(Some(id));
-            } else {
-                del_session_id()
+            match storage_preference.get() {
+                Some(StorageMode::Local) => {
+                    set_remembered_session_id.set(Some(id));
+                }
+                Some(StorageMode::None) => del_session_id(),
+                None => {}
             }
         }
     });
