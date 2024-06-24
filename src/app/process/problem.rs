@@ -1,5 +1,3 @@
-use std::collections::BTreeSet;
-
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
@@ -104,17 +102,16 @@ pub fn ProblemView() -> impl IntoView {
         })
     };
     let stakeholders_autocomplete = Signal::derive(move || {
-        BTreeSet::from_iter(
-            wk_state
-                .get()
-                .problem
-                .get()
-                .stakeholders
-                .into_iter()
-                .map(|s| s.get()),
-        )
-        .into_iter()
-        .collect::<Vec<_>>()
+        wk_state
+            .try_get()
+            .map(|s| {
+                s.problem
+                    .try_get()
+                    .map(|p| p.try_get().map(|p| p.unique_stakeholders()))
+            })
+            .flatten()
+            .flatten()
+            .unwrap_or_default()
     });
 
     let tabs = tabs_signal(ProcessStep::Problem);
@@ -204,7 +201,7 @@ pub fn ProblemView() -> impl IntoView {
                             {t!("worksheets.problem.label_problems")}
                         </h4>
                         <ListInputView
-                            input_type="text"
+                            input_type="textarea"
                             data=problems_data
                             add_value=problems_value_add
                             remove_value=problems_value_remove
@@ -218,7 +215,7 @@ pub fn ProblemView() -> impl IntoView {
                             {t!("worksheets.problem.label_stakeholders")}
                         </h4>
                         <ListInputView
-                            input_type="text"
+                            input_type="textarea"
                             data=stakeholders_data
                             add_value=stakeholders_value_add
                             remove_value=stakeholders_value_remove
