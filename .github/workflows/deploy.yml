@@ -13,7 +13,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.66
+          toolchain: 1.79
           targets: wasm32-wasi, wasm32-unknown-unknown
       - uses: taiki-e/install-action@v2
         with:
