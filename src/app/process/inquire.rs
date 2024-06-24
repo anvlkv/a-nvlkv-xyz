@@ -184,7 +184,7 @@ fn InquireResult(
     let done_personal = inquire_personal_action.value();
     let response = inquire_action.value();
     let lang = use_lang();
-    let link = Signal::derive(move || format!("/{}/process/0", lang.get()));
+    let link = Signal::derive(move || format!("/{}/process/1", lang.get()));
     let (last_chance, set_last_chance) = create_signal(false);
     let contact_value = Signal::derive(move || state.get().inquire.get().contact.get());
     let send_disabled =
