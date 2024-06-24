@@ -3,12 +3,12 @@ const fetched = {};
 const loadRiveFile = async (src) => {
   const cached = fetched[src];
   if (cached) {
-    return cached;
+    return cached.slice(0);
   } else {
     const req = new Request(src);
     const res = await fetch(req);
     const buffer = await res.arrayBuffer();
-    fetched[src] = buffer;
+    fetched[src] = buffer.slice(0);
     return buffer;
   }
 };
