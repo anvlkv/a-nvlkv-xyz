@@ -47,7 +47,7 @@ pub fn WorksheetView(
 ) -> impl IntoView {
     let (current_description, set_current_description) = create_signal(String::default());
 
-    let (_, set_wk_storage, del_wk_storage) =
+    let (wk_storage, set_wk_storage, del_wk_storage) =
         use_storage_with_options::<Option<WorkSheets>, JsonCodec>(
             (&storage_type).into(),
             WK_STORAGE,
@@ -77,33 +77,39 @@ pub fn WorksheetView(
     });
 
     let wk_data_throttled = signal_throttled(
-        Signal::derive(move || {
-            wk_state
-                .get()
-                // .flatten()
-                .map(|wk| wk.get())
-        }),
+        Signal::derive(move || wk_state.get().map(|wk| wk.get())),
         750.0,
     );
 
+    create_render_effect(move |_| {
+        let data = wk_storage.get_untracked();
+        if let Some(wk) = data {
+            state.update(|s| {
+                s.wk = WorkSheetsFormState::new(wk);
+            });
+        }
+    });
+
     create_effect(move |_| {
         let wk = wk_data_throttled.get();
-        match state.get().storage_preference.get() {
-            Some(StorageMode::Local) => {
-                if let Some(wk) = wk {
-                    set_wk_storage.update(|w| *w = Some(wk))
+        if let Some(pref) = state.try_get().map(|s| s.storage_preference.try_get()) {
+            match pref.flatten() {
+                Some(StorageMode::Local) => {
+                    if let Some(wk) = wk {
+                        set_wk_storage.update(|w| *w = Some(wk))
+                    }
                 }
-            }
-            None => {
-                log::debug!("wk: {wk:#?}");
+                None => {
+                    log::debug!("wk: {wk:#?}");
 
-                if wk.map(|d| d != WorkSheets::default()).unwrap_or(false) {
-                    state.get().show_privacy_prompt.set(true);
+                    if wk.map(|d| d != WorkSheets::default()).unwrap_or(false) {
+                        state.get().show_privacy_prompt.set(true);
+                    }
                 }
-            }
-            _ => {
-                del_wk_storage();
-                del_hidden();
+                _ => {
+                    del_wk_storage();
+                    del_hidden();
+                }
             }
         }
     });
