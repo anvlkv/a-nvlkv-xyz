@@ -32,7 +32,7 @@ pub fn ListInputView(
     };
 
     let with_placeholder_id =
-        create_memo(move |_| data.get().iter().find(|v| v.get().is_empty()).map(|v| v.id));
+        create_memo(move |_| data.get().iter().take(1).find(|v| v.get().is_empty()).map(|v| v.id));
 
     let element = create_node_ref::<html::Div>();
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
