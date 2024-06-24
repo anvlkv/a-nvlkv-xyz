@@ -1,11 +1,13 @@
 use form_signal::FormState;
 use leptos::*;
 
+use crate::app::components::ReadOnlyView;
+
 use super::CheckedOption;
 
 #[component]
 pub fn ListSelectView(
-    #[prop(into)] options: MaybeSignal<Vec<CheckedOption>>,
+    #[prop(into)] options: Signal<Vec<CheckedOption>>,
     #[prop(into)] value: Signal<FormState<Vec<String>>>,
     #[prop(into, optional)] max: MaybeSignal<Option<usize>>,
 ) -> impl IntoView {
@@ -22,8 +24,40 @@ pub fn ListSelectView(
 
     let max = Signal::derive(move || max.get());
 
+    let not_in_scope = Signal::derive(move || {
+        let options = options.get();
+        value
+            .get()
+            .get()
+            .into_iter()
+            .filter(|v| options.iter().find(|o| &o.value == v).is_none())
+            .map(|v| CheckedOption {
+                value: v.clone(),
+                label: view! {
+                    <ReadOnlyView>
+                        <span class="line-through">{v.clone()}</span>
+                    </ReadOnlyView>
+                },
+            })
+            .collect::<Vec<_>>()
+    });
+
     view! {
         <ul>
+            <For
+                each=move || not_in_scope.get()
+                key=|state| state.value.clone()
+                let:child
+            >
+                <ListSelectItem
+                    value={child.value.clone()}
+                    form={value}
+                    max
+                    on_change={on_change}
+                >
+                    {child.label.clone()}
+                </ListSelectItem>
+            </For>
             <For
                 each=move || options.get()
                 key=|state| state.value.clone()
