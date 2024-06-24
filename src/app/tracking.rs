@@ -23,8 +23,9 @@ pub async fn new_tracking_session(ua: Option<String>) -> Result<Uuid, ServerFnEr
         let sql = r#"
             INSERT INTO tracking
             (id, user_agent,
+            created_date, updated_date,
             restored_session, inferrence, personal_inquery, wk_download)
-            VALUES (?, ?, NULL, NULL, NULL, NULL)
+            VALUES (?, ?, unixepoch(), unixepoch(), NULL, NULL, NULL, NULL)
     "#;
         _ = conn
             .execute(
@@ -50,7 +51,7 @@ pub async fn restore_tracking_session(
 
     let sql = r#"
         UPDATE tracking
-        SET restored_session = ?
+        SET restored_session = ?, updated_date = unixepoch()
         WHERE id = ?;
 "#;
     _ = conn
@@ -72,7 +73,7 @@ pub fn complete_inferrence(id: Uuid, result: String) -> Result<(), ServerFnError
 
     let sql = r#"
         UPDATE tracking
-        SET inferrence = ?
+        SET inferrence = ?, updated_date = unixepoch()
         WHERE id = ?;
 "#;
     _ = conn
@@ -91,7 +92,7 @@ pub fn complete_personal(id: Uuid, data_id: String) -> Result<(), ServerFnError<
 
     let sql = r#"
         UPDATE tracking
-        SET personal_inquery = ?
+        SET personal_inquery = ?, updated_date = unixepoch()
         WHERE id = ?;
 "#;
     _ = conn
@@ -110,7 +111,7 @@ pub async fn complete_wk_download(id: Uuid) -> Result<(), ServerFnError<String>>
 
     let sql = r#"
         UPDATE tracking
-        SET wk_download = 1
+        SET wk_download = 1, updated_date = unixepoch()
         WHERE id = ?;
 "#;
     _ = conn
