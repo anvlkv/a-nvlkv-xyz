@@ -152,7 +152,7 @@ where
                 >
                     <ListDropTarget
                         item_after={0 as usize}
-                        drop_target_name=drop_target_name
+                        drop_target_name
                     />
                 </Show>
                 <For each={move || values_range.get()}

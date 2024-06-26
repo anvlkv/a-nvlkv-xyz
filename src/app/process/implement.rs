@@ -98,10 +98,20 @@ pub fn ImplementView() -> impl IntoView {
             wk_state.wk_data.update(|wk| {
                 match list_name.as_str() {
                     "now" => {
-                        wk.implement.now.insert(insert_after + 1, entry);
+                        let pos = if insert_after + 1 <= wk.implement.now.len() {
+                            insert_after + 1
+                        } else {
+                            wk.implement.now.len()
+                        };
+                        wk.implement.now.insert(pos, entry);
                     }
                     "best" => {
-                        wk.implement.best.insert(insert_after + 1, entry);
+                        let pos = if insert_after + 1 <= wk.implement.best.len() {
+                            insert_after + 1
+                        } else {
+                            wk.implement.best.len()
+                        };
+                        wk.implement.best.insert(pos, entry);
                     }
                     _ => {
                         log::warn!("unknown list name");

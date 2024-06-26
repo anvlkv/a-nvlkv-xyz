@@ -136,14 +136,22 @@ pub fn ProblemView() -> impl IntoView {
     DragListCtx::provide(Callback::new(
         move |(entry, list_name, insert_after): (String, String, usize)| {
             wk_state.wk_data.update(|wk| {
-                log::debug!("insert {entry} in {list_name} after {insert_after}");
-
                 match list_name.as_str() {
                     "problems" => {
-                        wk.problem.problems.insert(insert_after + 1, entry);
+                        let pos = if insert_after + 1 <= wk.problem.problems.len() {
+                            insert_after + 1
+                        } else {
+                            wk.problem.problems.len()
+                        };
+                        wk.problem.problems.insert(pos, entry);
                     }
                     "stakeholders" => {
-                        wk.problem.stakeholders.insert(insert_after + 1, entry);
+                        let pos = if insert_after + 1 <= wk.problem.stakeholders.len() {
+                            insert_after + 1
+                        } else {
+                            wk.problem.stakeholders.len()
+                        };
+                        wk.problem.stakeholders.insert(pos, entry);
                     }
                     _ => {
                         log::warn!("unknown list name");
