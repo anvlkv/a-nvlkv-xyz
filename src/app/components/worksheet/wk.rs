@@ -6,8 +6,12 @@ use leptos_use::{
     storage::{use_storage, use_storage_with_options, UseStorageOptions},
     utils::JsonCodec,
 };
+use strum::VariantArray;
 
-use crate::app::state::{use_store, AppState, StorageMode, WorkSheets, WorkSheetsFormState};
+use crate::app::{
+    state::{use_store, ProcessStep, ProjectData, SeqStep, StorageMode, WorkSheets},
+    use_lang, Language,
+};
 
 #[derive(PartialEq, Clone)]
 pub struct Tab {
@@ -18,7 +22,7 @@ pub struct Tab {
 
 #[derive(Clone)]
 pub struct WorksheetState {
-    pub form: Resource<AppState, WorkSheetsFormState>,
+    pub wk_data: RwSignal<WorkSheets>,
     pub description_hidden: Signal<bool>,
     pub toggle_description_hidden: Callback<()>,
     pub set_current_description: WriteSignal<String>,
@@ -33,21 +37,19 @@ pub fn use_wk_ctx() -> WorksheetState {
     use_context::<WorksheetState>().unwrap()
 }
 
-pub fn use_wk_state() -> Signal<WorkSheetsFormState> {
-    let ctx = use_wk_ctx();
-    Signal::derive(move || ctx.form.get().unwrap_or_default())
-}
-
 #[cfg_attr(feature = "ssr", allow(unused))]
 #[component]
 pub fn WorksheetView(
     #[prop(into)] storage_type: StorageMode,
     #[prop(into, optional)] fs_element: Option<NodeRef<html::Div>>,
+    #[prop(into, optional)] examples: Option<
+        Resource<Language, Result<Vec<ProjectData>, ServerFnError<String>>>,
+    >,
     children: ChildrenFn,
 ) -> impl IntoView {
     let (current_description, set_current_description) = create_signal(String::default());
 
-    let (wk_storage, set_wk_storage, del_wk_storage) =
+    let (_, set_wk_storage, del_wk_storage) =
         use_storage_with_options::<Option<WorkSheets>, JsonCodec>(
             (&storage_type).into(),
             WK_STORAGE,
@@ -60,8 +62,8 @@ pub fn WorksheetView(
     );
 
     let state = use_store();
-    let wk_state =
-        create_local_resource(move || state.get(), |state| async move { state.wk.clone() });
+    let lang = use_lang();
+    // let wk_res = create_local_resource(move || state.get().wk.get(), |state| async move { state });
 
     let description_hidden = create_local_resource(
         move || hidden_stored.get(),
@@ -76,33 +78,21 @@ pub fn WorksheetView(
             .unwrap_or(&false)
     });
 
-    let wk_data_throttled = signal_throttled(
-        Signal::derive(move || wk_state.get().map(|wk| wk.get())),
-        750.0,
-    );
-
-    // create_render_effect(move |_| {
-    //     let data = wk_storage.get_untracked();
-    //     if let Some(wk) = data {
-    //         state.update(|s| {
-    //             s.wk = WorkSheetsFormState::new(wk);
-    //         });
-    //     }
-    // });
+    let wk_data_throttled = signal_throttled(Signal::derive(move || state.get().wk.get()), 350.0);
 
     create_effect(move |_| {
         let wk = wk_data_throttled.get();
-        if let Some(pref) = state.try_get().map(|s| s.storage_preference.try_get()) {
-            match pref.flatten() {
-                Some(StorageMode::Local) => {
-                    if let Some(wk) = wk {
-                        set_wk_storage.update(|w| *w = Some(wk))
-                    }
-                }
+        if let Some(pref) = state
+            .try_get()
+            .map(|s| s.storage_preference.try_get())
+            .flatten()
+        {
+            match pref {
+                Some(StorageMode::Local) => set_wk_storage.update(|w| *w = Some(wk)),
                 None => {
                     log::debug!("wk: {wk:#?}");
 
-                    if wk.map(|d| d != WorkSheets::default()).unwrap_or(false) {
+                    if wk != WorkSheets::default() {
                         state.get().show_privacy_prompt.set(true);
                     }
                 }
@@ -153,18 +143,137 @@ pub fn WorksheetView(
         }
     });
 
-    provide_context(WorksheetState {
-        form: wk_state,
-        description_hidden,
-        toggle_description_hidden: on_toggle_hidden,
-        toggle_fullscreen: on_tooggle_fullscreen,
-        set_current_description,
-        is_fullscreen: is_fullscreen.into(),
+    create_effect(move |_| {
+        if let Some(examples) = examples {
+            let lang = lang.get();
+            if let Some(examples) = examples.get().map(|d| d.ok()).flatten() {
+                state.update(|s| {
+                    s.examples = examples;
+                    s.sequence = vec![];
+                    make_sequence(&mut s.sequence, &s.examples, lang);
+                });
+            } else {
+                state.update(|s| {
+                    s.sequence = ProcessStep::VARIANTS
+                        .iter()
+                        .enumerate()
+                        .map(|(i, step)| SeqStep {
+                            href: format!("/{}/process/{}", lang, i),
+                            process_step: *step,
+                            example: None,
+                        })
+                        .collect();
+                });
+            }
+        }
     });
 
-    view! {
-        <div class="flex flex-col">
-            {children}
-        </div>
+    move || {
+        let wk = state.get().wk;
+        let children = children.clone();
+        log::debug!("render wk inner");
+        view! {
+            <WorkSheetProvider
+                wk_data=wk
+                toggle_description_hidden=on_toggle_hidden
+                toggle_fullscreen=on_tooggle_fullscreen
+                description_hidden
+                set_current_description
+                is_fullscreen
+            >
+                <div id="worksheets-root" class="flex flex-col">
+                    {children()}
+                </div>
+            </WorkSheetProvider>
+        }
     }
+}
+
+#[component]
+fn WorkSheetProvider(
+    #[prop(into)] wk_data: RwSignal<WorkSheets>,
+    #[prop(into)] description_hidden: Signal<bool>,
+    #[prop(into)] toggle_description_hidden: Callback<()>,
+    #[prop(into)] set_current_description: WriteSignal<String>,
+    #[prop(into)] toggle_fullscreen: Callback<()>,
+    #[prop(into)] is_fullscreen: Signal<bool>,
+    children: ChildrenFn,
+) -> impl IntoView {
+    provide_context(WorksheetState {
+        wk_data,
+        description_hidden,
+        toggle_description_hidden,
+        toggle_fullscreen,
+        set_current_description,
+        is_fullscreen,
+    });
+    log::debug!("WorkSheetProvider");
+    children.into_view()
+}
+
+fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<ProjectData>, lang: Language) {
+    // about
+    seq.push(SeqStep {
+        href: format!("/{}/process/{}", lang, 0),
+        process_step: ProcessStep::About,
+        example: None,
+    });
+
+    // all worksheets first example
+    examples.first().iter().for_each(|ex| {
+        seq.extend(
+            ProcessStep::VARIANTS
+                .iter()
+                .enumerate()
+                .filter_map(|(i, step)| {
+                    if i > 0 && i < ProcessStep::VARIANTS.len() - 2 {
+                        Some(SeqStep {
+                            href: format!("/{}/process/{}/{}", lang, i, ex.id),
+                            process_step: *step,
+                            example: Some(ex.id.clone()),
+                        })
+                    } else {
+                        None
+                    }
+                }),
+        );
+    });
+
+    // each workshet examples
+    seq.extend(
+        ProcessStep::VARIANTS
+            .iter()
+            .enumerate()
+            .fold(vec![], |mut acc, (i, step)| {
+                if i > 0 && i < ProcessStep::VARIANTS.len() - 2 {
+                    // example
+                    acc.extend(examples.iter().skip(1).map(|ex| SeqStep {
+                        href: format!("/{}/process/{}/{}", lang, i, ex.id),
+                        process_step: *step,
+                        example: Some(ex.id.clone()),
+                    }));
+                    // worksheet
+                    acc.push(SeqStep {
+                        href: format!("/{}/process/{}", lang, i),
+                        process_step: *step,
+                        example: None,
+                    });
+                }
+                acc
+            }),
+    );
+
+    // iterate
+    seq.push(SeqStep {
+        href: format!("/{}/process/{}", lang, 5),
+        process_step: ProcessStep::Iterate,
+        example: None,
+    });
+
+    // inquire
+    seq.push(SeqStep {
+        href: format!("/{}/process/{}", lang, 6),
+        process_step: ProcessStep::Inquire,
+        example: None,
+    });
 }

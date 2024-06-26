@@ -11,7 +11,10 @@ pub fn ProcessSwitchView() -> impl IntoView {
     let params = use_params_map();
     let wk_ctx = use_wk_ctx();
 
+    log::debug!("render ProcessSwitchView");
+
     let view = move || {
+        log::debug!("render ProcessSwitchView inner");
         let p = params.get();
         let step: usize = p
             .get("step")

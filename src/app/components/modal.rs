@@ -43,7 +43,7 @@ pub fn ModalView(
                         <div class="flex w-full justify-end">
                             <ButtonView
                                 attr:class="mr-4 min-w-20 md:min-w-28"
-                                on:click={move |_| on_resolve.call(true)}
+                                on:click={move |_| on_resolve(true)}
                                 cta=cta_1
                             >
                                 {t!("util.ok")}
@@ -51,7 +51,7 @@ pub fn ModalView(
                             <Show when=move || cancel_btn.get()>
                                 <ButtonView
                                     attr:class="min-w-20 md:min-w-28"
-                                    on:click={move |_| on_resolve.call(false)}
+                                    on:click={move |_| on_resolve(false)}
                                 >
                                     {t!("util.cancel")}
                                 </ButtonView>

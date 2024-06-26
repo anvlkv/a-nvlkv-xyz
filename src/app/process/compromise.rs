@@ -1,37 +1,33 @@
+use form_signal::FormSignal;
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, CheckedOption,
-        DescriptionView, ListSelectView, ReadOnlyListView, ReadOnlyView, StringInputView,
-        WorksheetHeader,
+        use_example_ctx, use_wk_ctx, ButtonSize, ButtonView, CheckedOption, DescriptionView,
+        ListSelectView, ReadOnlyListView, ReadOnlyView, StringInputView, WorksheetHeader,
     },
     process::FixedProblemStatement,
-    state::{Completenes, ProblemWK, ProcessStep, SolutionsWK},
+    state::{use_store, Completenes, ProblemWK, ProcessStep, SolutionsWK},
     tabs_signal, use_lang,
 };
 
 /// step 4
 #[component]
 pub fn CompromiseView() -> impl IntoView {
-    let wk_state = use_wk_state();
-    let wk_ctx = use_wk_ctx();
+    let state = use_store();
+    let wk_state = use_wk_ctx();
     let lang = use_lang();
     let link = Signal::derive(move || format!("/{}/process/4", lang.get()));
-
-    let question_statement = Signal::derive(move || {
-        wk_state
-            .get()
-            .compromise
-            .try_get()
-            .map(|v| v.question)
-            .unwrap_or_default()
-    });
+    let question_statement = FormSignal::new(
+        wk_state.wk_data,
+        |s| s.compromise.question,
+        |s, q| s.compromise.question = q,
+    );
 
     let solutions_list = Signal::derive(move || {
-        let wk_data: SolutionsWK = (&wk_state.get().solutions.get()).into();
+        let wk_data: SolutionsWK = state.get().wk.get().solutions;
         wk_data
             .solutions
             .into_iter()
@@ -48,7 +44,7 @@ pub fn CompromiseView() -> impl IntoView {
     });
 
     let stakeholders_list = Signal::derive(move || {
-        let wk_data: ProblemWK = (&wk_state.get().problem.get()).into();
+        let wk_data: ProblemWK = state.get().wk.get().problem;
         wk_data
             .unique_stakeholders()
             .into_iter()
@@ -63,28 +59,22 @@ pub fn CompromiseView() -> impl IntoView {
             .collect::<Vec<_>>()
     });
 
-    let solution_choices = Signal::derive(move || {
-        wk_state
-            .get()
-            .compromise
-            .try_get()
-            .map(|v| v.solution_choices)
-            .unwrap_or_default()
-    });
+    let solution_choices = FormSignal::new(
+        wk_state.wk_data,
+        |s| s.compromise.solution_choices,
+        |s, ch| s.compromise.solution_choices = ch,
+    );
 
-    let stakeholder_choices = Signal::derive(move || {
-        wk_state
-            .get()
-            .compromise
-            .try_get()
-            .map(|v| v.stakeholder_choices)
-            .unwrap_or_default()
-    });
+    let stakeholder_choices = FormSignal::new(
+        wk_state.wk_data,
+        |s| s.compromise.stakeholder_choices,
+        |s, ch| s.compromise.stakeholder_choices = ch,
+    );
 
     let tabs = tabs_signal(ProcessStep::Compromise);
 
     let disable_question = Signal::derive(move || {
-        let data = wk_state.get().compromise.get().get();
+        let data = wk_state.wk_data.get().compromise;
         data.solution_choices
             .iter()
             .filter(|e| !e.is_empty())
@@ -98,7 +88,7 @@ pub fn CompromiseView() -> impl IntoView {
                 .is_none()
     });
 
-    let disable_cta = Signal::derive(move || !wk_state.get().compromise.get().get().is_complete());
+    let disable_cta = Signal::derive(move || !wk_state.wk_data.get().compromise.is_complete());
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.compromise.title"), t!("process.title"), t!("name"))}/>
@@ -109,8 +99,8 @@ pub fn CompromiseView() -> impl IntoView {
         />
         <div class="grow w-full">
             <DescriptionView
-                hidden=wk_ctx.description_hidden
-                toggle_hidden=wk_ctx.toggle_description_hidden
+                hidden=wk_state.description_hidden
+                toggle_hidden=wk_state.toggle_description_hidden
             >
                 <p class="whitespace-pre-line">
                     {t!("worksheets.compromise.description")}
@@ -172,17 +162,10 @@ pub fn CompromiseView() -> impl IntoView {
 
 #[component]
 pub fn FixedQuestionStatement() -> impl IntoView {
-    let state = use_wk_state();
+    let state = use_wk_ctx();
     let lang = use_lang();
 
-    let question = Signal::derive(move || {
-        state
-            .get()
-            .compromise
-            .try_get()
-            .map(|v| v.question.get())
-            .unwrap_or_default()
-    });
+    let question = Signal::derive(move || state.wk_data.get().compromise.question);
 
     let href = Signal::derive(move || Some(format!("/{}/process/3", lang.get())));
     let empty = Signal::derive(move || question.get().is_empty());
@@ -201,16 +184,9 @@ pub fn FixedQuestionStatement() -> impl IntoView {
 
 #[component]
 pub fn FixedSolutionsChoice() -> impl IntoView {
-    let state = use_wk_state();
+    let state = use_wk_ctx();
 
-    let solutions = Signal::derive(move || {
-        state
-            .get()
-            .compromise
-            .try_get()
-            .map(|v| v.solution_choices.get())
-            .unwrap_or_default()
-    });
+    let solutions = Signal::derive(move || state.wk_data.get().compromise.solution_choices);
 
     view! {
         <ReadOnlyListView
@@ -222,16 +198,9 @@ pub fn FixedSolutionsChoice() -> impl IntoView {
 
 #[component]
 pub fn FixedStakeholdersChoice() -> impl IntoView {
-    let state = use_wk_state();
+    let state = use_wk_ctx();
 
-    let stakeholders = Signal::derive(move || {
-        state
-            .get()
-            .compromise
-            .try_get()
-            .map(|v| v.stakeholder_choices.get())
-            .unwrap_or_default()
-    });
+    let stakeholders = Signal::derive(move || state.wk_data.get().compromise.stakeholder_choices);
 
     view! {
         <ReadOnlyListView

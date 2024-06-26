@@ -104,12 +104,11 @@ pub fn Localized(children: ChildrenFn) -> impl IntoView {
 fn ThemedHtml() -> impl IntoView {
     let store = use_store();
 
-    let storage_type = Signal::derive(move || {
+    let storage_type = create_memo(move |_| {
         store
-            .try_get()
-            .map(|s| s.storage_preference.try_get())
-            .flatten()
-            .flatten()
+            .get()
+            .storage_preference
+            .get()
             .unwrap_or(StorageMode::None)
     });
 

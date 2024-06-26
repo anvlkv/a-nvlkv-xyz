@@ -1,3 +1,4 @@
+use form_signal::FormSignal;
 use leptos::*;
 use leptos_meta::Title;
 use leptos_router::ActionForm;
@@ -5,23 +6,26 @@ use leptos_router::ActionForm;
 use crate::app::{
     components::{ButtonSize, ButtonView, ContactForm, ErrorView, IconView, Status, StatusView},
     process::InquireContact,
-    state::{Completenes, ContactFormState},
+    state::{Completenes, Contact},
     tracking::SessionId,
 };
 
 #[component]
 pub fn ContactView() -> impl IntoView {
-    let contact_value = create_rw_signal(ContactFormState::default());
-    let (contact_value, _) = contact_value.split();
+    let contact_value = create_rw_signal(Contact::default());
+    let contact_value = FormSignal::new(contact_value, |v| v.clone(), |v, val| *v = val);
     let (loaded, set_loaded) = create_signal(false);
 
     create_effect(move |_| {
         set_loaded.set(true);
     });
 
-    let disabled = Signal::derive(move || {
-        let value = contact_value.get().get();
-        !value.is_complete() && loaded.get()
+    let disabled = Signal::derive({
+        let contact_value = contact_value.clone();
+        move || {
+            let value = contact_value.get();
+            !value.is_complete() && loaded.get()
+        }
     });
 
     let inquire_personal_action = create_server_action::<InquireContact>();
@@ -31,7 +35,11 @@ pub fn ContactView() -> impl IntoView {
 
     view! {
         <Title text={move || format!("{} | {}", t!("contact.title"), t!("name"))}/>
-        <ActionForm action={inquire_personal_action} class="mx-auto max-w-screen-2xl px-6 md:px-8 lg:px-16 min-h-full w-full">
+        <ActionForm
+            action={inquire_personal_action}
+            class="mx-auto max-w-screen-2xl px-6 md:px-8 lg:px-16 min-h-full w-full"
+            clone:contact_value
+        >
             <input
                 attr:type="hidden"
                 name="session_id"
@@ -45,12 +53,13 @@ pub fn ContactView() -> impl IntoView {
                         fallback=move || view!{
                             <ContactResult inquire_personal_action/>
                         }
+                        clone:contact_value
                     >
                         <h2 class="text-xl mb-4">{t!("contact.title")}</h2>
                         <legend>
                             <p class="max-w-prose">{t!("contact.description")}</p>
                         </legend>
-                        <ContactForm value={contact_value.into()}/>
+                        <ContactForm value={contact_value.clone()}/>
                         <ButtonView
                             cta=2
                             size=ButtonSize::Lg

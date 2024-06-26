@@ -1,37 +1,18 @@
 use std::{collections::HashSet, str::FromStr};
 
-use leptos::SignalSet;
 use serde::{Deserialize, Serialize};
 use strum::{Display, EnumString, VariantArray};
 
-use super::{Contact, ContactFormState};
+use super::Contact;
 
-#[derive(FormState, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct WorkSheets {
-    #[nested]
     pub problem: ProblemWK,
-    #[nested]
     pub solutions: SolutionsWK,
-    #[nested]
     pub compromise: CompromiseWK,
-    #[nested]
     pub implement: ImplementWK,
-    #[nested]
     pub iterate: IterateWK,
-    #[nested]
     pub inquire: InquireWK,
-}
-
-impl WorkSheetsFormState {
-    pub fn clear(&self) {
-        let d = WorkSheets::default();
-        self.problem.set(d.problem.into());
-        self.solutions.set(d.solutions.into());
-        self.compromise.set(d.compromise.into());
-        self.implement.set(d.implement.into());
-        self.iterate.set(d.iterate.into());
-        self.inquire.set(d.inquire.into());
-    }
 }
 
 impl std::fmt::Display for WorkSheets {
@@ -88,11 +69,9 @@ impl Default for WorkSheets {
     }
 }
 
-#[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct ProblemWK {
-    #[iterable]
     pub problems: Vec<String>,
-    #[iterable]
     pub stakeholders: Vec<String>,
     pub problem_statement: String,
 }
@@ -151,9 +130,8 @@ impl ProblemWK {
     }
 }
 
-#[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct SolutionsWK {
-    #[iterable]
     pub solutions: Vec<String>,
 }
 
@@ -167,7 +145,7 @@ impl Completenes for SolutionsWK {
     }
 }
 
-#[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct CompromiseWK {
     pub solution_choices: Vec<String>,
     pub stakeholder_choices: Vec<String>,
@@ -208,11 +186,9 @@ impl Completenes for CompromiseWK {
     }
 }
 
-#[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct ImplementWK {
-    #[iterable]
     pub now: Vec<String>,
-    #[iterable]
     pub best: Vec<String>,
 }
 
@@ -228,14 +204,12 @@ impl Completenes for ImplementWK {
     }
 }
 
-#[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct IterateWK {
     pub title: String,
     pub start_date: String,
     pub end_date: String,
-    #[iterable]
     pub resources: Vec<String>,
-    #[iterable]
     pub external_resources: Vec<String>,
 }
 
@@ -253,12 +227,11 @@ impl Completenes for IterateWK {
     }
 }
 
-#[derive(FormState, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct InquireWK {
     pub inquery_option: String,
     pub custom_prompt: String,
     pub personalized: bool,
-    #[nested]
     pub contact: Contact,
 }
 

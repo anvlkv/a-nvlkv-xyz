@@ -2,8 +2,6 @@ mod examples;
 mod types;
 mod worksheets;
 
-use form_signal::FormState;
-
 pub use examples::*;
 pub use types::*;
 pub use worksheets::*;
@@ -40,12 +38,12 @@ pub fn StoreProvider() -> impl IntoView {
 
         if let Some(storage_prefernce) = remembered_storage_preference.try_get_untracked().flatten()
         {
-            state.storage_preference = FormState::new(Some(storage_prefernce));
+            state.storage_preference = create_rw_signal(Some(storage_prefernce));
             log::info!("restore storage preference");
         }
 
         if let Some(wk) = wk_storage.get_untracked() {
-            state.wk = WorkSheetsFormState::new(wk);
+            state.wk = create_rw_signal(wk);
             log::info!("restore worksheets");
         }
 

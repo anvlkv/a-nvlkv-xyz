@@ -1,7 +1,5 @@
 #[macro_use]
 extern crate rust_i18n;
-#[macro_use]
-extern crate form_signal_macro;
 
 pub mod app;
 

@@ -7,8 +7,8 @@ use crate::app::{
     components::{ErrorView, Tab, WorksheetDummy, WorksheetView},
     process::*,
     projects::get_projects,
-    state::{use_store, ProcessStep, ProjectData, SeqStep, StorageMode},
-    use_lang, Language,
+    state::{use_store, ProcessStep, StorageMode},
+    use_lang,
 };
 
 #[component]
@@ -16,8 +16,12 @@ pub fn ProcessView() -> impl IntoView {
     let store = use_store();
     let lang = use_lang();
 
-    let storage_type = create_read_slice(store, |s| {
-        s.storage_preference.get().unwrap_or(StorageMode::None)
+    let storage_type = create_memo(move |_| {
+        store
+            .get()
+            .storage_preference
+            .get()
+            .unwrap_or(StorageMode::None)
     });
 
     let examples = create_resource(
@@ -26,40 +30,6 @@ pub fn ProcessView() -> impl IntoView {
     );
 
     let fullscreen_root = create_node_ref::<html::Div>();
-
-    let process_view_with_data = Signal::derive(move || {
-        let lang = store.get().lang;
-        if let Some(data) = examples.get() {
-            let examples = data.map_err(|e| ServerFnErrorErr::from(e))?;
-            store.update(|s| {
-                s.examples = examples;
-                s.sequence = vec![];
-                make_sequence(&mut s.sequence, &s.examples, lang);
-            });
-        } else {
-            store.update(|s| {
-                s.sequence = ProcessStep::VARIANTS
-                    .iter()
-                    .enumerate()
-                    .map(|(i, step)| SeqStep {
-                        href: format!("/{}/process/{}", lang, i),
-                        process_step: *step,
-                        example: None,
-                    })
-                    .collect();
-            });
-        }
-        let storage_type = storage_type.get();
-
-        leptos::error::Result::<View>::Ok(view! {
-            <WorksheetView
-                storage_type=storage_type
-                fs_element=fullscreen_root
-            >
-                <Outlet/>
-            </WorksheetView>
-        })
-    });
 
     view! {
         <Title text={move || format!("{} | {}", t!("process.title"), t!("name"))}/>
@@ -80,7 +50,24 @@ pub fn ProcessView() -> impl IntoView {
                 <section class="grow p-8 my-6 lg:my-8 lg:mb-20 bg-stone-200 dark:bg-stone-800 rounded-xl shadow">
                     <Transition fallback={WorksheetDummy}>
                         <ErrorBoundary fallback=|err| view! { <ErrorView errors=err/>}>
-                            {process_view_with_data}
+                            {move || {
+                                if let Some(d) = examples.get() {
+                                    _ = d.map_err(ServerFnErrorErr::from)?;
+                                }
+                                leptos::error::Result::<View>::Ok(().into_view())
+                            }}
+                            {move || {
+                                let storage_type = storage_type.get();
+                                view! {
+                                    <WorksheetView
+                                        storage_type=storage_type
+                                        fs_element=fullscreen_root
+                                        examples=examples
+                                    >
+                                        <Outlet/>
+                                    </WorksheetView>
+                                }
+                            }}
                         </ErrorBoundary>
                     </Transition>
                 </section>
@@ -120,71 +107,4 @@ pub fn tabs_signal(step: ProcessStep) -> Signal<Vec<Tab>> {
         }));
         tabs
     })
-}
-
-fn make_sequence(seq: &mut Vec<SeqStep>, examples: &Vec<ProjectData>, lang: Language) {
-    // about
-    seq.push(SeqStep {
-        href: format!("/{}/process/{}", lang, 0),
-        process_step: ProcessStep::About,
-        example: None,
-    });
-
-    // all worksheets first example
-    examples.first().iter().for_each(|ex| {
-        seq.extend(
-            ProcessStep::VARIANTS
-                .iter()
-                .enumerate()
-                .filter_map(|(i, step)| {
-                    if i > 0 && i < ProcessStep::VARIANTS.len() - 2 {
-                        Some(SeqStep {
-                            href: format!("/{}/process/{}/{}", lang, i, ex.id),
-                            process_step: *step,
-                            example: Some(ex.id.clone()),
-                        })
-                    } else {
-                        None
-                    }
-                }),
-        );
-    });
-
-    // each workshet examples
-    seq.extend(
-        ProcessStep::VARIANTS
-            .iter()
-            .enumerate()
-            .fold(vec![], |mut acc, (i, step)| {
-                if i > 0 && i < ProcessStep::VARIANTS.len() - 2 {
-                    // example
-                    acc.extend(examples.iter().skip(1).map(|ex| SeqStep {
-                        href: format!("/{}/process/{}/{}", lang, i, ex.id),
-                        process_step: *step,
-                        example: Some(ex.id.clone()),
-                    }));
-                    // worksheet
-                    acc.push(SeqStep {
-                        href: format!("/{}/process/{}", lang, i),
-                        process_step: *step,
-                        example: None,
-                    });
-                }
-                acc
-            }),
-    );
-
-    // iterate
-    seq.push(SeqStep {
-        href: format!("/{}/process/{}", lang, 5),
-        process_step: ProcessStep::Iterate,
-        example: None,
-    });
-
-    // inquire
-    seq.push(SeqStep {
-        href: format!("/{}/process/{}", lang, 6),
-        process_step: ProcessStep::Inquire,
-        example: None,
-    });
 }

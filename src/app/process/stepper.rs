@@ -184,8 +184,8 @@ fn StepView(step: ProcessStep, current_step_data: Signal<SeqStep>) -> impl IntoV
         <A
             href=move || href.get()
             exact=true
-            on:pointerenter=move |_| activate_cb.call(true)
-            on:pointerleave=move |_| activate_cb.call(false)
+            on:pointerenter=move |_| activate_cb(true)
+            on:pointerleave=move |_| activate_cb(false)
             active_class="pointer-events-none"
             class="block flex flex-col xl:flex-row items-center px-6 xl:pl-0 hover:underline hover:text-purple-800 active:text-purple-950 text-center xl:text-left"
         >

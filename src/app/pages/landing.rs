@@ -80,13 +80,13 @@ pub fn LandingView() -> impl IntoView {
                         attr:class="mt-4 block md:mt-8 md:mb-4 mx-auto shrink-0"
                         link=Signal::derive(move || format!("/{}/process/0", lang.get()))
                         on:pointerover={move |_| {
-                            pointer_cb.call(true)
+                            pointer_cb(true)
                         }}
                         on:pointerenter={move |_| {
-                            pointer_cb.call(true)
+                            pointer_cb(true)
                         }}
                         on:pointerleave={move |_| {
-                            pointer_cb.call(false)
+                            pointer_cb(false)
                         }}
                         node_ref=button_element
                     >

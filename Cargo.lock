@@ -13,7 +13,6 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "form-signal",
- "form-signal-macro",
  "futures",
  "http 1.1.0",
  "js-sys",
@@ -582,18 +581,6 @@ dependencies = [
  "leptos",
  "log",
  "uuid",
-]
-
-[[package]]
-name = "form-signal-macro"
-version = "0.1.0"
-dependencies = [
- "form-signal",
- "leptos",
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "syn 2.0.60",
 ]
 
 [[package]]

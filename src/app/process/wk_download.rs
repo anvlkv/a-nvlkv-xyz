@@ -4,16 +4,20 @@ use leptos::*;
 use leptos_meta::*;
 
 use crate::app::{
-    components::{use_wk_state, ButtonView, Localized, RvArtboardView, WorksheetView},
-    state::{use_store, StorageMode, WorkSheets},
+    components::{ButtonView, Localized, RvArtboardView, WorksheetView},
+    state::{use_store, StorageMode},
     tracking::{complete_wk_download, SessionId},
 };
 
 #[component]
 pub fn WorksheetsDownload() -> impl IntoView {
     let store = use_store();
-    let storage_type = create_read_slice(store, |s| {
-        s.storage_preference.get().unwrap_or(StorageMode::None)
+    let storage_type = create_memo(move |_| {
+        store
+            .get()
+            .storage_preference
+            .get()
+            .unwrap_or(StorageMode::None)
     });
 
     view! {
@@ -43,11 +47,8 @@ pub fn WorksheetsDownload() -> impl IntoView {
 
 #[component]
 fn PrintView() -> impl IntoView {
-    let ctx = use_wk_state();
-    let data = Signal::derive(move || {
-        let wk: WorkSheets = ctx.get().get();
-        wk
-    });
+    let store = use_store();
+    let data = Signal::derive(move || store.get().wk.get().clone());
     let problem_statement = move || data.get().problem.problem_statement;
     let solutions = move || data.get().compromise.solution_choices;
     let stakeholders = move || data.get().compromise.stakeholder_choices;

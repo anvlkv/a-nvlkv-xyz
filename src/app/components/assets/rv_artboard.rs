@@ -122,7 +122,7 @@ pub fn RvArtboardView(
                     if fut.await.is_ok() {
                         log::debug!("animation loaded: {file}/{name}/{state_machine}");
                         if let Some(on_loaded) = on_loaded {
-                            on_loaded.call(name);
+                            on_loaded(name);
                         }
                     } else {
                         log::error!("error loading animation: {file}/{name}/{state_machine}")

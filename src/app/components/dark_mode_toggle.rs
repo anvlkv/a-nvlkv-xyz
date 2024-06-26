@@ -34,7 +34,7 @@ pub fn DarkModeToggleView(#[prop(into)] storage_type: StorageMode) -> impl IntoV
 
     let on_change = move |_| {
         let is_dark = dark_mode.get();
-        set_dark_mode.call(!is_dark);
+        set_dark_mode(!is_dark);
     };
 
     let title = Signal::derive(move || {
