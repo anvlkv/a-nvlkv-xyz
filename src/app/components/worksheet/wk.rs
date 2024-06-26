@@ -63,7 +63,6 @@ pub fn WorksheetView(
 
     let state = use_store();
     let lang = use_lang();
-    // let wk_res = create_local_resource(move || state.get().wk.get(), |state| async move { state });
 
     let description_hidden = create_local_resource(
         move || hidden_stored.get(),
@@ -90,8 +89,6 @@ pub fn WorksheetView(
             match pref {
                 Some(StorageMode::Local) => set_wk_storage.update(|w| *w = Some(wk)),
                 None => {
-                    log::debug!("wk: {wk:#?}");
-
                     if wk != WorkSheets::default() {
                         state.get().show_privacy_prompt.set(true);
                     }

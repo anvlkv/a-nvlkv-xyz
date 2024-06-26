@@ -3,8 +3,9 @@ use std::collections::BTreeMap;
 use form_signal::{AllSignalTraits, FormSignal};
 use leptos::*;
 use leptos_use::{
-    use_draggable_with_options, use_event_listener, use_mouse_in_element_with_options,
-    UseDraggableOptions, UseDraggableReturn, UseMouseInElementOptions, UseMouseInElementReturn,
+    core::Position, use_draggable_with_options, use_event_listener,
+    use_mouse_in_element_with_options, UseDraggableOptions, UseDraggableReturn,
+    UseMouseInElementOptions, UseMouseInElementReturn,
 };
 use uuid::Uuid;
 
@@ -58,17 +59,10 @@ where
 
     let remove_value = Callback::new({
         let value = value.clone();
-        move |id: Uuid| {
-            if let Some(pos) =
-                data_ids
-                    .get()
-                    .iter()
-                    .find_map(|(pos, i)| if i == &id { Some(pos) } else { None })
-            {
-                value.update(|v| {
-                    _ = v.remove(*pos);
-                })
-            }
+        move |pos: usize| {
+            value.update(|v| {
+                _ = v.remove(pos);
+            })
         }
     });
 
@@ -141,7 +135,10 @@ where
     let drop_target_name = Signal::derive(move || drop_target_name.get());
     let values_range = Signal::derive({
         let value = value.clone();
-        move || (0..value.get().len())
+        move || {
+            let total = value.get().len();
+            (0..total).map(move |i| (i, total))
+        }
     });
     provide_context(FocusCtx(focused_id, data_ids));
 
@@ -150,16 +147,16 @@ where
     view! {
         <div class="flex flex-col items-stretch" node_ref=element>
             <ol class="contents">
-                // <Show
-                //     when={move || value.try_get().unwrap_or_default().len() <= 1}
-                // >
-                //     <ListDropTarget
-                //         item_after=FormState::new(Default::default())
-                //         drop_target_name=drop_target_name
-                //     />
-                // </Show>
-                <For each=move || values_range.get()
-                    key=|i| *i
+                <Show
+                    when={move || values_range.get().len() <= 1}
+                >
+                    <ListDropTarget
+                        item_after={0 as usize}
+                        drop_target_name=drop_target_name
+                    />
+                </Show>
+                <For each={move || values_range.get()}
+                    key=|(i, t)| (*i, *t)
                     let:child
                 >
                     <ListItemView
@@ -167,10 +164,15 @@ where
                         placeholder=placeholder.clone()
                         autocomplete=autocomplete.clone()
                         with_placeholder_id
-                        index=child
+                        index=child.0
                         values={value.clone()}
                         delete_allowed
                         remove_value
+                        drop_target_name
+                    />
+                    <ListDropTarget
+                        item_after=child.0
+                        drop_target_name
                     />
                 </For>
             </ol>
@@ -201,7 +203,8 @@ fn ListItemView<T, Rw, R, W>(
     #[prop(into, optional)] autocomplete: MaybeSignal<Vec<String>>,
     #[prop(into)] values: FormSignal<T, Vec<String>, Rw, R, W>,
     #[prop(into)] delete_allowed: Signal<bool>,
-    #[prop(into)] remove_value: Callback<Uuid>,
+    #[prop(into)] remove_value: Callback<usize>,
+    #[prop(into)] drop_target_name: Signal<String>,
 ) -> impl IntoView
 where
     Rw: AllSignalTraits<T>,
@@ -240,18 +243,18 @@ where
 
     let on_remove = move |e: ev::MouseEvent| {
         e.prevent_default();
-        remove_value(value.id);
+        let at = index.get();
+        remove_value(at);
     };
 
     let auto_focus = Signal::derive(move || focused_id.get() == Some(value.id));
 
-    let on_blur_item = Callback::new(move |e| {
-        log::debug!("blurred");
+    let on_blur_item = Callback::new(move |_| {
         if focused_id.get() == Some(value.id) {
             focused_id.set(None)
         }
     });
-    let on_focus_item = Callback::new(move |e| focused_id.set(Some(value.id)));
+    let on_focus_item = Callback::new(move |_| focused_id.set(Some(value.id)));
 
     let placeholder = Signal::derive(move || {
         if with_placeholder_id.get() == Some(value.id) {
@@ -262,11 +265,11 @@ where
     });
 
     let dragable_ref = create_node_ref::<html::Div>();
-    // let drag_ctx = use_context::<DragListCtx>();
+    let drag_ctx = use_context::<DragListCtx>();
 
     let has_drag_ctx = Signal::derive({
-        // let drag_ctx = drag_ctx.clone();
-        move || true //drag_ctx.is_some()
+        let drag_ctx = drag_ctx.clone();
+        move || drag_ctx.is_some()
     });
 
     let UseDraggableReturn {
@@ -275,29 +278,36 @@ where
         dragable_ref,
         UseDraggableOptions::default()
             .on_start({
-                // let drag_ctx = drag_ctx.clone();
+                let drag_ctx = drag_ctx.clone();
+                let value = value.clone();
                 move |_| {
-                    //     if let Some(ctx) = drag_ctx.as_ref() {
-                    //         let value = value.get();
-                    //         ctx.0.set(Some(value));
-                    //         true
-                    //     } else {
-                    //         false
-                    // }
-                    true
+                    if let Some(ctx) = drag_ctx.as_ref() {
+                        let value = value.get();
+                        let index = index.get();
+                        let name = drop_target_name.get();
+                        ctx.origin.set(Some((index, value, name)));
+                        true
+                    } else {
+                        false
+                    }
                 }
             })
             .on_end({
-                // let drag_ctx = drag_ctx.clone();
+                let drag_ctx = drag_ctx.clone();
+                let value = value.clone();
                 move |_| {
-                    //     if let Some(ctx) = drag_ctx.as_ref() {
-                    //         if let Some((insert_after, drop_target)) = ctx.1.get() {
-                    //             ctx.2.call((value.get(), drop_target, insert_after));
-                    //         } else {
-                    //             log::debug!("drop restore position")
-                    //         }
-                    //         ctx.0.set(None);
-                    //     }
+                    if let Some(ctx) = drag_ctx.as_ref() {
+                        if let Some((insert_after, drop_target)) = ctx.target.get() {
+                            let cb = ctx.on_drop;
+                            log::debug!("insert_after: {insert_after}");
+                            let inner = value.get();
+                            remove_value(index.get());
+                            cb((inner, drop_target, insert_after));
+                        } else {
+                            log::debug!("drop restore position")
+                        }
+                        ctx.origin.set(None);
+                    }
                 }
             }),
     );
@@ -375,92 +385,97 @@ where
     }
 }
 
-// #[derive(Clone, Debug)]
-// pub struct DragListCtx(
-//     RwSignal<Option<FormState<String>>>,
-//     RwSignal<Option<(Uuid, String)>>,
-//     Callback<(FormState<String>, String, Uuid)>,
-// );
+#[derive(Clone, Debug)]
+pub struct DragListCtx {
+    on_drop: Callback<(String, String, usize)>,
+    origin: RwSignal<Option<(usize, String, String)>>,
+    target: RwSignal<Option<(usize, String)>>,
+}
 
-// impl DragListCtx {
-//     pub fn provide(cb: Callback<(FormState<String>, String, Uuid)>) {
-//         let origin = create_rw_signal(None);
-//         let target = create_rw_signal(None);
-//         provide_context(DragListCtx(origin, target, cb));
-//     }
-// }
+impl DragListCtx {
+    pub fn provide(on_drop: Callback<(String, String, usize)>) {
+        let origin = create_rw_signal(None);
+        let target = create_rw_signal(None);
+        provide_context(DragListCtx {
+            origin,
+            target,
+            on_drop,
+        });
+    }
+}
 
-// const TOLLERANCE: f64 = 15_f64;
+const TOLLERANCE: f64 = 15_f64;
 
-// #[component]
-// fn ListDropTarget(
-//     #[prop(into)] item_after: FormState<String>,
-//     #[prop(into)] drop_target_name: Signal<String>,
-// ) -> impl IntoView {
-//     let drag_ctx = use_context::<DragListCtx>();
+#[component]
+fn ListDropTarget(
+    #[prop(into)] item_after: usize,
+    #[prop(into)] drop_target_name: Signal<String>,
+) -> impl IntoView {
+    let drag_ctx = use_context::<DragListCtx>();
 
-//     if let Some(ctx) = drag_ctx {
-//         let el = create_node_ref::<html::Li>();
-//         let id_after = item_after.id.clone();
+    if let Some(ctx) = drag_ctx {
+        let el = create_node_ref::<html::Li>();
 
-//         let UseMouseInElementReturn {
-//             is_outside,
-//             element_x,
-//             element_y,
-//             element_width,
-//             element_height,
-//             ..
-//         } = use_mouse_in_element_with_options(
-//             el,
-//             UseMouseInElementOptions::default().handle_outside(true),
-//         );
+        let UseMouseInElementReturn {
+            is_outside,
+            element_x,
+            element_y,
+            element_width,
+            element_height,
+            ..
+        } = use_mouse_in_element_with_options(
+            el,
+            UseMouseInElementOptions::default().handle_outside(true),
+        );
 
-//         let is_in_tolerance_bounds = Signal::derive(move || {
-//             (element_x.get() >= -TOLLERANCE && element_y.get() >= -TOLLERANCE)
-//                 && (element_x.get() - element_width.get() <= TOLLERANCE
-//                     && element_y.get() - element_height.get() <= TOLLERANCE)
-//         });
+        let is_in_tolerance_bounds = Signal::derive(move || {
+            (element_x.get() >= -TOLLERANCE && element_y.get() >= -TOLLERANCE)
+                && (element_x.get() - element_width.get() <= TOLLERANCE
+                    && element_y.get() - element_height.get() <= TOLLERANCE)
+        });
 
-//         let class = Signal::derive(move || {
-//             format!(
-//                 "transition-all duration-100 mx-4 mb-4 rounded {}",
-//                 if !is_outside.get() || is_in_tolerance_bounds.get() {
-//                     "h-8 bg-purple-400 dark:bg-purple-600"
-//                 } else {
-//                     "h-2 bg-purple-200 dark:bg-purple-900"
-//                 }
-//             )
-//         });
+        let class = Signal::derive(move || {
+            format!(
+                "transition-all duration-100 mx-4 mb-4 rounded {}",
+                if !is_outside.get() || is_in_tolerance_bounds.get() {
+                    "h-8 bg-purple-400 dark:bg-purple-600"
+                } else {
+                    "h-2 bg-purple-200 dark:bg-purple-900"
+                }
+            )
+        });
 
-//         create_render_effect(move |_| {
-//             let drop_target = drop_target_name.get();
-//             if !is_outside.get() || is_in_tolerance_bounds.get() {
-//                 ctx.1.set(Some((id_after, drop_target)))
-//             } else {
-//                 ctx.1.update(|d| match d.as_ref() {
-//                     Some(id) => {
-//                         if id == &(id_after, drop_target) {
-//                             *d = None
-//                         }
-//                     }
-//                     _ => {}
-//                 })
-//             }
-//         });
+        create_render_effect(move |_| {
+            let drop_target = drop_target_name.get();
+            if !is_outside.get() || is_in_tolerance_bounds.get() {
+                ctx.target.set(Some((item_after, drop_target)))
+            } else {
+                ctx.target.update(|d| match d.as_ref() {
+                    Some(id) => {
+                        if id == &(item_after, drop_target) {
+                            *d = None
+                        }
+                    }
+                    _ => {}
+                })
+            }
+        });
 
-//         view! {
-//             <Show
-//                 when=move || ctx.0.get().filter(|f| f.id != id_after).is_some()
-//             >
-//                 <li
-//                     id={format!("drop-target-{id_after}")}
-//                     class=class
-//                     node_ref={el}
-//                 />
-//             </Show>
-//         }
-//         .into_view()
-//     } else {
-//         ().into_view()
-//     }
-// }
+        view! {
+            <Show
+                when=move || {
+                    let name = drop_target_name.get();
+                    ctx.origin.get().filter(|f| f.0 != item_after || f.2 != name).is_some()
+                }
+            >
+                <li
+                    class=class
+                    node_ref={el}
+                />
+            </Show>
+        }
+        .into_view()
+    } else {
+        ().into_view()
+    }
+}

@@ -7,8 +7,8 @@ use web_time::Instant;
 
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, ButtonSize, ButtonView, DescriptionView, HistoryEntry,
-        ListInputView, ReadOnlyListView, ReadOnlyView, StringInputView, UndoRemove,
+        use_example_ctx, use_wk_ctx, ButtonSize, ButtonView, DescriptionView, DragListCtx,
+        HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, StringInputView, UndoRemove,
         WorksheetHeader,
     },
     state::{use_store, Completenes, ProcessStep},
@@ -133,47 +133,25 @@ pub fn ProblemView() -> impl IntoView {
 
     let disable_cta = Signal::derive(move || !wk_state.wk_data.get().problem.is_complete());
 
-    // DragListCtx::provide(Callback::new(
-    //     move |(entry, list_name, insert_after): (FormState<String>, String, Uuid)| {
-    //         let wk = wk_state.get().problem;
-    //         log::debug!(
-    //             "dropped {} on {list_name} to insert after {insert_after}",
-    //             entry.id
-    //         );
+    DragListCtx::provide(Callback::new(
+        move |(entry, list_name, insert_after): (String, String, usize)| {
+            wk_state.wk_data.update(|wk| {
+                log::debug!("insert {entry} in {list_name} after {insert_after}");
 
-    //         wk.update(|wk| {
-    //             match list_name.as_str() {
-    //                 "problems" => {
-    //                     let old_pos = wk.problems.iter().position(|f| f.id == entry.id);
-    //                     wk.problems.retain(|f| f.id != entry.id);
-    //                     wk.stakeholders.retain(|f| f.id != entry.id);
-    //                     let new_pos = wk.problems.iter().position(|f| f.id == insert_after);
-
-    //                     if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
-    //                         wk.problems.insert(pos, entry);
-    //                     } else {
-    //                         wk.problems.push(entry);
-    //                     }
-    //                 }
-    //                 "stakeholders" => {
-    //                     let old_pos = wk.stakeholders.iter().position(|f| f.id == entry.id);
-    //                     wk.problems.retain(|f| f.id != entry.id);
-    //                     wk.stakeholders.retain(|f| f.id != entry.id);
-    //                     let new_pos = wk.stakeholders.iter().position(|f| f.id == insert_after);
-
-    //                     if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
-    //                         wk.stakeholders.insert(pos, entry);
-    //                     } else {
-    //                         wk.stakeholders.push(entry);
-    //                     }
-    //                 }
-    //                 _ => {
-    //                     log::warn!("unknown list name");
-    //                 }
-    //             };
-    //         });
-    //     },
-    // ));
+                match list_name.as_str() {
+                    "problems" => {
+                        wk.problem.problems.insert(insert_after + 1, entry);
+                    }
+                    "stakeholders" => {
+                        wk.problem.stakeholders.insert(insert_after + 1, entry);
+                    }
+                    _ => {
+                        log::warn!("unknown list name");
+                    }
+                };
+            });
+        },
+    ));
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.problem.title"), t!("process.title"), t!("name"))}/>

@@ -31,6 +31,7 @@ pub fn ProcessSwitchView() -> impl IntoView {
             } else {
                 window().scroll_to_with_x_and_y(0.0, 0.0);
             }
+            log::debug!("scroll to top");
         });
 
         match example {

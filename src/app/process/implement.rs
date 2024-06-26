@@ -7,8 +7,8 @@ use web_time::Instant;
 
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, ButtonSize, ButtonView, DescriptionView, HistoryEntry,
-        ListInputView, ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
+        use_example_ctx, use_wk_ctx, ButtonSize, ButtonView, DescriptionView, DragListCtx,
+        HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
     },
     process::{
         FixedProblemStatement, FixedQuestionStatement, FixedSolutionsChoice,
@@ -93,43 +93,23 @@ pub fn ImplementView() -> impl IntoView {
 
     let disable_cta = Signal::derive(move || !wk_state.wk_data.get().implement.is_complete());
 
-    // DragListCtx::provide(Callback::new(
-    //     move |(entry, list_name, insert_after): (FormState<String>, String, Uuid)| {
-    //         let wk = wk_state.get().implement;
-
-    //         wk.update(|wk| {
-    //             match list_name.as_str() {
-    //                 "now" => {
-    //                     let old_pos = wk.now.iter().position(|f| f.id == entry.id);
-    //                     wk.now.retain(|f| f.id != entry.id);
-    //                     wk.best.retain(|f| f.id != entry.id);
-    //                     let new_pos = wk.now.iter().position(|f| f.id == insert_after);
-
-    //                     if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
-    //                         wk.now.insert(pos, entry);
-    //                     } else {
-    //                         wk.now.push(entry);
-    //                     }
-    //                 }
-    //                 "best" => {
-    //                     let old_pos = wk.best.iter().position(|f| f.id == entry.id);
-    //                     wk.now.retain(|f| f.id != entry.id);
-    //                     wk.best.retain(|f| f.id != entry.id);
-    //                     let new_pos = wk.best.iter().position(|f| f.id == insert_after);
-
-    //                     if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
-    //                         wk.best.insert(pos, entry);
-    //                     } else {
-    //                         wk.best.push(entry);
-    //                     }
-    //                 }
-    //                 _ => {
-    //                     log::warn!("unknown list name");
-    //                 }
-    //             };
-    //         });
-    //     },
-    // ));
+    DragListCtx::provide(Callback::new(
+        move |(entry, list_name, insert_after): (String, String, usize)| {
+            wk_state.wk_data.update(|wk| {
+                match list_name.as_str() {
+                    "now" => {
+                        wk.implement.now.insert(insert_after + 1, entry);
+                    }
+                    "best" => {
+                        wk.implement.best.insert(insert_after + 1, entry);
+                    }
+                    _ => {
+                        log::warn!("unknown list name");
+                    }
+                };
+            });
+        },
+    ));
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.implement.title"), t!("process.title"), t!("name"))}/>
