@@ -251,7 +251,7 @@ pub fn SessionIdProvider(
     create_isomorphic_effect(move |_| {
         let init_id = init_id.try_get().flatten().flatten();
         // only happens on client if it has session id in LS
-        if let Some(old_id) = remembered_session_id.try_get().flatten() {
+        if let Some(old_id) = remembered_session_id.try_get_untracked().flatten() {
             id_rw.set(Some(old_id.clone()));
             // only happens if there's an id for current session
             if let Some(init_id) = init_id {
