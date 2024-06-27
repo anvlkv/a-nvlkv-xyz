@@ -1,6 +1,6 @@
 use leptos::*;
 
-use crate::app::{components::ButtonView, STYLED_ROOT};
+use crate::app::{components::ButtonView, FULL_SCREEN_MAIN, STYLED_ROOT};
 
 #[component]
 pub fn ModalView(
@@ -12,12 +12,29 @@ pub fn ModalView(
 ) -> impl IntoView {
     let children_view = Signal::derive(move || children().into_view());
 
+    #[cfg(feature = "client")]
     create_render_effect(move |_| {
-        if let Some(root_el) = document().get_element_by_id(STYLED_ROOT) {
+        if let Some(root_el) = document()
+            .fullscreen_element()
+            .map(|e| {
+                e.query_selector(&format!("#{FULL_SCREEN_MAIN}"))
+                    .ok()
+                    .flatten()
+            })
+            .flatten()
+            .or_else(|| document().get_element_by_id(STYLED_ROOT))
+        {
             if when.get() {
                 root_el.class_list().add_1("blur").unwrap();
             } else {
                 root_el.class_list().remove_1("blur").unwrap();
+            }
+            if &root_el.id() == FULL_SCREEN_MAIN {
+                if when.get() {
+                    root_el.class_list().remove_1("contents").unwrap();
+                } else {
+                    root_el.class_list().add_1("contents").unwrap();
+                }
             }
         }
     });

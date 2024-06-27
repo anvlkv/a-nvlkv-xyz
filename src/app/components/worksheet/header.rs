@@ -57,13 +57,21 @@ pub fn WorksheetHeader(
                             <IconView icon="Info"/>
                         </button>
                     </Show>
-                    <button
-                        on:click={move |_| toggle_fullscreen(())}
-                        title=t!("util.fullscreen")
-                        class="mb-px text-sky-800 dark:text-sky-200"
-                    >
-                        <IconView icon="Fullscreen"/>
-                    </button>
+                    <Show when={move || {
+                        cfg_if::cfg_if!{if #[cfg(feature="client")] {
+                            document().fullscreen_enabled()
+                        }else {
+                            false
+                        }}
+                    }}>
+                        <button
+                            on:click={move |_| toggle_fullscreen(())}
+                            title=t!("util.fullscreen")
+                            class="mb-px text-sky-800 dark:text-sky-200"
+                        >
+                            <IconView icon="Fullscreen"/>
+                        </button>
+                    </Show>
                 </div>
                 <For each=move || tabs.get()
                     key=|state| state.href.clone()

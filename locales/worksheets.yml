@@ -387,10 +387,10 @@ worksheets:
         以下の回答は AI を使用して生成されています。
         常識的な情報や役立つアドバイスが含まれている場合もありますが、必要な注意を払ってご利用ください。
     cta_2:
-      en: Reiterate
-      ru: Повторить итерацию
-      nl: Herhaal iteratie
-      ja: 繰り返す
+      en: Make improvements
+      ru: Внести исправления
+      nl: Breng correcties aan
+      ja: 修正する
     cta_3:
       en: Get a personalized answer
       ru: Получить индивидуальный ответ

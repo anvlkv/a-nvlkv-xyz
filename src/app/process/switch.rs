@@ -1,5 +1,6 @@
 use leptos::*;
 use leptos_router::*;
+use web_sys::{Element, ScrollBehavior, ScrollToOptions};
 
 use crate::app::{
     components::{use_wk_ctx, ExampleView},
@@ -24,13 +25,15 @@ pub fn ProcessSwitchView() -> impl IntoView {
         let example = p.get("example");
 
         create_effect(move |_| {
-            if wk_ctx.is_fullscreen.get() {
-                if let Some(el) = document().fullscreen_element() {
-                    el.set_scroll_top(0);
-                }
+            let mut options = ScrollToOptions::default();
+            options.behavior(ScrollBehavior::Smooth).top(0.0);
+
+            if let Some(el) = document().fullscreen_element() {
+                el.scroll_with_scroll_to_options(&options);
             } else {
-                window().scroll_to_with_x_and_y(0.0, 0.0);
+                window().scroll_with_scroll_to_options(&options);
             }
+
             log::debug!("scroll to top");
         });
 
