@@ -1,4 +1,3 @@
-use form_signal::FormState;
 use leptos::*;
 use leptos_use::storage::StorageType;
 use serde::{Deserialize, Serialize};
@@ -10,10 +9,10 @@ use super::{worksheets::*, ProjectData};
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct AppState {
-    pub wk: WorkSheetsFormState,
+    pub wk: RwSignal<WorkSheets>,
     pub examples: Vec<ProjectData>,
     pub sequence: Vec<SeqStep>,
-    pub storage_preference: FormState<Option<StorageMode>>,
+    pub storage_preference: RwSignal<Option<StorageMode>>,
     pub show_privacy_prompt: RwSignal<bool>,
     pub lang: Language,
 }
@@ -57,7 +56,7 @@ pub enum ProcessStep {
     Inquire = 6,
 }
 
-#[derive(Debug, Default, Clone, PartialEq, FormState, Eq, Serialize, Deserialize, Hash)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct Contact {
     pub name: String,
     pub email: String,

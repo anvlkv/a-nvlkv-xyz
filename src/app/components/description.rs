@@ -29,7 +29,7 @@ pub fn DescriptionView(
                 {move || if let Some(toggle_hidden) = toggle_hidden {
                   view!{
                       <button
-                          on:click={move |_| toggle_hidden.call(())}
+                          on:click={move |_| toggle_hidden(())}
                           title=t!("util.close")
                           class="ml-1 mr-0 -mt-0.5 text-sm"
                       >

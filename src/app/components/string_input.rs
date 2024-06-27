@@ -1,4 +1,4 @@
-use form_signal::FormState;
+use form_signal::{AllSignalTraits, FormSignal};
 use leptos::{
     html::{div, input, textarea},
     *,
@@ -10,7 +10,7 @@ use crate::app::components::APP_MAIN;
 const AUTOCOMPLETE_OPTION: &str = "_autocomplete-option";
 
 #[component]
-pub fn StringInputView(
+pub fn StringInputView<T, Rw, R, W>(
     #[prop(into)] input_type: String,
     #[prop(into, optional)] placeholder: MaybeSignal<String>,
     #[prop(into, optional)] disabled: MaybeSignal<bool>,
@@ -18,57 +18,62 @@ pub fn StringInputView(
     #[prop(into, optional)] auto_focus: MaybeSignal<bool>,
     #[prop(into, optional)] on_blur: Option<Callback<ev::FocusEvent>>,
     #[prop(into, optional)] on_focus: Option<Callback<ev::FocusEvent>>,
-    #[prop(into)] value: Signal<FormState<String>>,
+    #[prop(into)] value: FormSignal<T, String, Rw, R, W>,
     #[prop(into, optional)] autocomplete: MaybeSignal<Vec<String>>,
     #[prop(attrs, optional)] attrs: Vec<(&'static str, Attribute)>,
-) -> impl IntoView {
+) -> impl IntoView
+where
+    Rw: AllSignalTraits<T>,
+    T: std::fmt::Debug + Default + PartialEq + Clone + 'static,
+    R: Fn(T) -> String + Clone + 'static,
+    W: Fn(&mut T, String) + Clone + 'static,
+{
     let (autocomplete_options, set_autocomplete_options) = create_signal::<Vec<String>>(Vec::new());
     let (focused, set_focused) = create_signal(false);
     let (may_autocomplete, set_may_autocomplete) = create_signal(false);
 
     let element = create_node_ref::<html::AnyElement>();
 
-    let on_input = move |event| {
-        let next = value.get();
-        let input_value = event_target_value(&event);
-        next.update(move |v| *v = input_value);
+    let on_input = {
+        let value = value.clone();
+        move |event| {
+            let input_value = event_target_value(&event);
+            value.update(move |v| *v = input_value);
 
-        let input_value = event_target_value(&event);
-        let autocomplete_options = autocomplete
-            .get()
-            .into_iter()
-            .filter(|val| {
-                val.to_lowercase()
-                    .contains(input_value.to_lowercase().as_str())
-                    && val != &input_value
-            })
-            .collect::<Vec<_>>();
-        set_may_autocomplete.set(autocomplete_options.len() > 0);
-        set_autocomplete_options.set(autocomplete_options);
-    };
-
-    let on_focus = move |e: ev::FocusEvent| {
-        let next = value.get();
-        next.touch();
-        set_focused.set(true);
-        if let Some(cb) = on_focus {
-            cb.call(e);
+            let input_value = event_target_value(&event);
+            let autocomplete_options = autocomplete
+                .get()
+                .into_iter()
+                .filter(|val| {
+                    val.to_lowercase()
+                        .contains(input_value.to_lowercase().as_str())
+                        && val != &input_value
+                })
+                .collect::<Vec<_>>();
+            set_may_autocomplete.set(autocomplete_options.len() > 0);
+            set_autocomplete_options.set(autocomplete_options);
         }
     };
 
-    let value_src = Signal::derive(move || {
-        value
-            .try_get()
-            .map(|v| v.try_get())
-            .flatten()
-            .unwrap_or_default()
+    let on_focus = {
+        move |e: ev::FocusEvent| {
+            set_focused.set(true);
+            if let Some(cb) = on_focus {
+                cb(e);
+            }
+        }
+    };
+
+    let value_src = Signal::derive({
+        let value = value.clone();
+        move || value.try_get().unwrap_or_default()
     });
 
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let may_blure = move |e: ev::FocusEvent| {
         if !focused.get() {
             if let Some(cb) = on_blur {
-                cb.call(e);
+                cb(e);
             }
 
             set_may_autocomplete.set(false);
@@ -76,7 +81,7 @@ pub fn StringInputView(
     };
 
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
-    let on_blur_input_el = move |e: ev::FocusEvent| {
+    let on_blur_input_el = Callback::new(move |e: ev::FocusEvent| {
         #[cfg(feature = "client")]
         {
             use wasm_bindgen::JsCast;
@@ -94,10 +99,10 @@ pub fn StringInputView(
                 may_blure(e);
             }
         }
-    };
+    });
 
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
-    let on_blur_autocomplete_el = move |e: ev::FocusEvent| {
+    let on_blur_autocomplete_el = Callback::new(move |e: ev::FocusEvent| {
         #[cfg(feature = "client")]
         {
             use wasm_bindgen::JsCast;
@@ -115,12 +120,15 @@ pub fn StringInputView(
                 may_blure(e);
             }
         }
-    };
+    });
 
-    let on_select_autocomplete = Callback::new(move |input_value: String| {
-        let next = value.get();
-        next.update(move |v| *v = input_value);
-        set_may_autocomplete.set(false);
+    let on_select_autocomplete = Callback::new({
+        let value = value.clone();
+
+        move |input_value: String| {
+            value.update(move |v| *v = input_value);
+            set_may_autocomplete.set(false);
+        }
     });
 
     let UseElementBoundingReturn {
@@ -140,6 +148,7 @@ pub fn StringInputView(
     });
 
     create_effect(move |_| {
+        log::debug!("auto_focus {}", auto_focus.get());
         if auto_focus.get() {
             if let Some(el) = element.get().as_deref() {
                 el.focus().unwrap();
@@ -150,6 +159,8 @@ pub fn StringInputView(
     let class = move || {
         format!("w-full px-4 py-2 rounded border border-slate-400 bg-stone-50 dark:bg-stone-950 text-stone-950 dark:text-stone-50 text-lg focus:outline-purple-400 focus:outline {} {}", if disabled.get() { "pointer-events-none contrast-50 saturate-50" } else {""}, class.get())
     };
+
+    log::debug!("render StringInput");
 
     div()
         .attr("class", "contents")
@@ -167,7 +178,7 @@ pub fn StringInputView(
             .node_ref(element)
             .attrs(attrs)
             .attr("disabled", disabled)
-            .attr("id", move || value.get().id.to_string())
+            .attr("id", move || value.id.to_string())
             .attr("class", class)
             .attr("placeholder", placeholder)
             .prop("value", value_src)
@@ -204,7 +215,7 @@ fn AutoCompleteList(
         options.get().into_iter().map(|value| {
                 let clicked_value = value.clone();
                 let on_click = move |_| {
-                    on_select.call(clicked_value.clone());
+                    on_select(clicked_value.clone());
                 };
 
                 view!{
@@ -212,7 +223,7 @@ fn AutoCompleteList(
                         tabindex="1"
                         class=format!("{AUTOCOMPLETE_OPTION} cursor-pointer px-4 py-2 border-b border-slate-400 last:border-b-0 focus:outline focus:outline-purple-400")
                         on:click=on_click
-                        on:blur=move |e| on_blur.call(e)
+                        on:blur=move |e| on_blur(e)
                     >
                         {value}
                     </li>

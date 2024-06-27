@@ -1,123 +1,123 @@
+use form_signal::FormSignal;
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 use uuid::Uuid;
 use web_time::Instant;
 
-use form_signal::FormState;
-
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
-        DragListCtx, HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, StringInputView,
-        UndoRemove, WorksheetHeader,
+        use_example_ctx, use_wk_ctx, ButtonSize, ButtonView, DescriptionView, DragListCtx,
+        HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, StringInputView, UndoRemove,
+        WorksheetHeader,
     },
-    state::{Completenes, ProcessStep},
+    state::{use_store, Completenes, ProcessStep},
     tabs_signal, use_lang,
 };
 
 /// step 2
 #[component]
 pub fn ProblemView() -> impl IntoView {
-    let wk_state = use_wk_state();
-    let wk_ctx = use_wk_ctx();
+    let wk_state = use_wk_ctx();
+    let state = use_store();
     let lang = use_lang();
     let link = Signal::derive(move || format!("/{}/process/2", lang.get()));
 
-    let problem_statement = Signal::derive(move || {
-        wk_state
-            .get()
-            .problem
-            .try_get()
-            .map(|v| v.problem_statement)
-            .unwrap_or_default()
-    });
-    let problem_delete_history = create_rw_signal(vec![]);
-    let stakeholder_delete_history = create_rw_signal(vec![]);
+    log::debug!("render ProblemView");
+    let problem_statement = FormSignal::new(
+        wk_state.wk_data,
+        |s| s.problem.problem_statement,
+        |s, p| s.problem.problem_statement = p,
+    );
 
-    let problems_data = Signal::derive(move || {
-        wk_state
-            .get()
-            .problem
-            .try_get()
-            .map(|v| v.problems.clone())
-            .unwrap_or_default()
-    });
-    let problems_value_add = move |(next, index): (String, Option<usize>)| {
-        let next = FormState::new(next);
-        let id = next.id;
-        wk_state.get().problem.update(move |p| {
-            p.problems.insert(index.unwrap_or(p.problems.len()), next);
-        });
-        id
-    };
-    let problems_value_remove = move |id: Uuid| {
-        wk_state.get().problem.update(move |p| {
-            let i = p.problems.iter().position(|v| v.id == id).unwrap();
-            let removed = p.problems.remove(i).get_untracked();
-            problem_delete_history.update(|h| h.push((removed, i, Instant::now())));
-        })
-    };
-    let problem_restore = move |(val, at, _): HistoryEntry<String>| {
-        wk_state.get().problem.update(move |p| {
-            if p.problems.len() >= at {
-                p.problems.insert(at, FormState::new(val));
-            } else {
-                p.problems.push(FormState::new(val));
-            }
-        })
-    };
+    // let problem_delete_history = create_rw_signal(vec![]);
+    // let stakeholder_delete_history = create_rw_signal(vec![]);
 
-    let stakeholders_data = Signal::derive(move || {
-        wk_state
-            .get()
-            .problem
-            .try_get()
-            .map(|v| v.stakeholders.clone())
-            .unwrap_or_default()
-    });
-    let stakeholders_value_add = move |(next, index): (String, Option<usize>)| {
-        let next = FormState::new(next);
-        let id = next.id;
-        wk_state.get().problem.update(move |p| {
-            p.stakeholders
-                .insert(index.unwrap_or(p.stakeholders.len()), next);
-        });
-        id
-    };
-    let stakeholders_value_remove = move |id: Uuid| {
-        wk_state.get().problem.update(move |p| {
-            let i = p.stakeholders.iter().position(|v| v.id == id).unwrap();
-            let removed = p.stakeholders.remove(i).get_untracked();
-            stakeholder_delete_history.update(|h| h.push((removed, i, Instant::now())));
-        })
-    };
-    let stakeholder_restore = move |(val, at, _): HistoryEntry<String>| {
-        wk_state.get().problem.update(move |p| {
-            if p.stakeholders.len() >= at {
-                p.stakeholders.insert(at, FormState::new(val));
-            } else {
-                p.stakeholders.push(FormState::new(val));
-            }
-        })
-    };
-    let stakeholders_autocomplete = Signal::derive(move || {
-        wk_state
-            .try_get()
-            .map(|s| {
-                s.problem
-                    .try_get()
-                    .map(|p| p.try_get().map(|p| p.unique_stakeholders()))
-            })
-            .flatten()
-            .flatten()
-            .unwrap_or_default()
-    });
+    let problems_data = FormSignal::new(
+        wk_state.wk_data,
+        |s| s.problem.problems,
+        |s, p| s.problem.problems = p,
+    );
+
+    //     Signal::derive(move || {
+    //     wk_state
+    //         .get()
+    //         .problem
+    //         .try_get()
+    //         .map(|v| v.problems.clone())
+    //         .unwrap_or_default()
+    // });
+    // let problems_value_add = move |(next, index): (String, Option<usize>)| {
+    //     let next = FormState::new(next);
+    //     let id = next.id;
+    //     wk_state.get().problem.update(move |p| {
+    //         p.problems.insert(index.unwrap_or(p.problems.len()), next);
+    //     });
+    //     id
+    // };
+    // let problems_value_remove = move |id: Uuid| {
+    //     wk_state.get().problem.update(move |p| {
+    //         let i = p.problems.iter().position(|v| v.id == id).unwrap();
+    //         let removed = p.problems.remove(i).get_untracked();
+    //         problem_delete_history.update(|h| h.push((removed, i, Instant::now())));
+    //     })
+    // };
+    // let problem_restore = move |(val, at, _): HistoryEntry<String>| {
+    //     wk_state.get().problem.update(move |p| {
+    //         if p.problems.len() >= at {
+    //             p.problems.insert(at, FormState::new(val));
+    //         } else {
+    //             p.problems.push(FormState::new(val));
+    //         }
+    //     })
+    // };
+
+    let stakeholders_data = FormSignal::new(
+        wk_state.wk_data,
+        |s| s.problem.stakeholders,
+        |s, d| s.problem.stakeholders = d,
+    );
+
+    //     Signal::derive(move || {
+    //     wk_state
+    //         .get()
+    //         .problem
+    //         .try_get()
+    //         .map(|v| v.stakeholders.clone())
+    //         .unwrap_or_default()
+    // });
+    // let stakeholders_value_add = move |(next, index): (String, Option<usize>)| {
+    //     let next = FormState::new(next);
+    //     let id = next.id;
+    //     wk_state.get().problem.update(move |p| {
+    //         p.stakeholders
+    //             .insert(index.unwrap_or(p.stakeholders.len()), next);
+    //     });
+    //     id
+    // };
+    // let stakeholders_value_remove = move |id: Uuid| {
+    //     wk_state.get().problem.update(move |p| {
+    //         let i = p.stakeholders.iter().position(|v| v.id == id).unwrap();
+    //         let removed = p.stakeholders.remove(i).get_untracked();
+    //         stakeholder_delete_history.update(|h| h.push((removed, i, Instant::now())));
+    //     })
+    // };
+    // let stakeholder_restore = move |(val, at, _): HistoryEntry<String>| {
+    //     wk_state.get().problem.update(move |p| {
+    //         if p.stakeholders.len() >= at {
+    //             p.stakeholders.insert(at, FormState::new(val));
+    //         } else {
+    //             p.stakeholders.push(FormState::new(val));
+    //         }
+    //     })
+    // };
+    let stakeholders_autocomplete =
+        Signal::derive(move || wk_state.wk_data.get().problem.unique_stakeholders());
 
     let tabs = tabs_signal(ProcessStep::Problem);
 
     let disable_statement = Signal::derive(move || {
-        let data = wk_state.get().problem.get().get();
+        let data = wk_state.wk_data.get().problem;
         data.problems
             .iter()
             .filter(|e| !e.is_empty())
@@ -131,41 +131,27 @@ pub fn ProblemView() -> impl IntoView {
                 .is_none()
     });
 
-    let disable_cta = Signal::derive(move || !wk_state.get().problem.get().get().is_complete());
+    let disable_cta = Signal::derive(move || !wk_state.wk_data.get().problem.is_complete());
 
     DragListCtx::provide(Callback::new(
-        move |(entry, list_name, insert_after): (FormState<String>, String, Uuid)| {
-            let wk = wk_state.get().problem;
-            log::debug!(
-                "dropped {} on {list_name} to insert after {insert_after}",
-                entry.id
-            );
-
-            wk.update(|wk| {
+        move |(entry, list_name, insert_after): (String, String, usize)| {
+            wk_state.wk_data.update(|wk| {
                 match list_name.as_str() {
                     "problems" => {
-                        let old_pos = wk.problems.iter().position(|f| f.id == entry.id);
-                        wk.problems.retain(|f| f.id != entry.id);
-                        wk.stakeholders.retain(|f| f.id != entry.id);
-                        let new_pos = wk.problems.iter().position(|f| f.id == insert_after);
-
-                        if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
-                            wk.problems.insert(pos, entry);
+                        let pos = if insert_after + 1 <= wk.problem.problems.len() {
+                            insert_after + 1
                         } else {
-                            wk.problems.push(entry);
-                        }
+                            wk.problem.problems.len()
+                        };
+                        wk.problem.problems.insert(pos, entry);
                     }
                     "stakeholders" => {
-                        let old_pos = wk.stakeholders.iter().position(|f| f.id == entry.id);
-                        wk.problems.retain(|f| f.id != entry.id);
-                        wk.stakeholders.retain(|f| f.id != entry.id);
-                        let new_pos = wk.stakeholders.iter().position(|f| f.id == insert_after);
-
-                        if let Some(pos) = new_pos.map(|p| p + 1).or(old_pos) {
-                            wk.stakeholders.insert(pos, entry);
+                        let pos = if insert_after + 1 <= wk.problem.stakeholders.len() {
+                            insert_after + 1
                         } else {
-                            wk.stakeholders.push(entry);
-                        }
+                            wk.problem.stakeholders.len()
+                        };
+                        wk.problem.stakeholders.insert(pos, entry);
                     }
                     _ => {
                         log::warn!("unknown list name");
@@ -184,8 +170,8 @@ pub fn ProblemView() -> impl IntoView {
         />
         <div class="grow w-full">
             <DescriptionView
-                hidden=wk_ctx.description_hidden
-                toggle_hidden=wk_ctx.toggle_description_hidden
+                hidden=wk_state.description_hidden
+                toggle_hidden=wk_state.toggle_description_hidden
             >
                 <p class="whitespace-pre-line">
                     {t!("worksheets.problem.description")}
@@ -202,9 +188,9 @@ pub fn ProblemView() -> impl IntoView {
                         </h4>
                         <ListInputView
                             input_type="textarea"
-                            data=problems_data
-                            add_value=problems_value_add
-                            remove_value=problems_value_remove
+                            value=problems_data
+                            // add_value=problems_value_add
+                            // remove_value=problems_value_remove
                             add_entry_text={t!("worksheets.problem.add_problem").to_string()}
                             placeholder={t!("worksheets.problem.placeholder_problem").to_string()}
                             drop_target_name="problems"
@@ -216,9 +202,9 @@ pub fn ProblemView() -> impl IntoView {
                         </h4>
                         <ListInputView
                             input_type="textarea"
-                            data=stakeholders_data
-                            add_value=stakeholders_value_add
-                            remove_value=stakeholders_value_remove
+                            value=stakeholders_data
+                            // add_value=stakeholders_value_add
+                            // remove_value=stakeholders_value_remove
                             add_entry_text={t!("worksheets.problem.add_stakeholder").to_string()}
                             placeholder={t!("worksheets.problem.placeholder_stakeholders").to_string()}
                             autocomplete=stakeholders_autocomplete
@@ -250,30 +236,23 @@ pub fn ProblemView() -> impl IntoView {
                 </ButtonView>
             </div>
         </div>
-        <UndoRemove
-            history=problem_delete_history
-            on_restore=problem_restore
-        />
-        <UndoRemove
-            history=stakeholder_delete_history
-            on_restore=stakeholder_restore
-        />
+        // <UndoRemove
+        //     history=problem_delete_history
+        //     on_restore=problem_restore
+        // />
+        // <UndoRemove
+        //     history=stakeholder_delete_history
+        //     on_restore=stakeholder_restore
+        // />
     }
 }
 
 #[component]
 pub fn FixedProblemStatement() -> impl IntoView {
-    let state = use_wk_state();
+    let state = use_wk_ctx();
     let lang = use_lang();
 
-    let problem_statement = Signal::derive(move || {
-        state
-            .get()
-            .problem
-            .try_get()
-            .map(|v| v.problem_statement.get())
-            .unwrap_or_default()
-    });
+    let problem_statement = Signal::derive(move || state.wk_data.get().problem.problem_statement);
     let href = Signal::derive(move || Some(format!("/{}/process/1", lang.get())));
 
     let empty = Signal::derive(move || problem_statement.get().is_empty());

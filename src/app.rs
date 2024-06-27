@@ -83,8 +83,12 @@ pub fn App() -> impl IntoView {
                             <Route path="resume" view=ResumeView />
                             <Route path="links" view=LinksView />
                         </Route>
-                        <Route path="*any" view=NotFound/>
                     </Route>
+                    <Route path="*any" view=move || view!{
+                        <div class="font-sans min-h-dvh w-screen overflow-auto md:overflow-hidden flex flex-col bg-stone-300 dark:bg-stone-950 text-slate-950 dark:text-slate-50">
+                            <NotFound/>
+                        </div>
+                    }/>
                 </Routes>
             </Router>
         </div>

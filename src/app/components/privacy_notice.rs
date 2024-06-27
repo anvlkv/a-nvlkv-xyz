@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use form_signal::FormState;
+use form_signal::FormSignal;
 use leptos::*;
 
 use super::{CheckedOption, ModalView, RadioInputView};
@@ -16,34 +16,30 @@ pub fn PrivacyNoticeView() -> impl IntoView {
 
     let when = create_read_slice(state, move |s| s.show_privacy_prompt.get());
 
-    let (storage_option_form, _) = create_signal({
-        FormState::<String>::new(
-            state
-                .get_untracked()
-                .storage_preference
-                .get_untracked()
-                .unwrap_or_default()
-                .to_string(),
-        )
-    });
+    let storage_option_form = create_rw_signal(
+        state
+            .get_untracked()
+            .storage_preference
+            .get_untracked()
+            .unwrap_or_default()
+            .to_string(),
+    );
 
-    let on_resolve = move |accepted| {
+    let on_resolve = Callback::new(move |accepted| {
+        let next = storage_option_form.get();
         let state = state.get();
-        let next = storage_option_form.get().get();
 
         if accepted {
             state
                 .storage_preference
-                .set(Some(StorageMode::from_str(next.as_str()).unwrap()));
+                .set(Some(StorageMode::from_str(next.as_str()).unwrap()))
         } else {
             let old = state.storage_preference.get();
-            storage_option_form
-                .get()
-                .update(|o| *o = old.unwrap_or_default().to_string());
+            storage_option_form.update(|o| *o = old.unwrap_or_default().to_string());
         }
 
         state.show_privacy_prompt.set(false);
-    };
+    });
 
     view! {
         <ModalView
@@ -58,7 +54,7 @@ pub fn PrivacyNoticeView() -> impl IntoView {
 }
 
 #[component]
-fn PrivacyContent(#[prop(into)] storage_option: Signal<FormState<String>>) -> impl IntoView {
+fn PrivacyContent(#[prop(into)] storage_option: RwSignal<String>) -> impl IntoView {
     let options = Signal::derive(|| {
         vec![
             CheckedOption {
@@ -79,6 +75,8 @@ fn PrivacyContent(#[prop(into)] storage_option: Signal<FormState<String>>) -> im
             },
         ]
     });
+
+    let storage_option = FormSignal::new(storage_option, |v| v.clone(), |v, val| *v = val);
 
     view! {
         <div class="flex flex-col items-center lg:flex-row max-w-prose">

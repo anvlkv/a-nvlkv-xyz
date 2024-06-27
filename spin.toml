@@ -39,7 +39,13 @@ sqlite_databases = ["default"]
 command = "LEPTOS_TAILWIND_VERSION=v3.4.4 LEPTOS_SASS_VERSION=1.77.2 cargo leptos build --release && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --release --no-default-features --features ssr"
 # # debug
 # command = "LEPTOS_TAILWIND_VERSION=v3.4.4 LEPTOS_SASS_VERSION=1.77.2 cargo leptos build && LEPTOS_OUTPUT_NAME=a_nvlkv_xyz cargo build --lib --target wasm32-wasi --no-default-features --features ssr"
-watch = ["src/**/*.rs", "src/**/*.mjs", "Cargo.toml", "style/*"]
+watch = [
+    "src/**/*.rs",
+    "form-signal/**/*.rs",
+    "src/**/*.mjs",
+    "Cargo.toml",
+    "style/*",
+]
 
 [[trigger.http]]
 route = "/pkg/..."

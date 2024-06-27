@@ -1,67 +1,63 @@
+use form_signal::FormSignal;
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 use uuid::Uuid;
 use web_time::Instant;
 
-use form_signal::FormState;
-
 use crate::app::{
     components::{
-        use_example_ctx, use_wk_ctx, use_wk_state, ButtonSize, ButtonView, DescriptionView,
-        HistoryEntry, ListInputView, ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
+        use_example_ctx, use_wk_ctx, ButtonSize, ButtonView, DescriptionView, HistoryEntry,
+        ListInputView, ReadOnlyListView, ReadOnlyView, UndoRemove, WorksheetHeader,
     },
     process::FixedProblemStatement,
-    state::{Completenes, ProcessStep},
+    state::{use_store, Completenes, ProcessStep},
     tabs_signal, use_lang,
 };
 
 /// step 3
 #[component]
 pub fn SolutionView() -> impl IntoView {
-    let wk_state = use_wk_state();
-    let wk_ctx = use_wk_ctx();
+    let state = use_store();
+    let wk_state = use_wk_ctx();
     let lang = use_lang();
     let link = Signal::derive(move || format!("/{}/process/3", lang.get()));
 
-    let solution_delete_history = create_rw_signal(vec![]);
+    // let solution_delete_history = create_rw_signal(vec![]);
 
-    let solutions_data = Signal::derive(move || {
-        wk_state
-            .get()
-            .solutions
-            .try_get()
-            .map(|v| v.solutions.clone())
-            .unwrap_or_default()
-    });
-    let solutions_value_add = move |(next, index): (String, Option<usize>)| {
-        let next = FormState::new(next);
-        let id = next.id;
-        wk_state.get().solutions.update(move |p| {
-            p.solutions.insert(index.unwrap_or(p.solutions.len()), next);
-        });
-        id
-    };
-    let solutions_value_remove = move |id: Uuid| {
-        wk_state.get().solutions.update(move |p| {
-            let i = p.solutions.iter().position(|v| v.id == id).unwrap();
-            let removed = p.solutions.remove(i).get_untracked();
-            solution_delete_history.update(|h| h.push((removed, i, Instant::now())));
-        })
-    };
-    let solution_restore = move |(val, at, _): HistoryEntry<String>| {
-        wk_state.get().solutions.update(move |p| {
-            if p.solutions.len() >= at {
-                p.solutions.insert(at, FormState::new(val));
-            } else {
-                p.solutions.push(FormState::new(val));
-            }
-        })
-    };
+    let solutions_data = FormSignal::new(
+        wk_state.wk_data,
+        |s| s.solutions.solutions,
+        |s, d| s.solutions.solutions = d,
+    );
+    // let solutions_value_add = move |(next, index): (String, Option<usize>)| {
+    //     let next = FormState::new(next);
+    //     let id = next.id;
+    //     wk_state.get().solutions.update(move |p| {
+    //         p.solutions.insert(index.unwrap_or(p.solutions.len()), next);
+    //     });
+    //     id
+    // };
+    // let solutions_value_remove = move |id: Uuid| {
+    //     wk_state.get().solutions.update(move |p| {
+    //         let i = p.solutions.iter().position(|v| v.id == id).unwrap();
+    //         let removed = p.solutions.remove(i).get_untracked();
+    //         solution_delete_history.update(|h| h.push((removed, i, Instant::now())));
+    //     })
+    // };
+    // let solution_restore = move |(val, at, _): HistoryEntry<String>| {
+    //     wk_state.get().solutions.update(move |p| {
+    //         if p.solutions.len() >= at {
+    //             p.solutions.insert(at, FormState::new(val));
+    //         } else {
+    //             p.solutions.push(FormState::new(val));
+    //         }
+    //     })
+    // };
 
     let tabs = tabs_signal(ProcessStep::Solution);
 
-    let disable_cta = Signal::derive(move || !wk_state.get().solutions.get().get().is_complete());
+    let disable_cta = Signal::derive(move || !wk_state.wk_data.get().solutions.is_complete());
 
     view! {
         <Title text={move || format!("{} | {} | {}", t!("worksheets.solutions.title"), t!("process.title"), t!("name"))}/>
@@ -72,8 +68,8 @@ pub fn SolutionView() -> impl IntoView {
         />
         <div class="grow w-full">
             <DescriptionView
-                hidden=wk_ctx.description_hidden
-                toggle_hidden=wk_ctx.toggle_description_hidden
+                hidden=wk_state.description_hidden
+                toggle_hidden=wk_state.toggle_description_hidden
             >
                 <p class="whitespace-pre-line">
                     {t!("worksheets.solutions.description")}
@@ -90,9 +86,9 @@ pub fn SolutionView() -> impl IntoView {
                     </h4>
                     <ListInputView
                         input_type="textarea"
-                        data=solutions_data
-                        add_value=solutions_value_add
-                        remove_value=solutions_value_remove
+                        value=solutions_data
+                        // add_value=solutions_value_add
+                        // remove_value=solutions_value_remove
                         add_entry_text={t!("worksheets.solutions.add_solution").to_string()}
                         placeholder={t!("worksheets.solutions.placeholder_solution").to_string()}
                     />
@@ -109,10 +105,10 @@ pub fn SolutionView() -> impl IntoView {
                 </ButtonView>
             </div>
         </div>
-        <UndoRemove
-            history=solution_delete_history
-            on_restore=solution_restore
-        />
+        // <UndoRemove
+        //     history=solution_delete_history
+        //     on_restore=solution_restore
+        // />
     }
 }
 

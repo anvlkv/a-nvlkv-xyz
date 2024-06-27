@@ -1,12 +1,19 @@
+use form_signal::{AllSignalTraits, FormSignal};
 use leptos::*;
 
-use crate::app::{components::StringInputView, state::ContactFormState};
+use crate::app::{components::StringInputView, state::Contact};
 
 #[component]
-pub fn ContactForm(value: Signal<ContactFormState>) -> impl IntoView {
-    let contact_name = Signal::derive(move || value.get().name);
-    let contact_email = Signal::derive(move || value.get().email);
-    let contact_message = Signal::derive(move || value.get().message);
+pub fn ContactForm<T, Rw, R, W>(value: FormSignal<T, Contact, Rw, R, W>) -> impl IntoView
+where
+    Rw: AllSignalTraits<T>,
+    T: std::fmt::Debug + Default + PartialEq + Clone + 'static,
+    R: Fn(T) -> Contact + Clone + 'static,
+    W: Fn(&mut T, Contact) + Clone + 'static,
+{
+    let contact_name = value.derive(|v| v.name.clone(), |v, name| v.name = name);
+    let contact_email = value.derive(|v| v.email.clone(), |v, email| v.email = email);
+    let contact_message = value.derive(|v| v.message.clone(), |v, message| v.message = message);
 
     view! {
         <label class="block my-2">

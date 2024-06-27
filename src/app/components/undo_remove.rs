@@ -23,20 +23,20 @@ where
     let child_view = move |child: &HistoryEntry<T>| {
         let action = {
             let child = child.clone();
-            move |_| {
-                on_restore.call(child.clone());
+            Callback::new(move |_| {
+                on_restore(child.clone());
                 history.update(|h| {
                     h.retain(|v| v != &child);
                 });
-            }
+            })
         };
         let on_timeout = {
             let child = child.clone();
-            move |_| {
+            Callback::new(move |_| {
                 history.update(|h| {
                     h.retain(|v| v != &child);
                 })
-            }
+            })
         };
 
         view! {
@@ -75,7 +75,7 @@ fn TimedEntry(
 ) -> impl IntoView {
     let cancel_timeout = set_timeout_with_handle(
         move || {
-            on_timeout.call(());
+            on_timeout(());
         },
         Duration::from_secs(timeout as u64),
     )
@@ -110,7 +110,7 @@ fn TimedEntry(
                 class="pr-4 text-purple-800 font-bold"
                 on:click={move |_| {
                     cancel_timeout.clear();
-                    action.call(());
+                    action(());
                 }}
             >
                 <IconView icon="Restore"/>
@@ -125,7 +125,7 @@ fn TimedEntry(
                 class="mr-0"
                 on:click={move |_| {
                 cancel_timeout.clear();
-                on_timeout.call(());
+                on_timeout(());
                 }}
             >
                 {move || t!("util.time_left", seconds=seconds_left.get()).to_string()}

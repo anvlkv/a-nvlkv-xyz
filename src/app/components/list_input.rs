@@ -1,72 +1,111 @@
-use form_signal::FormState;
+use std::collections::BTreeMap;
+
+use form_signal::{AllSignalTraits, FormSignal};
 use leptos::*;
 use leptos_use::{
-    use_draggable_with_options, use_event_listener, use_mouse_in_element_with_options,
-    UseDraggableOptions, UseDraggableReturn, UseMouseInElementOptions, UseMouseInElementReturn,
+    core::Position, use_draggable_with_options, use_event_listener,
+    use_mouse_in_element_with_options, UseDraggableOptions, UseDraggableReturn,
+    UseMouseInElementOptions, UseMouseInElementReturn,
 };
 use uuid::Uuid;
 
 use crate::app::components::{ButtonView, IconView, StringInputView};
 
+#[derive(Debug, Clone)]
+struct FocusCtx(RwSignal<Option<Uuid>>, RwSignal<BTreeMap<usize, Uuid>>);
+
 #[component]
-pub fn ListInputView(
+pub fn ListInputView<T, Rw, R, W>(
     #[prop(into)] input_type: String,
-    #[prop(into)] data: Signal<Vec<FormState<String>>>,
-    #[prop(into)] add_value: Callback<(String, Option<usize>), Uuid>,
-    #[prop(into)] remove_value: Callback<Uuid>,
+    #[prop(into)] value: FormSignal<T, Vec<String>, Rw, R, W>,
     #[prop(into, optional)] drop_target_name: MaybeSignal<String>,
     #[prop(into, optional)] placeholder: MaybeSignal<String>,
     #[prop(into, optional)] add_entry_text: MaybeSignal<String>,
     #[prop(into, optional)] autocomplete: MaybeSignal<Vec<String>>,
-) -> impl IntoView {
+) -> impl IntoView
+where
+    Rw: AllSignalTraits<T>,
+    T: std::fmt::Debug + Default + PartialEq + Clone + 'static,
+    R: Fn(T) -> Vec<String> + Clone + 'static,
+    W: Fn(&mut T, Vec<String>) + Clone + 'static,
+{
     let focused_id = create_rw_signal::<Option<Uuid>>(None);
+    let data_ids = create_rw_signal::<BTreeMap<usize, Uuid>>(BTreeMap::new());
 
-    let on_add = move || {
-        let data = data.get();
-        let next_pos = focused_id
-            .get()
-            .map(|id| data.iter().position(|d| d.id == id).map(|p| p + 1))
-            .flatten();
-        let next_id = add_value.call((Default::default(), next_pos));
-        focused_id.set(Some(next_id));
+    let on_add = {
+        let value = value.clone();
+        move || {
+            let all_ids = data_ids.get();
+            let next_pos = focused_id
+                .get()
+                .map(|id| {
+                    all_ids
+                        .iter()
+                        .find_map(|(pos, d)| if d == &id { Some(pos + 1) } else { None })
+                })
+                .flatten();
+            // let next_id = add_value.call((Default::default(), next_pos));
+            // focused_id.set(Some(next_id));
+            let new_val = String::default();
+            value.update(|v| {
+                if let Some(pos) = next_pos {
+                    v.insert(pos, new_val);
+                } else {
+                    v.push(new_val);
+                }
+            });
+        }
     };
 
+    let remove_value = Callback::new({
+        let value = value.clone();
+        move |pos: usize| {
+            value.update(|v| {
+                _ = v.remove(pos);
+            })
+        }
+    });
+
     let with_placeholder_id =
-        create_memo(move |_| data.get().iter().take(1).find(|v| v.get().is_empty()).map(|v| v.id));
+        create_memo(move |_| data_ids.get().values().next().map(|d| d.clone()));
 
     let element = create_node_ref::<html::Div>();
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let button_element = create_node_ref::<html::AnyElement>();
 
     let is_multiline = input_type == "textarea".to_string();
-
-    let cleanup_listener = use_event_listener(element, ev::keydown, move |e: ev::KeyboardEvent| {
-        if e.key().to_lowercase().as_str() == "enter" {
-            if is_multiline && e.shift_key() {
-                return;
-            }
-            e.prevent_default();
-            e.stop_propagation();
-            on_add();
-        } else if e.key().to_lowercase().as_str() == "backspace" {
-            if let Some((id, next)) = focused_id
-                .get()
-                .map(|id| {
-                    let data = data.get();
-                    data.iter()
-                        .enumerate()
-                        .find(|(_, d)| d.id == id)
-                        .filter(|(_, d)| d.get().is_empty())
-                        .map(|(i, d)| (d.id, data.iter().nth(i.saturating_sub(1)).map(|d| d.id)))
-                })
-                .flatten()
-            {
-                e.prevent_default();
-                remove_value.call(id);
-                focused_id.set(next);
-            }
-        }
+    let delete_allowed = Signal::derive({
+        let value = value.clone();
+        move || value.try_get().unwrap_or_default().len() > 1
     });
+
+    // let cleanup_listener = use_event_listener(element, ev::keydown, move |e: ev::KeyboardEvent| {
+    //     let key = e.key().to_lowercase().as_str();
+    //     if key == "enter" {
+    //         if is_multiline && e.shift_key() {
+    //             return;
+    //         }
+    //         e.prevent_default();
+    //         e.stop_propagation();
+    //         on_add();
+    //     } else if key == "backspace" && delete_allowed.get() {
+    //         if let Some((id, next)) = focused_id
+    //             .get()
+    //             .map(|id| {
+    //                 let data = data_ids.get();
+    //                 data.iter()
+    //                     .find(|(_, d)| d == id)
+    //                     .filter(|(_, d)| d.get().is_empty())
+    //                     .map(|(i, d)| (d.id, data.iter().nth(i.saturating_sub(1)).map(|d| d.id)))
+    //             })
+    //             .flatten()
+    //         {
+    //             e.prevent_default();
+    //             remove_value.call(id);
+    //             focused_id.set(next);
+    //         }
+    //     }
+    // });
 
     #[cfg_attr(feature = "ssr", allow(unused_variables))]
     let on_blur_item = move |e: ev::FocusEvent| {
@@ -88,28 +127,36 @@ pub fn ListInputView(
         }
     };
 
-    on_cleanup(move || {
-        cleanup_listener();
-    });
+    // on_cleanup(move || {
+    //     cleanup_listener();
+    // });
 
     let add_entry_text = Signal::derive(move || add_entry_text.get());
     let drop_target_name = Signal::derive(move || drop_target_name.get());
-    let delete_allowed = Signal::derive(move || data.try_get().unwrap_or_default().len() > 1);
+    let values_range = Signal::derive({
+        let value = value.clone();
+        move || {
+            let total = value.get().len();
+            (0..total).map(move |i| (i, total))
+        }
+    });
+    provide_context(FocusCtx(focused_id, data_ids));
+
+    log::debug!("render ListInputView");
 
     view! {
         <div class="flex flex-col items-stretch" node_ref=element>
             <ol class="contents">
                 <Show
-                    when={move || data.try_get().unwrap_or_default().len() <= 1}
+                    when={move || values_range.get().len() <= 1}
                 >
                     <ListDropTarget
-                        item_after=FormState::new(Default::default())
-                        drop_target_name=drop_target_name
+                        item_after={0 as usize}
+                        drop_target_name
                     />
                 </Show>
-                <For
-                    each=move || data.try_get().unwrap_or_default().into_iter().enumerate()
-                    key=|(index, state)| (state.id, *index)
+                <For each={move || values_range.get()}
+                    key=|(i, t)| (*i, *t)
                     let:child
                 >
                     <ListItemView
@@ -117,16 +164,15 @@ pub fn ListInputView(
                         placeholder=placeholder.clone()
                         autocomplete=autocomplete.clone()
                         with_placeholder_id
-                        focused_id=focused_id
-                        on_blur=on_blur_item
-                        on_focus={move |_| focused_id.set(Some(child.1.id))}
-                        item=child.1.clone()
-                        remove_value
+                        index=child.0
+                        values={value.clone()}
                         delete_allowed
+                        remove_value
+                        drop_target_name
                     />
                     <ListDropTarget
-                        item_after=child.1.clone()
-                        drop_target_name=drop_target_name
+                        item_after=child.0
+                        drop_target_name
                     />
                 </For>
             </ol>
@@ -149,42 +195,69 @@ pub fn ListInputView(
 }
 
 #[component]
-fn ListItemView(
+fn ListItemView<T, Rw, R, W>(
     #[prop(into)] input_type: String,
+    #[prop(into)] index: MaybeSignal<usize>,
     #[prop(into, optional)] placeholder: MaybeSignal<String>,
     #[prop(into)] with_placeholder_id: Signal<Option<Uuid>>,
     #[prop(into, optional)] autocomplete: MaybeSignal<Vec<String>>,
-    #[prop(into)] focused_id: Signal<Option<Uuid>>,
-    #[prop(into)] remove_value: Callback<Uuid>,
-    #[prop(into)] on_blur: Callback<ev::FocusEvent>,
-    #[prop(into)] on_focus: Callback<ev::FocusEvent>,
-    #[prop(into)] item: FormState<String>,
+    #[prop(into)] values: FormSignal<T, Vec<String>, Rw, R, W>,
     #[prop(into)] delete_allowed: Signal<bool>,
-) -> impl IntoView {
-    let value = Signal::derive(move || item.clone());
+    #[prop(into)] remove_value: Callback<usize>,
+    #[prop(into)] drop_target_name: Signal<String>,
+) -> impl IntoView
+where
+    Rw: AllSignalTraits<T>,
+    T: std::fmt::Debug + Default + PartialEq + Clone + 'static,
+    R: Fn(T) -> Vec<String> + Clone + 'static,
+    W: Fn(&mut T, Vec<String>) + Clone + 'static,
+{
+    let value = values.derive(
+        move |v| {
+            let i = index.get();
+            v[i].clone()
+        },
+        move |v, n| {
+            let i = index.get();
+            v[i] = n;
+        },
+    );
+    let FocusCtx(focused_id, all_ids) = use_context::<FocusCtx>().unwrap();
+
+    create_render_effect(move |_| {
+        let i = index.get();
+        all_ids.update(|d| {
+            _ = d.insert(i, value.id);
+        });
+    });
+
+    on_cleanup(move || {
+        let i = index.get();
+        let id = value.id;
+        all_ids.update(|d| {
+            if d.get(&i) == Some(&id) {
+                _ = d.remove(&i);
+            }
+        });
+    });
 
     let on_remove = move |e: ev::MouseEvent| {
         e.prevent_default();
-        remove_value.call(value.get().id);
+        let at = index.get();
+        remove_value(at);
     };
 
-    let auto_focus = Signal::derive(move || {
-        value
-            .try_get()
-            .zip(focused_id.get())
-            .map(|(v, f)| v.id == f)
-            .unwrap_or(false)
-    });
+    let auto_focus = Signal::derive(move || focused_id.get() == Some(value.id));
 
-    let on_blur_item = Callback::new(move |e| {
-        on_blur.call(e);
+    let on_blur_item = Callback::new(move |_| {
+        if focused_id.get() == Some(value.id) {
+            focused_id.set(None)
+        }
     });
-    let on_focus_item = Callback::new(move |e| {
-        on_focus.call(e);
-    });
+    let on_focus_item = Callback::new(move |_| focused_id.set(Some(value.id)));
 
     let placeholder = Signal::derive(move || {
-        if with_placeholder_id.get() == Some(value.get().id) {
+        if with_placeholder_id.get() == Some(value.id) {
             placeholder.get()
         } else {
             Default::default()
@@ -206,10 +279,13 @@ fn ListItemView(
         UseDraggableOptions::default()
             .on_start({
                 let drag_ctx = drag_ctx.clone();
+                let value = value.clone();
                 move |_| {
                     if let Some(ctx) = drag_ctx.as_ref() {
                         let value = value.get();
-                        ctx.0.set(Some(value));
+                        let index = index.get();
+                        let name = drop_target_name.get();
+                        ctx.origin.set(Some((index, value, name)));
                         true
                     } else {
                         false
@@ -218,14 +294,19 @@ fn ListItemView(
             })
             .on_end({
                 let drag_ctx = drag_ctx.clone();
+                let value = value.clone();
                 move |_| {
                     if let Some(ctx) = drag_ctx.as_ref() {
-                        if let Some((insert_after, drop_target)) = ctx.1.get() {
-                            ctx.2.call((value.get(), drop_target, insert_after));
+                        if let Some((insert_after, drop_target)) = ctx.target.get() {
+                            let cb = ctx.on_drop;
+                            log::debug!("insert_after: {insert_after}");
+                            let inner = value.get();
+                            remove_value(index.get());
+                            cb((inner, drop_target, insert_after));
                         } else {
                             log::debug!("drop restore position")
                         }
-                        ctx.0.set(None);
+                        ctx.origin.set(None);
                     }
                 }
             }),
@@ -305,17 +386,21 @@ fn ListItemView(
 }
 
 #[derive(Clone, Debug)]
-pub struct DragListCtx(
-    RwSignal<Option<FormState<String>>>,
-    RwSignal<Option<(Uuid, String)>>,
-    Callback<(FormState<String>, String, Uuid)>,
-);
+pub struct DragListCtx {
+    on_drop: Callback<(String, String, usize)>,
+    origin: RwSignal<Option<(usize, String, String)>>,
+    target: RwSignal<Option<(usize, String)>>,
+}
 
 impl DragListCtx {
-    pub fn provide(cb: Callback<(FormState<String>, String, Uuid)>) {
+    pub fn provide(on_drop: Callback<(String, String, usize)>) {
         let origin = create_rw_signal(None);
         let target = create_rw_signal(None);
-        provide_context(DragListCtx(origin, target, cb));
+        provide_context(DragListCtx {
+            origin,
+            target,
+            on_drop,
+        });
     }
 }
 
@@ -323,14 +408,13 @@ const TOLLERANCE: f64 = 15_f64;
 
 #[component]
 fn ListDropTarget(
-    #[prop(into)] item_after: FormState<String>,
+    #[prop(into)] item_after: usize,
     #[prop(into)] drop_target_name: Signal<String>,
 ) -> impl IntoView {
     let drag_ctx = use_context::<DragListCtx>();
 
     if let Some(ctx) = drag_ctx {
         let el = create_node_ref::<html::Li>();
-        let id_after = item_after.id.clone();
 
         let UseMouseInElementReturn {
             is_outside,
@@ -364,11 +448,11 @@ fn ListDropTarget(
         create_render_effect(move |_| {
             let drop_target = drop_target_name.get();
             if !is_outside.get() || is_in_tolerance_bounds.get() {
-                ctx.1.set(Some((id_after, drop_target)))
+                ctx.target.set(Some((item_after, drop_target)))
             } else {
-                ctx.1.update(|d| match d.as_ref() {
+                ctx.target.update(|d| match d.as_ref() {
                     Some(id) => {
-                        if id == &(id_after, drop_target) {
+                        if id == &(item_after, drop_target) {
                             *d = None
                         }
                     }
@@ -379,10 +463,12 @@ fn ListDropTarget(
 
         view! {
             <Show
-                when=move || ctx.0.get().filter(|f| f.id != id_after).is_some()
+                when=move || {
+                    let name = drop_target_name.get();
+                    ctx.origin.get().filter(|f| f.0 != item_after || f.2 != name).is_some()
+                }
             >
                 <li
-                    id={format!("drop-target-{id_after}")}
                     class=class
                     node_ref={el}
                 />

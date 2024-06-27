@@ -70,8 +70,12 @@ pub fn HeaderView() -> impl IntoView {
         }
     };
 
-    let storage_type = create_read_slice(store, |s| {
-        s.storage_preference.get().unwrap_or(StorageMode::None)
+    let storage_type = create_memo(move |_| {
+        store
+            .get()
+            .storage_preference
+            .get()
+            .unwrap_or(StorageMode::None)
     });
 
     let toggle = move || {

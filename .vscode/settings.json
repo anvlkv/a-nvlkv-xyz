@@ -1,7 +1,0 @@
-{
-  "git.ignoreLimitWarning": true,
-  "python.analysis.typeCheckingMode": "off",
-  "cSpell.words": [
-    "nvlkv"
-  ]
-}
